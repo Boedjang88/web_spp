@@ -1,24 +1,25 @@
-# Gunakan PHP 8.4 sesuai permintaan (Option A)
+# Gunakan PHP 8.4
 FROM php:8.4-fpm
 
-# Install library sistem yang dibutuhkan Laravel & Postgres
+# Install library sistem (Termasuk libzip-dev yang WAJIB buat Excel)
 RUN apt-get update && apt-get install -y \
     git \
     curl \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
+    libzip-dev \
     zip \
     unzip \
     libpq-dev \
     nodejs \
     npm
 
-# Bersihkan cache biar ringan
+# Bersihkan cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install Ekstensi PHP yang wajib (Postgres, GD, dll)
-RUN docker-php-ext-install pdo_pgsql mbstring exif pcntl bcmath gd
+# Install Ekstensi PHP (Sekarang ada ZIP dan INTL buat Excel)
+RUN docker-php-ext-install pdo_pgsql mbstring exif pcntl bcmath gd zip intl
 
 # Ambil Composer terbaru
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -26,20 +27,20 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set folder kerja
 WORKDIR /var/www/html
 
-# Copy semua file project ke dalam server
+# Copy semua file
 COPY . .
 
-# Install Dependencies PHP (Laravel)
+# Install Dependencies PHP
 RUN composer install --no-dev --optimize-autoloader
 
-# Install Dependencies JS & Build Aset (Tailwind/Vite)
+# Install Dependencies JS & Build
 RUN npm install && npm run build
 
-# Beri hak akses ke folder storage
+# Permission storage
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Buka Port 8080 (Standar Zeabur)
+# Expose Port
 EXPOSE 8080
 
-# Perintah Jalankan Server (Migrasi dulu baru jalan)
+# Jalankan
 CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8080

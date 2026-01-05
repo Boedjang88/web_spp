@@ -9,16 +9,8 @@
         "filament/filament": "^3.2",
         "laravel/framework": "^11.0",
         "laravel/tinker": "^2.9",
-        "pxlrbt/filament-excel": "^2.3"
-    },
-    "require-dev": {
-        "fakerphp/faker": "^1.23",
-        "laravel/pail": "^1.1",
-        "laravel/pint": "^1.13",
-        "laravel/sail": "^1.26",
-        "mockery/mockery": "^1.6",
-        "nunomaduro/collision": "^8.1",
-        "phpunit/phpunit": "^10.5"
+        "pxlrbt/filament-excel": "^2.3",
+        "maatwebsite/excel": "^3.1.55"
     },
     "autoload": {
         "psr-4": {
