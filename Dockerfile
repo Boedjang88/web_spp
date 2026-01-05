@@ -1,7 +1,7 @@
 # Gunakan PHP 8.4
 FROM php:8.4-fpm
 
-# Install library sistem (Termasuk libzip-dev yang WAJIB buat Excel)
+# Install library system (WAJIB ADA libzip-dev buat Excel)
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y \
 # Bersihkan cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install Ekstensi PHP (Sekarang ada ZIP dan INTL buat Excel)
+# Install Ekstensi PHP (WAJIB ADA zip dan intl)
 RUN docker-php-ext-install pdo_pgsql mbstring exif pcntl bcmath gd zip intl
 
 # Ambil Composer terbaru
@@ -27,20 +27,18 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set folder kerja
 WORKDIR /var/www/html
 
-# Copy semua file
+# Copy project
 COPY . .
 
-# Install Dependencies PHP
-RUN composer install --no-dev --optimize-autoloader
+# Install Dependencies dengan ignore platform (biar gak rewel soal versi PHP lokal)
+RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs
 
-# Install Dependencies JS & Build
+# Build Aset
 RUN npm install && npm run build
 
-# Permission storage
+# Permission
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Expose Port
+# Expose & Start
 EXPOSE 8080
-
-# Jalankan
 CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8080
