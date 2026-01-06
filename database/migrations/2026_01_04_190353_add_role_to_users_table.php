@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
 {
-    Schema::table('users', function (Blueprint $table) {
-        // Tambah kolom role, defaultnya 'admin'
-        $table->string('role')->default('petugas')->after('email');
-    });
+    // Cek dulu: Kalau kolom 'role' BELUM ada, baru tambahin.
+    // Kalau udah ada, lewatin aja (biar gak error).
+    if (!Schema::hasColumn('users', 'role')) {
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('role')->default('siswa')->after('email');
+        });
+    }
 }
 
 public function down(): void
