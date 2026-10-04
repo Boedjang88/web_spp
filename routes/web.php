@@ -63,6 +63,10 @@ Route::middleware(['auth', 'pdp.consent'])->group(function () {
         return view('siakad.analytics.performance', compact('siswa'));
     })->name('siakad.analytics.performance');
 
+    // --- UKT Portal & Billing Breakdown ---
+    Route::get('siakad/ukt', [\App\Http\Controllers\Web\UktPortalController::class, 'index'])->name('siakad.ukt.index');
+    Route::get('siakad/ukt/kwitansi/{id}', [\App\Http\Controllers\Web\UktPortalController::class, 'cetakKwitansi'])->name('siakad.ukt.kwitansi');
+
     // --- Super Admin & Admin TU Only: User Management ---
     Route::middleware('role:superadmin,admin')->group(function () {
         Route::resource('web/users', UserController::class)->names('web.users');

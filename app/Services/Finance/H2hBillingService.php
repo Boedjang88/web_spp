@@ -125,8 +125,40 @@ class H2hBillingService
                 return $existingTx;
             }
 
-            // 2. Locate Tagihan VA
+            // 2. Locate Tagihan VA or Tagihan UKT
             $tagihan = TagihanVa::where('nomor_va', $nomorVa)->lockForUpdate()->first();
+            
+            if (!$tagihan) {
+                $tagihanUkt = \App\Models\TagihanUkt::where('nomor_va', $nomorVa)->lockForUpdate()->first();
+                if ($tagihanUkt) {
+                    $tagihan = TagihanVa::firstOrCreate(
+                        [
+                            'id_siswa' => $tagihanUkt->id_mahasiswa,
+                            'id_tahun_akademik' => $tagihanUkt->id_tahun_akademik,
+                        ],
+                        [
+                            'nomor_va' => $tagihanUkt->nomor_va,
+                            'nomor_invoice' => $tagihanUkt->nomor_invoice,
+                            'total_tagihan' => $tagihanUkt->total_tagihan,
+                            'total_harus_bayar' => $tagihanUkt->total_harus_bayar,
+                            'total_sudah_bayar' => $tagihanUkt->total_sudah_bayar,
+                            'status_pembayaran' => $tagihanUkt->status_pembayaran,
+                            'tgl_jatuh_tempo' => $tagihanUkt->tgl_jatuh_tempo,
+                        ]
+                    );
+
+                    // Sync TagihanUkt
+                    $tagihanUkt->total_sudah_bayar += $jumlahBayar;
+                    if ($tagihanUkt->total_sudah_bayar >= $tagihanUkt->total_harus_bayar) {
+                        $tagihanUkt->status_pembayaran = 'Lunas';
+                        $tagihanUkt->tgl_lunas = now();
+                    } else {
+                        $tagihanUkt->status_pembayaran = 'Sebagian';
+                    }
+                    $tagihanUkt->save();
+                }
+            }
+
             if (!$tagihan) {
                 throw new Exception("Virtual Account {$nomorVa} tidak terdaftar di sistem.");
             }

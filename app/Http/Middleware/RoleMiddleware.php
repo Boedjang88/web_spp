@@ -38,17 +38,31 @@ class RoleMiddleware
         }
 
         // Superadmin has access to everything
-        if ($user->role === 'superadmin') {
+        if (in_array($user->role, ['superadmin', 'super_admin'])) {
             return $next($request);
         }
 
-        // Admin has access if role asked includes 'admin' or 'petugas'
-        if ($user->role === 'admin' && (empty($roles) || in_array('admin', $roles) || in_array('petugas', $roles))) {
-            return $next($request);
-        }
+        // Canonical 4-Tier RBAC Groupings
+        $roleAliases = [
+            'superadmin' => ['superadmin', 'super_admin'],
+            'baak' => ['baak', 'admin', 'admin_akademik', 'admin_keuangan', 'petugas'],
+            'admin' => ['baak', 'admin', 'admin_akademik', 'admin_keuangan', 'petugas'],
+            'dosen' => ['dosen', 'guru', 'lecturer'],
+            'guru' => ['dosen', 'guru', 'lecturer'],
+            'mahasiswa' => ['mahasiswa', 'siswa', 'student'],
+            'siswa' => ['mahasiswa', 'siswa', 'student'],
+        ];
 
+        // Check exact match or alias group match
         if (in_array($user->role, $roles)) {
             return $next($request);
+        }
+
+        foreach ($roles as $allowedRole) {
+            $aliases = $roleAliases[$allowedRole] ?? [$allowedRole];
+            if (in_array($user->role, $aliases)) {
+                return $next($request);
+            }
         }
 
         if ($request->expectsJson()) {

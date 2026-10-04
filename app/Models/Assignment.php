@@ -16,6 +16,7 @@ class Assignment extends Model
 
     protected $fillable = [
         'id_kelas_kuliah',
+        'target_kelas_ids',
         'judul',
         'deskripsi',
         'attachment_path',
@@ -29,6 +30,7 @@ class Assignment extends Model
     ];
 
     protected $casts = [
+        'target_kelas_ids' => 'array',
         'bobot_persen' => 'decimal:2',
         'deadline_at' => 'datetime',
         'allow_late_submission' => 'boolean',

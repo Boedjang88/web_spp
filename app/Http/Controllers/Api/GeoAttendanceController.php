@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Cache;
 class GeoAttendanceController extends BaseApiController
 {
     /**
-     * Generate Expiring QR Token for Lecturer BAP Session (Valid for 60 seconds)
+     * Generate Expiring QR Token for Lecturer BAP Session (Valid for 10 seconds)
      */
     public function generateSessionToken(int $idBap): JsonResponse
     {
@@ -21,18 +21,18 @@ class GeoAttendanceController extends BaseApiController
         $token = 'ATT-QR-' . strtoupper(bin2hex(random_bytes(8)));
         $cacheKey = "qr_attendance_bap_{$idBap}";
 
-        // Store in cache for 60 seconds
-        Cache::put($cacheKey, $token, now()->addSeconds(60));
+        // Store in cache for 10 seconds rotating token
+        Cache::put($cacheKey, $token, now()->addSeconds(10));
 
         return $this->sendResponse([
             'id_bap' => $bap->id,
             'pertemuan_ke' => $bap->pertemuan_ke,
             'qr_token' => $token,
-            'expires_in_seconds' => 60,
+            'expires_in_seconds' => 10,
             'ruangan' => $bap->ruangan?->nama_ruangan,
             'target_lat' => $bap->ruangan?->latitude,
             'target_long' => $bap->ruangan?->longitude,
-            'radius_meter' => $bap->ruangan?->radius_meter ?? 50,
+            'radius_meter' => min(20, $bap->ruangan?->radius_meter ?? 20),
         ], 'Token QR Presensi berhasil dibuat.');
     }
 
@@ -50,7 +50,8 @@ class GeoAttendanceController extends BaseApiController
         ]);
 
         $user = $request->user();
-        if (!$user->id_siswa) {
+        $studentId = $user->id_mahasiswa ?? $user->id_siswa;
+        if (!$studentId) {
             return $this->sendError('Akses ditolak. Anda bukan mahasiswa.', [], 403);
         }
 
@@ -58,9 +59,9 @@ class GeoAttendanceController extends BaseApiController
         $cacheKey = "qr_attendance_bap_{$idBap}";
         $cachedToken = Cache::get($cacheKey);
 
-        // 1. Verify Expiring QR Token
+        // 1. Verify Expiring QR Token (10s window)
         if (!$cachedToken || $cachedToken !== $validated['qr_token']) {
-            return $this->sendError('Token QR Presensi tidak valid atau telah kadaluarsa. Silakan scan ulang.', [], 422);
+            return $this->sendError('Token QR Presensi tidak valid atau telah kadaluarsa (Expired > 10 detik). Silakan scan ulang.', [], 422);
         }
 
         $bap = BapPerkuliahan::with('ruangan')->findOrFail($idBap);
@@ -68,7 +69,7 @@ class GeoAttendanceController extends BaseApiController
 
         $targetLat = (float) ($ruangan?->latitude ?? -6.917464);
         $targetLong = (float) ($ruangan?->longitude ?? 107.619123);
-        $allowedRadius = $ruangan?->radius_meter ?? 50;
+        $allowedRadius = min(20, (int) ($ruangan?->radius_meter ?? 20)); // Enforce maximum 20 meters threshold
 
         // 2. Haversine Distance Calculation
         $submitLat = (float) $validated['latitude'];
@@ -77,7 +78,7 @@ class GeoAttendanceController extends BaseApiController
         $distanceMeter = $this->calculateHaversineDistance($submitLat, $submitLong, $targetLat, $targetLong);
 
         if ($distanceMeter > $allowedRadius) {
-            return $this->sendError("Presensi Ditolak! Anda berada di luar jangkauan ruangan ({$distanceMeter} meter dari {$ruangan?->nama_ruangan}, radius maksimal {$allowedRadius} meter).", [
+            return $this->sendError("Presensi Ditolak! Anda berada di luar jangkauan ruangan ({$distanceMeter} meter dari {$ruangan?->nama_ruangan}, batas maksimal {$allowedRadius} meter).", [
                 'jarak_meter' => $distanceMeter,
                 'radius_maksimal' => $allowedRadius,
             ], 422);

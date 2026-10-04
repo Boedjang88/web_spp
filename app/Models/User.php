@@ -21,6 +21,8 @@ class User extends Authenticatable implements FilamentUser
         'role',
         'id_guru',
         'id_siswa',
+        'id_dosen',
+        'id_mahasiswa',
         'is_active',
         'mfa_secret',
         'mfa_enabled',
@@ -52,38 +54,63 @@ class User extends Authenticatable implements FilamentUser
         return $this->belongsTo(Guru::class, 'id_guru');
     }
 
+    public function dosen(): BelongsTo
+    {
+        return $this->belongsTo(Dosen::class, 'id_dosen');
+    }
+
     public function siswa(): BelongsTo
     {
         return $this->belongsTo(Siswa::class, 'id_siswa');
     }
 
+    public function mahasiswa(): BelongsTo
+    {
+        return $this->belongsTo(Mahasiswa::class, 'id_mahasiswa');
+    }
+
     public function isSuperAdmin(): bool
     {
-        return $this->role === 'superadmin';
+        return in_array($this->role, ['superadmin', 'super_admin']);
+    }
+
+    public function isBaak(): bool
+    {
+        return in_array($this->role, ['superadmin', 'super_admin', 'baak', 'admin', 'admin_akademik', 'petugas']);
     }
 
     public function isAdmin(): bool
     {
-        return in_array($this->role, ['superadmin', 'admin', 'petugas']);
+        return $this->isBaak();
+    }
+
+    public function isDosen(): bool
+    {
+        return in_array($this->role, ['dosen', 'guru', 'lecturer']);
     }
 
     public function isGuru(): bool
     {
-        return $this->role === 'guru';
+        return $this->isDosen();
+    }
+
+    public function isMahasiswa(): bool
+    {
+        return in_array($this->role, ['mahasiswa', 'siswa', 'student']);
     }
 
     public function isSiswa(): bool
     {
-        return $this->role === 'siswa';
+        return $this->isMahasiswa();
     }
 
     public function canManageUsers(): bool
     {
-        return in_array($this->role, ['superadmin', 'admin']);
+        return in_array($this->role, ['superadmin', 'super_admin', 'baak', 'admin']);
     }
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return in_array($this->role, ['superadmin', 'admin', 'petugas']);
+        return in_array($this->role, ['superadmin', 'super_admin', 'baak', 'admin', 'petugas']);
     }
 }

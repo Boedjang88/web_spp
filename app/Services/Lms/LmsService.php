@@ -74,6 +74,7 @@ class LmsService
     {
         return Assignment::create([
             'id_kelas_kuliah' => $data['id_kelas_kuliah'],
+            'target_kelas_ids' => $data['target_kelas_ids'] ?? null,
             'judul' => $data['judul'],
             'deskripsi' => $data['deskripsi'] ?? null,
             'attachment_path' => $data['attachment_path'] ?? null,
@@ -91,12 +92,12 @@ class LmsService
      * Submit an assignment solution with millisecond timestamping and device fingerprinting.
      *
      * @param Assignment $assignment
-     * @param Siswa $siswa
+     * @param \App\Models\Mahasiswa|\App\Models\Siswa $siswa
      * @param UploadedFile|string $file
      * @param array $clientContext ['ip' => string, 'user_agent' => string]
      * @return Submission
      */
-    public function submitAssignment(Assignment $assignment, Siswa $siswa, $file, array $clientContext = []): Submission
+    public function submitAssignment(Assignment $assignment, object $siswa, $file, array $clientContext = []): Submission
     {
         $now = now();
 

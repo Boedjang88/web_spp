@@ -18,12 +18,12 @@ class GraduationClearanceService
     /**
      * Audit a student's graduation clearance criteria.
      *
-     * @param Siswa $siswa
+     * @param \App\Models\Mahasiswa|\App\Models\Siswa $siswa
      * @param int|null $targetSks
      * @param int|null $targetSkpi
      * @return array
      */
-    public function auditGraduation(Siswa $siswa, ?int $targetSks = null, ?int $targetSkpi = null): array
+    public function auditGraduation(object $siswa, ?int $targetSks = null, ?int $targetSkpi = null): array
     {
         // 1. Determine Curriculum Target SKS
         $targetSks = $targetSks ?? self::DEFAULT_TARGET_SKS;
@@ -150,7 +150,7 @@ class GraduationClearanceService
     /**
      * Check if a student is eligible to graduate.
      */
-    public function canGraduate(Siswa $siswa, ?int $targetSks = null, ?int $targetSkpi = null): bool
+    public function canGraduate(object $siswa, ?int $targetSks = null, ?int $targetSkpi = null): bool
     {
         $audit = $this->auditGraduation($siswa, $targetSks, $targetSkpi);
         return $audit['is_eligible'];
@@ -159,7 +159,7 @@ class GraduationClearanceService
     /**
      * Approve graduation and mutate status to 'Lulus'.
      */
-    public function approveGraduation(Siswa $siswa, ?string $nomorIjazah = null, ?int $targetSks = null, ?int $targetSkpi = null): Siswa
+    public function approveGraduation(object $siswa, ?string $nomorIjazah = null, ?int $targetSks = null, ?int $targetSkpi = null): object
     {
         $audit = $this->auditGraduation($siswa, $targetSks, $targetSkpi);
 
