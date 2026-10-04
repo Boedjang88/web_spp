@@ -63,9 +63,23 @@ Route::middleware(['auth', 'pdp.consent'])->group(function () {
         return view('siakad.analytics.performance', compact('siswa'));
     })->name('siakad.analytics.performance');
 
+    // --- Student Presensi Perkuliahan (GPS & QR Portal) ---
+    Route::get('siakad/presensi', [\App\Http\Controllers\Web\StudentAttendanceController::class, 'index'])->name('siakad.presensi.index');
+    Route::post('siakad/presensi/check-in', [\App\Http\Controllers\Web\StudentAttendanceController::class, 'checkIn'])->name('siakad.presensi.checkIn');
+
+    // --- Student Tasks & LMS Submissions ---
+    Route::get('siakad/tugas', [\App\Http\Controllers\Web\StudentAssignmentController::class, 'index'])->name('siakad.tugas.index');
+    Route::get('siakad/tugas/{id}', [\App\Http\Controllers\Web\StudentAssignmentController::class, 'show'])->name('siakad.tugas.show');
+    Route::post('siakad/tugas/{id}/submit', [\App\Http\Controllers\Web\StudentAssignmentController::class, 'submit'])->name('siakad.tugas.submit');
+
     // --- UKT Portal & Billing Breakdown ---
     Route::get('siakad/ukt', [\App\Http\Controllers\Web\UktPortalController::class, 'index'])->name('siakad.ukt.index');
+    Route::post('siakad/ukt/bayar/{id}', [\App\Http\Controllers\Web\UktPortalController::class, 'bayar'])->name('siakad.ukt.bayar');
     Route::get('siakad/ukt/kwitansi/{id}', [\App\Http\Controllers\Web\UktPortalController::class, 'cetakKwitansi'])->name('siakad.ukt.kwitansi');
+
+    // --- Student Biodata & PDP Profile Completion ---
+    Route::get('siakad/biodata', [\App\Http\Controllers\Web\StudentBiodataController::class, 'edit'])->name('siakad.biodata.edit');
+    Route::put('siakad/biodata/update', [\App\Http\Controllers\Web\StudentBiodataController::class, 'update'])->name('siakad.biodata.update');
 
     // --- Super Admin & Admin TU Only: User Management ---
     Route::middleware('role:superadmin,admin')->group(function () {

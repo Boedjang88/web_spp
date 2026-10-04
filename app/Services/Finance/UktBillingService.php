@@ -57,6 +57,20 @@ class UktBillingService
     }
 
     /**
+     * Process payment callback from array payload.
+     */
+    public function processPaymentCallback(array $payload): PembayaranUkt
+    {
+        return $this->processUktCallback(
+            $payload['nomor_va'],
+            $payload['nomor_transaksi_bank'] ?? ('TRX-' . strtoupper(Str::random(10))),
+            (float) $payload['jumlah_bayar'],
+            $payload['kode_bank'] ?? 'BNI',
+            $payload['channel_bayar'] ?? 'Virtual Account'
+        );
+    }
+
+    /**
      * Process incoming H2H bank settlement callback for UKT payment.
      */
     public function processUktCallback(

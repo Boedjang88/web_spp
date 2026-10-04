@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\Mahasiswa;
 use App\Models\PembayaranUkt;
+use App\Models\TagihanUkt;
 use App\Models\TahunAkademik;
 use App\Services\Finance\UktBillingService;
 use Illuminate\Http\Request;
@@ -29,10 +30,42 @@ class UktPortalController extends Controller
 
         $tagihan = $this->billingService->generateSemesterBill($mahasiswa, $activeTa);
         $riwayatPembayaran = PembayaranUkt::where('id_mahasiswa', $mahasiswa->id)
+            ->with(['tagihanUkt.tahunAkademik'])
             ->orderBy('tgl_bayar', 'desc')
             ->get();
 
         return view('siakad.ukt.index', compact('mahasiswa', 'activeTa', 'tagihan', 'riwayatPembayaran'));
+    }
+
+    /**
+     * Simulate / Process Bank H2H Payment for UKT Bill directly from student portal
+     */
+    public function bayar(Request $request, $id)
+    {
+        $user = $request->user();
+        $studentId = $user->id_mahasiswa ?? $user->id_siswa;
+        $mahasiswa = Mahasiswa::findOrFail($studentId);
+
+        $tagihan = TagihanUkt::where('id', $id)
+            ->where('id_mahasiswa', $mahasiswa->id)
+            ->firstOrFail();
+
+        if ($tagihan->status_pembayaran === 'Lunas') {
+            return back()->with('info', 'Tagihan ini sudah lunas.');
+        }
+
+        $sisaBayar = (float) $tagihan->sisa_harus_bayar;
+        $channel = $request->input('channel', 'Virtual Account');
+
+        $pembayaran = $this->billingService->processPaymentCallback([
+            'nomor_va' => $tagihan->nomor_va,
+            'nomor_transaksi_bank' => 'VA-SIM-' . strtoupper(bin2hex(random_bytes(6))),
+            'jumlah_bayar' => $sisaBayar,
+            'kode_bank' => 'BNI',
+            'channel_bayar' => $channel,
+        ]);
+
+        return back()->with('success', "Pembayaran UKT Berhasil! Nomor Kuitansi: {$pembayaran->nomor_kuitansi}. Kwitansi resmi dapat langsung dicetak.");
     }
 
     /**

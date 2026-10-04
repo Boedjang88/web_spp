@@ -19,12 +19,30 @@ class Mahasiswa extends Model
         'nisn',
         'nik',
         'nama',
+        'tempat_lahir',
+        'tanggal_lahir',
+        'jenis_kelamin',
+        'agama',
         'id_prodi',
         'id_dosen_pa',
         'id_ukt',
         'alamat',
+        'rt',
+        'rw',
+        'kelurahan',
+        'kecamatan',
+        'kota',
+        'kode_pos',
+        'nama_ayah',
         'nama_ibu_kandung',
+        'pekerjaan_ayah',
+        'pekerjaan_ibu',
+        'penghasilan_ortu',
+        'asal_sekolah',
+        'tahun_lulus_sekolah',
+        'nomor_ijazah_sekolah',
         'no_telp',
+        'email_pribadi',
         'no_hp_wali',
         'status_kelulusan',
         'tgl_kelulusan',
@@ -38,6 +56,7 @@ class Mahasiswa extends Model
         'nik' => 'encrypted',
         'nama_ibu_kandung' => 'encrypted',
         'no_hp_wali' => 'encrypted',
+        'tanggal_lahir' => 'date',
         'consent_pdp_at' => 'datetime',
         'tgl_kelulusan' => 'datetime',
         'total_skpi_points' => 'integer',
@@ -80,7 +99,12 @@ class Mahasiswa extends Model
 
     public function submissions(): HasMany
     {
-        return $this->hasMany(Submission::class, 'id_siswa');
+        return $this->hasMany(Submission::class, 'id_mahasiswa');
+    }
+
+    public function presensiMahasiswas(): HasMany
+    {
+        return $this->hasMany(PresensiMahasiswa::class, 'id_mahasiswa');
     }
 
     public function earlyWarningLogs(): HasMany

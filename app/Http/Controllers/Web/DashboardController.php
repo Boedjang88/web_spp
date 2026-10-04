@@ -33,9 +33,10 @@ class DashboardController extends Controller
         ];
         $hariIni = $mapHari[now()->format('l')] ?? 'Senin';
 
-        // 1. Data Khusus Siswa
-        if ($user && $user->role === 'siswa') {
+        // 1. Data Khusus Siswa / Mahasiswa
+        if ($user && ($user->role === 'siswa' || $user->role === 'mahasiswa')) {
             $siswa = $user->siswa ?? Siswa::with(['kelas', 'spp'])->first();
+            $mahasiswa = $user->mahasiswa ?? \App\Models\Mahasiswa::first();
 
             $jadwalSiswa = collect();
             $nilaiSiswa = collect();

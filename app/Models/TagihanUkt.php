@@ -67,4 +67,9 @@ class TagihanUkt extends Model
     {
         return max(0, (float) $this->total_harus_bayar - (float) $this->total_sudah_bayar);
     }
+
+    public function getSisaHarusBayarAttribute(): float
+    {
+        return $this->sisa_tagihan;
+    }
 }
