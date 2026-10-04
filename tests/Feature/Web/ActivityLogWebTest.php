@@ -34,13 +34,13 @@ class ActivityLogWebTest extends TestCase
     public function test_user_login_records_activity_log(): void
     {
         $user = User::factory()->create([
-            'email' => 'operator@sekolah.id',
+            'email' => 'operator@siakad.ac.id',
             'password' => Hash::make('secret123'),
             'role' => 'petugas',
         ]);
 
         $this->post('/login', [
-            'email' => 'operator@sekolah.id',
+            'email' => 'operator@siakad.ac.id',
             'password' => 'secret123',
         ]);
 

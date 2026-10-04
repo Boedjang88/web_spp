@@ -14,13 +14,13 @@ class AuthApiTest extends TestCase
     public function test_user_can_login_with_valid_credentials(): void
     {
         $user = User::factory()->create([
-            'email' => 'admin@sekolah.id',
+            'email' => 'admin@siakad.ac.id',
             'password' => Hash::make('password123'),
             'role' => 'admin',
         ]);
 
         $response = $this->postJson('/api/auth/login', [
-            'email' => 'admin@sekolah.id',
+            'email' => 'admin@siakad.ac.id',
             'password' => 'password123',
         ]);
 
@@ -39,7 +39,7 @@ class AuthApiTest extends TestCase
     public function test_user_cannot_login_with_invalid_credentials(): void
     {
         $response = $this->postJson('/api/auth/login', [
-            'email' => 'admin@sekolah.id',
+            'email' => 'admin@siakad.ac.id',
             'password' => 'wrongpassword',
         ]);
 

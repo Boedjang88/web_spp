@@ -65,7 +65,7 @@ class KartuUjianWebTest extends TestCase
         ]);
 
         $this->admin = User::factory()->create([
-            'name' => 'Admin Sekolah',
+            'name' => 'Admin BAAK Universitas',
             'email' => 'admin@test.com',
             'role' => 'admin',
             'is_active' => true,

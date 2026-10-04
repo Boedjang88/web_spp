@@ -232,11 +232,11 @@ class SiswaController extends BaseApiController
             'bulan_nunggak' => $tunggakan['list_bulan'],
             'status' => $tunggakan['total_bulan'] === 0 ? 'LUNAS' : 'MENUNGGAK',
             'metode_pembayaran' => [
-                'loket_sekolah' => 'Loket Kasir Tata Usaha Sekolah (Senin-Jumat 07.30-15.00 WIB)',
+                'loket_baak' => 'Loket Kasir BAAK / Keuangan Kampus (Senin-Jumat 08.00-16.00 WIB)',
                 'virtual_account_bni' => '988-1234-' . $siswa->nisn,
             ],
         ];
 
-        return $this->sendResponse($suratData, 'Data surat tagihan resmi siswa berhasil digenerate.');
+        return $this->sendResponse($suratData, 'Data surat tagihan resmi UKT mahasiswa berhasil digenerate.');
     }
 }

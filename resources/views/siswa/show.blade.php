@@ -93,10 +93,10 @@
                         @php
                             $phoneClean = preg_replace('/[^0-9]/', '', $siswa->no_telp);
                             if (str_starts_with($phoneClean, '0')) { $phoneClean = '62' . substr($phoneClean, 1); }
-                            $waMsg = "Halo Bpk/Ibu wali murid dari *{$siswa->nama}* (NISN: {$siswa->nisn}),\n\n"
-                                   . "Kami menginformasikan tagihan SPP ananda sebesar *Rp " . number_format($tunggakan['total_rupiah'], 0, ',', '.') . "* untuk periode bulan: *" . implode(', ', $tunggakan['list_bulan']) . "*.\n"
-                                   . "Mohon untuk segera melakukan pelunasan melalui loket sekolah atau mengecek tagihan di website.\n\n"
-                                   . "Terima kasih.\n_- Tata Usaha SMK Web SPP-_";
+                            $waMsg = "Yth. Mahasiswa / Orang Tua dari *{$siswa->nama}* (NIM: {$siswa->nisn}),\n\n"
+                                   . "Kami menginformasikan tagihan UKT sebesar *Rp " . number_format($tunggakan['total_rupiah'], 0, ',', '.') . "* untuk periode: *" . implode(', ', $tunggakan['list_bulan']) . "*.\n"
+                                   . "Mohon untuk segera melakukan pelunasan melalui Virtual Account / Loket BAAK Kampus.\n\n"
+                                   . "Terima kasih.\n_- BAAK Universitas SIAKAD Enterprise-_";
                         @endphp
                         <a href="https://wa.me/{{ $phoneClean }}?text={{ urlencode($waMsg) }}" target="_blank"
                             class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold shadow-sm inline-flex items-center gap-1.5 flex-shrink-0">

@@ -18,8 +18,8 @@ class PortalController extends BaseApiController
 
         if (!$siswa) {
             return $this->sendError(
-                'Data siswa dengan NISN tersebut tidak ditemukan.',
-                ['nisn' => ['NISN tidak terdaftar dalam basis data sekolah.']],
+                'Data mahasiswa dengan NIM / NISN tersebut tidak ditemukan.',
+                ['nisn' => ['NIM / NISN tidak terdaftar dalam basis data universitas.']],
                 404
             );
         }

@@ -53,7 +53,7 @@
                 <div>
                     <label for="email" class="block text-xs font-bold text-slate-700 mb-1">Alamat Email / NPM / NIDN</label>
                     <div class="relative">
-                        <input type="email" id="email" name="email" value="{{ old('email', 'admin@sekolah.id') }}" required autofocus
+                        <input type="email" id="email" name="email" value="{{ old('email', 'admin@siakad.ac.id') }}" required autofocus
                             class="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border @error('email') border-rose-400 @else border-slate-200 @enderror rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:bg-white transition"
                             placeholder="nama@siakad.ac.id">
                         <div class="absolute left-3 top-3 text-slate-400">
@@ -101,15 +101,15 @@
             <div class="mt-6 pt-5 border-t border-slate-100">
                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center mb-2.5">Akun Default Demo Universitas</p>
                 <div class="grid grid-cols-2 gap-2 text-xs">
-                    <button type="button" onclick="document.getElementById('email').value='admin@sekolah.id';document.getElementById('password').value='password123';"
+                    <button type="button" onclick="document.getElementById('email').value='admin@siakad.ac.id';document.getElementById('password').value='password123';"
                         class="p-2.5 rounded-xl bg-slate-50 hover:bg-indigo-50 hover:border-indigo-200 border border-slate-200 text-left transition group">
                         <span class="font-bold text-slate-800 group-hover:text-indigo-700 block">Admin BAAK</span>
-                        <span class="text-[10px] text-slate-500 block truncate">admin@sekolah.id</span>
+                        <span class="text-[10px] text-slate-500 block truncate">admin@siakad.ac.id</span>
                     </button>
-                    <button type="button" onclick="document.getElementById('email').value='petugas@sekolah.id';document.getElementById('password').value='password123';"
+                    <button type="button" onclick="document.getElementById('email').value='petugas@siakad.ac.id';document.getElementById('password').value='password123';"
                         class="p-2.5 rounded-xl bg-slate-50 hover:bg-indigo-50 hover:border-indigo-200 border border-slate-200 text-left transition group">
                         <span class="font-bold text-slate-800 group-hover:text-indigo-700 block">Petugas Keuangan</span>
-                        <span class="text-[10px] text-slate-500 block truncate">petugas@sekolah.id</span>
+                        <span class="text-[10px] text-slate-500 block truncate">petugas@siakad.ac.id</span>
                     </button>
                 </div>
             </div>

@@ -37,12 +37,12 @@ class ActivityLogApiTest extends TestCase
     public function test_api_login_creates_activity_log(): void
     {
         $user = User::factory()->create([
-            'email' => 'api.admin@sekolah.id',
+            'email' => 'api.admin@siakad.ac.id',
             'password' => bcrypt('password123'),
         ]);
 
         $response = $this->postJson('/api/auth/login', [
-            'email' => 'api.admin@sekolah.id',
+            'email' => 'api.admin@siakad.ac.id',
             'password' => 'password123',
         ]);
 

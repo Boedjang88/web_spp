@@ -22,12 +22,12 @@ class WebAuthTest extends TestCase
     public function test_user_can_login_via_web_form(): void
     {
         $user = User::factory()->create([
-            'email' => 'admin@sekolah.id',
+            'email' => 'admin@siakad.ac.id',
             'password' => Hash::make('password123'),
         ]);
 
         $response = $this->post('/login', [
-            'email' => 'admin@sekolah.id',
+            'email' => 'admin@siakad.ac.id',
             'password' => 'password123',
         ]);
 
@@ -38,12 +38,12 @@ class WebAuthTest extends TestCase
     public function test_user_cannot_login_with_wrong_password(): void
     {
         $user = User::factory()->create([
-            'email' => 'admin@sekolah.id',
+            'email' => 'admin@siakad.ac.id',
             'password' => Hash::make('password123'),
         ]);
 
         $response = $this->post('/login', [
-            'email' => 'admin@sekolah.id',
+            'email' => 'admin@siakad.ac.id',
             'password' => 'wrong-password',
         ]);
 

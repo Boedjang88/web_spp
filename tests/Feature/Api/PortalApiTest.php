@@ -56,6 +56,6 @@ class PortalApiTest extends TestCase
 
         $response->assertStatus(404)
             ->assertJsonPath('success', false)
-            ->assertJsonPath('message', 'Data siswa dengan NISN tersebut tidak ditemukan.');
+            ->assertJsonPath('message', 'Data mahasiswa dengan NIM / NISN tersebut tidak ditemukan.');
     }
 }

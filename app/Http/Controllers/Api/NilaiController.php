@@ -158,10 +158,10 @@ class NilaiController extends BaseApiController
         $rataRata = $nilais->count() > 0 ? round($nilais->avg('nilai_akhir'), 2) : 0;
 
         $raporData = [
-            'identitas_sekolah' => [
-                'nama' => 'SMK Merdeka Belajar',
-                'alamat' => 'Jl. Pendidikan No. 45, Kompleks Akademika',
-                'akreditasi' => 'A (Unggul)',
+            'identitas_universitas' => [
+                'nama' => 'Universitas SIAKAD Enterprise',
+                'alamat' => 'Jl. Kampus Utama No. 123, Indonesia',
+                'akreditasi' => 'Unggul (A)',
             ],
             'siswa' => [
                 'id' => $siswa->id,

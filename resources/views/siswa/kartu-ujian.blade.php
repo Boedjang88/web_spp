@@ -157,7 +157,7 @@
                 <div class="text-right space-y-12">
                     <div>
                         <span class="text-[11px] text-slate-500 block">Bandung, {{ now()->format('d F Y') }}</span>
-                        <span class="text-[11px] font-bold text-slate-800 block">Kepala Sekolah / Panitia UAS</span>
+                        <span class="text-[11px] font-bold text-slate-800 block">Dekan Fakultas / Panitia UTS/UAS</span>
                     </div>
                     <div>
                         <span class="font-bold text-slate-900 underline block">Drs. H. Mulyadi, M.M.</span>

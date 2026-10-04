@@ -171,8 +171,8 @@
             <div class="border border-blue-100 bg-blue-50/60 rounded-xl p-3.5 mt-4 text-[11px] text-blue-900">
                 <span class="font-bold block mb-1">Metode Pelunasan Tagihan:</span>
                 <ol class="list-decimal list-inside space-y-0.5 text-blue-800">
-                    <li>Loket Kasir Tata Usaha Sekolah pada jam operasional (Senin - Jumat 07.30 - 15.00 WIB).</li>
-                    <li>Transfer Virtual Account / Bank BNI: <strong>988-1234-{{ $siswa->nisn }}</strong> a.n. SMK Merdeka Belajar.</li>
+                    <li>Loket Kasir BAAK / Keuangan Kampus pada jam operasional (Senin - Jumat 08.00 - 16.00 WIB).</li>
+                    <li>Transfer Virtual Account Bank Mitra: <strong>988-1234-{{ $siswa->nisn }}</strong> a.n. Universitas SIAKAD Enterprise.</li>
                 </ol>
             </div>
 

@@ -85,7 +85,7 @@
                             <code class="text-slate-200">/api/auth/login</code>
                             <p class="text-[11px] text-slate-400 mt-1">Login pengguna &amp; dapatkan Sanctum Bearer Token</p>
                         </div>
-                        <button onclick="testApi('POST', '/api/auth/login', {'email':'admin@sekolah.id', 'password':'password123'}, false)" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold transition">Test</button>
+                        <button onclick="testApi('POST', '/api/auth/login', {'email':'admin@siakad.ac.id', 'password':'password123'}, false)" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold transition">Test</button>
                     </div>
 
                     <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700 flex items-center justify-between">
@@ -103,7 +103,7 @@
                             <code class="text-slate-200">/api/auth/profile</code>
                             <p class="text-[11px] text-slate-400 mt-1">Perbarui nama dan email login akun mandiri</p>
                         </div>
-                        <button onclick="testApi('PUT', '/api/auth/profile', {'name':'Admin TU Update','email':'admin@sekolah.id'}, true)" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold transition">Test</button>
+                        <button onclick="testApi('PUT', '/api/auth/profile', {'name':'Admin TU Update','email':'admin@siakad.ac.id'}, true)" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold transition">Test</button>
                     </div>
 
                     <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700 flex items-center justify-between">
@@ -138,9 +138,9 @@
                         <div>
                             <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold font-mono mr-2">POST</span>
                             <code class="text-slate-200">/api/users</code>
-                            <p class="text-[11px] text-slate-400 mt-1">Admin membuat akun baru Guru atau Siswa</p>
+                            <p class="text-[11px] text-slate-400 mt-1">Admin membuat akun baru Dosen atau Mahasiswa</p>
                         </div>
-                        <button onclick="testApi('POST', '/api/users', {'name':'Guru Matematika Baru','email':'guru.matematika@sekolah.id','password':'password123','role':'guru','is_active':true}, true)" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg font-semibold transition">Test</button>
+                        <button onclick="testApi('POST', '/api/users', {'name':'Dosen Informatika Baru','email':'dosen.informatika@siakad.ac.id','password':'password123','role':'guru','is_active':true}, true)" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg font-semibold transition">Test</button>
                     </div>
                 </div>
             </div>
@@ -368,7 +368,7 @@
                 const res = await fetch('/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({ email: 'admin@sekolah.id', password: 'password123' })
+                    body: JSON.stringify({ email: 'admin@siakad.ac.id', password: 'password123' })
                 });
                 const data = await res.json();
                 if (data.data && data.data.token) {

@@ -157,7 +157,7 @@
                                 <h3 class="text-blue-600 text-[11px] font-bold uppercase tracking-wider mb-1">Metode Pembayaran</h3>
                                 <p class="text-xs font-bold text-blue-950 mt-1">BNI Virtual Account:</p>
                                 <p class="text-sm font-mono font-black text-blue-700 select-all">988-1234-{{ $siswa->nisn }}</p>
-                                <p class="text-[10px] text-blue-500 mt-0.5">atau melalui loket kasir sekolah</p>
+                                <p class="text-[10px] text-blue-500 mt-0.5">atau melalui loket kasir BAAK / Keuangan Kampus</p>
                             </div>
                         </div>
 
@@ -323,18 +323,18 @@
         
         <!-- Footer Info -->
         <div class="bg-slate-50 p-4 text-center text-slate-400 text-xs border-t border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-2">
-            <span>&copy; {{ date('Y') }} SMK Merdeka Belajar &bull; Layanan Akademik &amp; Keuangan Sekolah</span>
+            <span>&copy; {{ date('Y') }} Universitas SIAKAD Enterprise &bull; Layanan Akademik &amp; Keuangan Kampus</span>
             <div class="flex items-center gap-3">
                 <a href="{{ url('/api/docs') }}" target="_blank" class="hover:text-slate-600 transition">Dokumentasi API</a>
                 <span>&bull;</span>
-                <a href="{{ route('login') }}" class="hover:text-blue-600 font-semibold transition">Area Pegawai</a>
+                <a href="{{ route('login') }}" class="hover:text-blue-600 font-semibold transition">Area Civitas / BAAK</a>
             </div>
         </div>
     </div>
 
     <!-- Bottom Footer -->
     <div class="text-xs text-slate-400 text-center pb-4">
-        SIAKAD &amp; SPP Sekolah Pro &bull; Laravel Monolith &amp; Sanctum REST API
+        SIAKAD &amp; UKT Enterprise Pro &bull; Laravel Monolith &amp; Sanctum REST API
     </div>
 
     <script>

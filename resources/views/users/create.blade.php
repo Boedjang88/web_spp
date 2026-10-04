@@ -105,7 +105,7 @@
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                         Alamat Email / Akun Login <span class="text-rose-500">*</span>
                     </label>
-                    <input type="email" name="email" id="emailInput" value="{{ old('email') }}" placeholder="cth: fauzi@sekolah.id" required
+                    <input type="email" name="email" id="emailInput" value="{{ old('email') }}" placeholder="cth: fauzi@siakad.ac.id" required
                         class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-white transition">
                     @error('email')
                         <p class="text-rose-500 text-[11px] mt-1">{{ $message }}</p>
@@ -187,7 +187,7 @@
         const opt = this.options[this.selectedIndex];
         if (opt.value) {
             if (opt.dataset.name) document.getElementById('nameInput').value = opt.dataset.name;
-            if (opt.dataset.nisn) document.getElementById('emailInput').value = opt.dataset.nisn + '@siswa.sekolah.id';
+            if (opt.dataset.nisn) document.getElementById('emailInput').value = opt.dataset.nisn + '@mahasiswa.siakad.ac.id';
         }
     });
 </script>
