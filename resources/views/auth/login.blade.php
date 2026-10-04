@@ -114,11 +114,140 @@
         </div>
     </div>
 
+    <!-- Floating Toast Notification Container -->
+    <div id="toastContainer" class="fixed top-4 right-4 z-50 flex flex-col gap-2.5 max-w-md w-auto sm:w-96 pointer-events-none"></div>
+
+    <!-- Global Modal Alert Dialog -->
+    <div id="alertModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/80 backdrop-blur-sm p-4 transition-opacity">
+        <div class="bg-zinc-900 border border-zinc-800 text-zinc-100 rounded-xl max-w-md w-full p-5 shadow-2xl space-y-4">
+            <div class="flex items-start justify-between gap-3">
+                <div class="flex items-center gap-2.5">
+                    <div id="modalIconContainer" class="w-8 h-8 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center font-mono font-bold text-xs shrink-0">
+                        !
+                    </div>
+                    <div>
+                        <h3 id="modalTitle" class="font-bold text-sm text-zinc-100">Notifikasi Otentikasi</h3>
+                        <span id="modalTypeBadge" class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">ALERT</span>
+                    </div>
+                </div>
+                <button type="button" onclick="closeAlertModal()" class="text-zinc-400 hover:text-zinc-200 text-sm font-mono">&times;</button>
+            </div>
+            <div id="modalBody" class="text-xs text-zinc-300 leading-relaxed font-sans border-y border-zinc-800 py-3 max-h-60 overflow-y-auto">
+                Pesan notifikasi sistem.
+            </div>
+            <div class="flex justify-end">
+                <button type="button" onclick="closeAlertModal()" class="px-4 py-2 bg-zinc-100 text-zinc-900 hover:bg-zinc-200 rounded-lg text-xs font-semibold font-mono transition">
+                    Tutup &bull; OK
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         function fillLogin(email) {
             document.getElementById('email').value = email;
             document.getElementById('password').value = 'password123';
         }
+
+        function showAlertModal(title, message, type = 'error') {
+            const modal = document.getElementById('alertModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            const modalIconContainer = document.getElementById('modalIconContainer');
+            const modalTypeBadge = document.getElementById('modalTypeBadge');
+
+            if (!modal) return;
+
+            modalTitle.textContent = title || (type === 'error' ? 'Otentikasi Gagal' : 'Informasi Portal');
+            modalBody.innerHTML = message;
+            modalTypeBadge.textContent = type.toUpperCase();
+
+            if (type === 'error') {
+                modalIconContainer.className = 'w-8 h-8 rounded-lg bg-rose-950/60 border border-rose-800 text-rose-400 flex items-center justify-center font-mono font-bold text-xs shrink-0';
+                modalIconContainer.textContent = '✕';
+            } else if (type === 'success') {
+                modalIconContainer.className = 'w-8 h-8 rounded-lg bg-emerald-950/60 border border-emerald-800 text-emerald-400 flex items-center justify-center font-mono font-bold text-xs shrink-0';
+                modalIconContainer.textContent = '✓';
+            } else {
+                modalIconContainer.className = 'w-8 h-8 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-300 flex items-center justify-center font-mono font-bold text-xs shrink-0';
+                modalIconContainer.textContent = '!';
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeAlertModal() {
+            const modal = document.getElementById('alertModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function showToast(type, title, message) {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            toast.className = `pointer-events-auto p-4 rounded-xl shadow-2xl border flex items-start gap-3 bg-zinc-900 text-zinc-100 border-zinc-800 transition backdrop-blur-md`;
+
+            let iconSymbol = type === 'error' ? '✕' : (type === 'success' ? '✓' : '!');
+            let badgeBg = type === 'error' ? 'bg-rose-950/60 text-rose-300 border-rose-800' : (type === 'success' ? 'bg-emerald-950/60 text-emerald-300 border-emerald-800' : 'bg-zinc-800 text-zinc-300 border-zinc-700');
+
+            toast.innerHTML = `
+                <div class="w-7 h-7 rounded-lg ${badgeBg} border flex items-center justify-center font-mono text-xs font-bold shrink-0">
+                    ${iconSymbol}
+                </div>
+                <div class="flex-1 min-w-0 font-sans">
+                    <div class="font-bold text-xs text-zinc-100">${title}</div>
+                    <div class="text-[11px] text-zinc-400 mt-0.5 leading-relaxed break-words">${message}</div>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-zinc-400 hover:text-zinc-200 text-xs p-1 font-mono">&times;</button>
+            `;
+
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 5000);
+        }
+
+        // Double-posting prevention with loading indicator
+        document.addEventListener('submit', function(e) {
+            const form = e.target;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn && !submitBtn.disabled) {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+                const origText = submitBtn.innerHTML;
+                submitBtn.innerHTML = `
+                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 inline-block text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                    </svg>
+                    <span>Memproses...</span>
+                `;
+                setTimeout(() => {
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+                        submitBtn.innerHTML = origText;
+                    }
+                }, 10000);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            @if(session('error'))
+                showToast('error', 'Login Gagal', '{{ session('error') }}');
+                showAlertModal('Otentikasi Gagal', '{{ session('error') }}', 'error');
+            @endif
+
+            @if(session('success'))
+                showToast('success', 'Berhasil Logout', '{{ session('success') }}');
+            @endif
+
+            @if($errors->any())
+                const errorMessages = @json($errors->all());
+                const formattedList = errorMessages.map(msg => `&bull; ${msg}`).join('<br>');
+                showToast('error', 'Input Kredensial Tidak Valid', errorMessages[0]);
+                showAlertModal('Gagal Masuk Portal', `<div class="space-y-1"><strong>Kesalahan Input Kredensial:</strong><br>${formattedList}</div>`, 'error');
+            @endif
+        });
     </script>
 </body>
 </html>
