@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class MbkmKonversi extends Model
 {
@@ -38,5 +39,10 @@ class MbkmKonversi extends Model
     public function mataKuliah(): BelongsTo
     {
         return $this->belongsTo(MataKuliah::class, 'id_mk');
+    }
+
+    public function details(): HasMany
+    {
+        return $this->hasMany(MbkmKonversiDetail::class, 'id_mbkm_konversi');
     }
 }
