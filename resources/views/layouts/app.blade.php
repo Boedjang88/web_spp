@@ -622,6 +622,32 @@
         </button>
     </nav>
 
+    <!-- Global Modal Alert Dialog -->
+    <div id="alertModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/80 backdrop-blur-sm p-4 transition-opacity">
+        <div class="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 rounded-xl max-w-md w-full p-5 shadow-2xl space-y-4">
+            <div class="flex items-start justify-between gap-3">
+                <div class="flex items-center gap-2.5">
+                    <div id="modalIconContainer" class="w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center font-mono font-bold text-xs shrink-0">
+                        !
+                    </div>
+                    <div>
+                        <h3 id="modalTitle" class="font-bold text-sm text-zinc-900 dark:text-zinc-100">Notifikasi Sistem</h3>
+                        <span id="modalTypeBadge" class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">ALERT</span>
+                    </div>
+                </div>
+                <button type="button" onclick="closeAlertModal()" class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 text-sm font-mono">&times;</button>
+            </div>
+            <div id="modalBody" class="text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed font-sans border-y border-zinc-100 dark:border-zinc-800 py-3 max-h-60 overflow-y-auto">
+                Pesan notifikasi sistem.
+            </div>
+            <div class="flex justify-end">
+                <button type="button" onclick="closeAlertModal()" class="px-4 py-2 bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 rounded-lg text-xs font-semibold font-mono transition">
+                    Tutup &bull; OK
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Global Toast & Interactive Feedback System -->
     <script>
         function toggleMobileMenu() {
@@ -631,46 +657,75 @@
             }
         }
 
+        function showAlertModal(title, message, type = 'error') {
+            const modal = document.getElementById('alertModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            const modalIconContainer = document.getElementById('modalIconContainer');
+            const modalTypeBadge = document.getElementById('modalTypeBadge');
+
+            if (!modal) return;
+
+            modalTitle.textContent = title || (type === 'error' ? 'Gagal / Error' : 'Informasi');
+            modalBody.innerHTML = typeof message === 'string' ? message : JSON.stringify(message);
+            modalTypeBadge.textContent = type.toUpperCase();
+
+            if (type === 'error') {
+                modalIconContainer.className = 'w-8 h-8 rounded-lg bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-600 dark:text-rose-400 flex items-center justify-center font-mono font-bold text-xs shrink-0';
+                modalIconContainer.textContent = '✕';
+            } else if (type === 'success') {
+                modalIconContainer.className = 'w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-mono font-bold text-xs shrink-0';
+                modalIconContainer.textContent = '✓';
+            } else {
+                modalIconContainer.className = 'w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 flex items-center justify-center font-mono font-bold text-xs shrink-0';
+                modalIconContainer.textContent = '!';
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeAlertModal() {
+            const modal = document.getElementById('alertModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
         function showToast(type, title, message) {
             const container = document.getElementById('toastContainer');
             if (!container) return;
 
             const toast = document.createElement('div');
-            toast.className = `pointer-events-auto p-4 rounded-2xl shadow-toast border flex items-start gap-3 bg-white text-slate-900 animate-toast-in transition backdrop-blur-md bg-white/98`;
+            toast.className = `pointer-events-auto p-4 rounded-xl shadow-toast border flex items-start gap-3 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 border-zinc-200 dark:border-zinc-800 animate-toast-in transition backdrop-blur-md`;
 
-            let iconHtml = '<svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
-            let badgeBg = 'bg-slate-100 text-slate-700 border-slate-200';
+            let iconSymbol = '!';
+            let badgeBg = 'bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700';
 
             if (type === 'success') {
-                iconHtml = '<svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
-                badgeBg = 'bg-emerald-50 text-emerald-700 border-emerald-200';
+                iconSymbol = '✓';
+                badgeBg = 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800';
             } else if (type === 'error') {
-                iconHtml = '<svg class="w-4 h-4 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>';
-                badgeBg = 'bg-rose-50 text-rose-700 border-rose-200';
+                iconSymbol = '✕';
+                badgeBg = 'bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800';
             } else if (type === 'warning') {
-                iconHtml = '<svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>';
-                badgeBg = 'bg-amber-50 text-amber-700 border-amber-200';
-            } else if (type === 'info') {
-                iconHtml = '<svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
-                badgeBg = 'bg-brand-50 text-brand-700 border-brand-200';
+                iconSymbol = '▲';
+                badgeBg = 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800';
             }
 
             toast.innerHTML = `
-                <div class="w-8 h-8 rounded-xl ${badgeBg} border flex items-center justify-center text-sm flex-shrink-0">
-                    ${iconHtml}
+                <div class="w-7 h-7 rounded-lg ${badgeBg} border flex items-center justify-center font-mono text-xs font-bold shrink-0">
+                    ${iconSymbol}
                 </div>
-                <div class="flex-1 min-w-0">
-                    <div class="font-bold text-xs text-slate-900">${title}</div>
-                    <div class="text-[11px] text-slate-600 mt-0.5 leading-relaxed break-words">${message}</div>
+                <div class="flex-1 min-w-0 font-sans">
+                    <div class="font-bold text-xs text-zinc-900 dark:text-zinc-100">${title}</div>
+                    <div class="text-[11px] text-zinc-600 dark:text-zinc-400 mt-0.5 leading-relaxed break-words">${message}</div>
                 </div>
-                <button onclick="dismissToast(this.parentElement)" class="text-slate-400 hover:text-slate-600 text-xs p-1 rounded-lg" aria-label="Tutup">&times;</button>
+                <button onclick="dismissToast(this.parentElement)" class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 text-xs p-1 font-mono" aria-label="Tutup">&times;</button>
             `;
 
             container.appendChild(toast);
 
             setTimeout(() => {
                 dismissToast(toast);
-            }, 4500);
+            }, 5000);
         }
 
         function dismissToast(element) {
@@ -679,8 +734,30 @@
             element.classList.add('animate-toast-out');
             setTimeout(() => {
                 element.remove();
-            }, 250);
+            }, 200);
         }
+
+        // Global Fetch API Error Interceptor for Popups
+        const originalFetch = window.fetch;
+        window.fetch = async function(...args) {
+            try {
+                const response = await originalFetch(...args);
+                if (!response.ok) {
+                    const clonedRes = response.clone();
+                    try {
+                        const errorData = await clonedRes.json();
+                        const msg = errorData.message || errorData.error || 'Terjadi kesalahan HTTP ' + response.status;
+                        showToast('error', `Gagal (${response.status})`, msg);
+                    } catch (e) {
+                        showToast('error', `Gagal (${response.status})`, 'Permintaan server mengalami kesalahan.');
+                    }
+                }
+                return response;
+            } catch (err) {
+                showToast('error', 'Koneksi Terputus', 'Gagal terhubung ke server. Periksa jaringan Anda.');
+                throw err;
+            }
+        };
 
         // Double-posting prevention with loading state
         document.addEventListener('submit', function(e) {
@@ -689,6 +766,7 @@
             if (submitBtn && !submitBtn.disabled) {
                 submitBtn.disabled = true;
                 submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+                const origText = submitBtn.innerHTML;
                 submitBtn.innerHTML = `
                     <svg class="animate-spin -ml-1 mr-2 h-4 w-4 inline-block text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -696,6 +774,14 @@
                     </svg>
                     <span>Memproses...</span>
                 `;
+                // Re-enable button after 10s timeout if page doesn't reload
+                setTimeout(() => {
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+                        submitBtn.innerHTML = origText;
+                    }
+                }, 10000);
             }
         });
 
@@ -730,19 +816,23 @@
             updateThemeIcons();
 
             @if(session('success'))
-                showToast('success', 'Berhasil', '{{ session('success') }}');
+                showToast('success', 'Berhasil Ditindaklanjuti', '{{ session('success') }}');
             @endif
 
             @if(session('error'))
-                showToast('error', 'Perhatian', '{{ session('error') }}');
+                showToast('error', 'Operasi Gagal', '{{ session('error') }}');
+                showAlertModal('Operasi Gagal', '{{ session('error') }}', 'error');
             @endif
 
             @if(session('info'))
-                showToast('info', 'Informasi', '{{ session('info') }}');
+                showToast('info', 'Informasi Sistem', '{{ session('info') }}');
             @endif
 
             @if($errors->any())
-                showToast('error', 'Validasi Gagal', '{{ $errors->first() }}');
+                const errorMessages = @json($errors->all());
+                const formattedList = errorMessages.map(msg => `&bull; ${msg}`).join('<br>');
+                showToast('error', 'Validasi Form Gagal', errorMessages[0]);
+                showAlertModal('Gagal Submisi Form', `<div class="space-y-1"><strong>Daftar Kesalahan:</strong><br>${formattedList}</div>`, 'error');
             @endif
         });
     </script>
