@@ -25,31 +25,50 @@
         .font-mono { font-family: 'JetBrains Mono', monospace; }
 
         @keyframes toastSlideIn {
-            from { transform: translateY(-10px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            from { transform: translateY(-12px) scale(0.96); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
         }
         @keyframes toastFadeOut {
-            from { transform: translateY(0); opacity: 1; }
-            to { transform: translateY(-10px); opacity: 0; }
+            from { transform: translateY(0) scale(1); opacity: 1; }
+            to { transform: translateY(-12px) scale(0.96); opacity: 0; }
         }
         @keyframes modalEnter {
-            from { transform: scale(0.96) translateY(6px); opacity: 0; }
+            from { transform: scale(0.94) translateY(10px); opacity: 0; }
             to { transform: scale(1) translateY(0); opacity: 1; }
         }
-        @keyframes modalBackdrop {
+        @keyframes modalLeave {
+            from { transform: scale(1) translateY(0); opacity: 1; }
+            to { transform: scale(0.94) translateY(10px); opacity: 0; }
+        }
+        @keyframes modalBackdropEnter {
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        @keyframes modalBackdropLeave {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
         @keyframes cardFadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .animate-toast-in { animation: toastSlideIn 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-toast-in { animation: toastSlideIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .animate-toast-out { animation: toastFadeOut 0.15s ease-in forwards; }
         .animate-modal-enter { animation: modalEnter 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .animate-modal-backdrop { animation: modalBackdrop 0.15s ease-out forwards; }
+        .animate-modal-leave { animation: modalLeave 0.15s ease-in forwards; }
+        .animate-modal-backdrop { animation: modalBackdropEnter 0.2s ease-out forwards; }
+        .animate-backdrop-leave { animation: modalBackdropLeave 0.15s ease-in forwards; }
         .animate-card-in { animation: cardFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        /* Global Fluid Micro-Interactions */
+        a, button, input, select, textarea, [role="button"] {
+            transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease, transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        button:active, a.btn:active, [role="button"]:active {
+            transform: scale(0.97);
+        }
     </style>
 </head>
 <body class="bg-zinc-950 min-h-screen flex items-center justify-center p-4 antialiased">
@@ -200,12 +219,32 @@
                 modalIconContainer.textContent = '!';
             }
 
-            modal.classList.remove('hidden');
+            const dialogBox = modal.querySelector('div');
+            modal.classList.remove('hidden', 'animate-backdrop-leave');
+            modal.classList.add('animate-modal-backdrop');
+            if (dialogBox) {
+                dialogBox.classList.remove('animate-modal-leave');
+                dialogBox.classList.add('animate-modal-enter');
+            }
         }
 
         function closeAlertModal() {
             const modal = document.getElementById('alertModal');
-            if (modal) modal.classList.add('hidden');
+            if (!modal || modal.classList.contains('hidden')) return;
+
+            const dialogBox = modal.querySelector('div');
+            modal.classList.remove('animate-modal-backdrop');
+            modal.classList.add('animate-backdrop-leave');
+            if (dialogBox) {
+                dialogBox.classList.remove('animate-modal-enter');
+                dialogBox.classList.add('animate-modal-leave');
+            }
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('animate-backdrop-leave');
+                if (dialogBox) dialogBox.classList.remove('animate-modal-leave');
+            }, 150);
         }
 
         function showToast(type, title, message) {
