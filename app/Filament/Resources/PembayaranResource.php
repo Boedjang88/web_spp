@@ -26,34 +26,25 @@ class PembayaranResource extends Resource
     protected static ?string $model = Pembayaran::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
-    protected static ?string $navigationLabel = 'Transaksi Pembayaran';
-    
-    // BIAR RAPI DI SIDEBAR (Grup Sendiri biar mencolok)
-    protected static ?string $navigationGroup = 'Keuangan';
+    protected static ?string $navigationLabel = 'Transaksi Pembayaran UKT';
+    protected static ?string $navigationGroup = 'Keuangan & UKT';
 
-    // ... code sebelumnya
-
-    // Cuma user dengan role 'admin' yang boleh hapus pembayaran
     public static function canDelete(Model $record): bool
     {
-        return auth()->user()->role === 'admin';
+        return auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin';
     }
     
-    // Cuma admin yang bisa hapus massal
     public static function canDeleteAny(): bool
     {
-        return auth()->user()->role === 'admin';
+        return auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin';
     }
-
-    // ... sisa code form dan table
-
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Select::make('id_petugas')
-                    ->label('Petugas Penerima')
+                    ->label('Petugas Verifikasi')
                     ->relationship('petugas', 'name')
                     ->default(auth()->id())
                     ->searchable()
@@ -61,7 +52,7 @@ class PembayaranResource extends Resource
                     ->required(),
 
                 Select::make('id_siswa')
-                    ->label('Siswa')
+                    ->label('Mahasiswa')
                     ->options(Siswa::all()->pluck('nama', 'id'))
                     ->searchable()
                     ->preload()
@@ -92,7 +83,7 @@ class PembayaranResource extends Resource
                 TextInput::make('tahun_dibayar')->numeric()->required()->default(date('Y'))->maxLength(4),
 
                 Select::make('id_spp')
-                    ->label('Tarif SPP')
+                    ->label('Tarif UKT')
                     ->options(Spp::all()->pluck('tahun', 'id'))
                     ->disabled()
                     ->dehydrated()
@@ -106,40 +97,38 @@ class PembayaranResource extends Resource
     {
         return $table
             ->headerActions([
-                // === TOMBOL EXPORT EXCEL (FITUR BARU) ===
                 ExportAction::make()
-                    ->label('Export Excel')
-                    ->color('success') // Warna Hijau
+                    ->label('Export Excel UKT')
+                    ->color('success')
                     ->icon('heroicon-o-document-arrow-down')
                     ->exports([
                         ExcelExport::make()
-                            ->fromTable() // Ambil data sesuai filter tabel saat ini
-                            ->withFilename('Laporan_Pembayaran_' . date('Y-m-d'))
+                            ->fromTable()
+                            ->withFilename('Laporan_Pembayaran_UKT_' . date('Y-m-d'))
                             ->withColumns([
                                 Column::make('tgl_bayar')->heading('Tanggal'),
-                                Column::make('siswa.nama')->heading('Nama Siswa'),
-                                Column::make('siswa.kelas.nama_kelas')->heading('Kelas'),
+                                Column::make('siswa.nama')->heading('Nama Mahasiswa'),
+                                Column::make('siswa.kelas.nama_kelas')->heading('Kelas Kuliah'),
                                 Column::make('bulan_dibayar')->heading('Bulan'),
                                 Column::make('tahun_dibayar')->heading('Tahun'),
-                                Column::make('jumlah_bayar')->heading('Nominal'),
+                                Column::make('jumlah_bayar')->heading('Nominal UKT'),
                                 Column::make('petugas.name')->heading('Petugas'),
                             ]),
                     ]),
             ])
             ->columns([
                 TextColumn::make('petugas.name')->label('Petugas'),
-                TextColumn::make('siswa.nama')->label('Siswa')->searchable()->sortable(),
+                TextColumn::make('siswa.nama')->label('Mahasiswa')->searchable()->sortable(),
                 TextColumn::make('bulan_dibayar')->label('Bulan'),
                 TextColumn::make('tahun_dibayar')->label('Tahun'),
-                TextColumn::make('jumlah_bayar')->money('IDR'),
+                TextColumn::make('jumlah_bayar')->money('IDR')->label('Nominal UKT'),
                 TextColumn::make('tgl_bayar')->date('d M Y'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 
-                // Tombol Cetak Kwitansi (yg sebelumnya udah kita buat)
-                \Filament\Tables\Actions\Action::make('cetak')
-                    ->label('Cetak')
+                Action::make('cetak')
+                    ->label('Cetak Kwitansi')
                     ->icon('heroicon-o-printer')
                     ->color('info')
                     ->url(fn (Pembayaran $record) => route('cetak.kwitansi', $record->id))

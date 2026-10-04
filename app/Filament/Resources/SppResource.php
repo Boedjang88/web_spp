@@ -16,10 +16,9 @@ class SppResource extends Resource
 {
     protected static ?string $model = Spp::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-currency-dollar'; // Icon Dollar
-    
-    // BIAR RAPI DI SIDEBAR
-    protected static ?string $navigationGroup = 'Data Master';
+    protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
+    protected static ?string $navigationLabel = 'Tarif UKT (Uang Kuliah Tunggal)';
+    protected static ?string $navigationGroup = 'Keuangan & UKT';
 
     public static function form(Form $form): Form
     {
@@ -28,13 +27,13 @@ class SppResource extends Resource
                 TextInput::make('tahun')
                     ->numeric()
                     ->required()
-                    ->label('Tahun Ajaran')
+                    ->label('Tahun Akademik')
                     ->maxLength(4),
                 
                 TextInput::make('nominal')
                     ->numeric()
                     ->required()
-                    ->label('Nominal SPP')
+                    ->label('Nominal UKT / Semester')
                     ->prefix('Rp'),
             ]);
     }
@@ -43,8 +42,13 @@ class SppResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('tahun')->sortable(),
-                TextColumn::make('nominal')->money('IDR')->sortable(),
+                TextColumn::make('tahun')->label('Tahun Akademik')->sortable(),
+                TextColumn::make('nominal')->label('Nominal UKT')->money('IDR')->sortable(),
+                TextColumn::make('siswas_count')
+                    ->counts('siswas')
+                    ->label('Mahasiswa Aktif')
+                    ->badge()
+                    ->color('info'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
