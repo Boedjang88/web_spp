@@ -16,4 +16,9 @@ class Kelas extends Model
         'nama_kelas',
         'kompetensi_keahlian'
     ];
+
+    public function siswas(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Siswa::class, 'id_kelas');
+    }
 }

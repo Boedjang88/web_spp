@@ -1,45 +1,59 @@
 <?php
-use App\Http\Controllers\CetakKwitansiController;
-use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\CekTagihanController;
-use Illuminate\Support\Facades\Artisan;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\Web\AuthController;
+use App\Http\Controllers\Web\DashboardController;
+use App\Http\Controllers\Web\KelasController;
+use App\Http\Controllers\Web\PembayaranController;
+use App\Http\Controllers\Web\SiswaController;
+use App\Http\Controllers\Web\SppController;
+use App\Http\Controllers\Api\ApiDocsController;
+use App\Http\Controllers\Web\LaporanController;
+use Illuminate\Support\Facades\Route;
 
+/*
+|--------------------------------------------------------------------------
+| Web Routes - Monolith Full-Stack SPP (Blade & Session Auth)
+|--------------------------------------------------------------------------
+*/
 
-// Halaman Utama (Cek Tagihan)
+// --- Public Routes: Cek Tagihan & Interactive API Docs ---
 Route::get('/', [CekTagihanController::class, 'index'])->name('cek.index');
 Route::post('/cek-tagihan', [CekTagihanController::class, 'search'])->name('cek.search');
+Route::get('/api/docs', [ApiDocsController::class, 'index'])->name('api.docs');
 
-// Route Cetak Kwitansi (yang tadi udah dibuat)
-Route::middleware('auth')->get('/cetak-kwitansi/{id}', CetakKwitansiController::class)->name('cetak.kwitansi');
-
-// --- AREA DARURAT (HAPUS NANTI SETELAH DEPLOY) ---
-
-
-// 1. Jalur buat Migrasi Database
-Route::get('/setup-database', function() {
-    // Migrasi tabel
-    Artisan::call('migrate --force');
-    // Link storage gambar
-    Artisan::call('storage:link');
-    
-    return '✅ Database berhasil dimigrasi & Storage terhubung!';
+// --- Guest Authentication Routes ---
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 });
 
-// 2. Jalur buat Bikin Admin
-Route::get('/setup-admin', function() {
-    // Cek dulu udah ada user belum biar gak duplikat
-    if (User::where('email', 'admin@sekolah.id')->exists()) {
-        return '⚠️ User admin sudah ada bos!';
-    }
+// --- Authenticated Web Routes (Admin & Petugas) ---
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    User::create([
-        'name' => 'Super Admin',
-        'email' => 'admin@sekolah.id',
-        'password' => Hash::make('password123'), // Password default
-        'role' => 'admin',
-    ]);
-    
-    return '✅ User Admin BERHASIL dibuat! Login: admin@sekolah.id | Pass: password123';
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Web CRUD: Kelas
+    Route::resource('web/kelas', KelasController::class)->names('web.kelas');
+
+    // Web CRUD: SPP
+    Route::resource('web/spp', SppController::class)->names('web.spp');
+
+    // Web CRUD: Siswa
+    Route::get('web/siswa/{id}/surat-tagihan', [SiswaController::class, 'suratTagihan'])->name('web.siswa.suratTagihan');
+    Route::resource('web/siswa', SiswaController::class)->names('web.siswa');
+
+    // Web CRUD & Cetak: Pembayaran
+    Route::get('web/pembayaran/{id}/cetak', [PembayaranController::class, 'cetakKwitansi'])->name('web.pembayaran.cetak');
+    Route::resource('web/pembayaran', PembayaranController::class)->names('web.pembayaran');
+
+    // Laporan Keuangan SPP & Export
+    Route::get('web/laporan', [LaporanController::class, 'index'])->name('web.laporan.index');
+    Route::get('web/laporan/cetak', [LaporanController::class, 'cetak'])->name('web.laporan.cetak');
+    Route::get('web/laporan/export-csv', [LaporanController::class, 'exportCsv'])->name('web.laporan.exportCsv');
+
+    // Audit Trail: Log Aktivitas Sistem
+    Route::get('web/activity-logs', [\App\Http\Controllers\Web\ActivityLogController::class, 'index'])->name('web.activity-logs.index');
 });

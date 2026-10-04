@@ -8,9 +8,10 @@
         "php": "^8.2",
         "filament/filament": "^3.2",
         "laravel/framework": "^11.0",
+        "laravel/sanctum": "^4.3",
         "laravel/tinker": "^2.9",
-        "pxlrbt/filament-excel": "^2.3",
-        "maatwebsite/excel": "^3.1.55"
+        "maatwebsite/excel": "^3.1.55",
+        "pxlrbt/filament-excel": "^2.3"
     },
     "autoload": {
         "psr-4": {
@@ -67,5 +68,10 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "require-dev": {
+        "fakerphp/faker": "^1.24",
+        "mockery/mockery": "^1.6",
+        "phpunit/phpunit": "^10.5"
+    }
 }

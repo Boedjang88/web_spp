@@ -17,4 +17,14 @@ class Spp extends Model
         'tahun',
         'nominal',
     ];
+
+    public function siswas(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Siswa::class, 'id_spp');
+    }
+
+    public function pembayarans(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Pembayaran::class, 'id_spp');
+    }
 }

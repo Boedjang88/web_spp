@@ -1,0 +1,76 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Models\Siswa;
+use Illuminate\Http\JsonResponse;
+
+class PortalController extends BaseApiController
+{
+    /**
+     * Public endpoint to check student SPP status & invoice by NISN
+     */
+    public function cekSiswa(string $nisn): JsonResponse
+    {
+        $siswa = Siswa::with(['kelas', 'spp', 'pembayarans.petugas'])
+            ->where('nisn', $nisn)
+            ->first();
+
+        if (!$siswa) {
+            return $this->sendError(
+                'Data siswa dengan NISN tersebut tidak ditemukan.',
+                ['nisn' => ['NISN tidak terdaftar dalam basis data sekolah.']],
+                404
+            );
+        }
+
+        $infoTunggakan = $siswa->info_tunggakan;
+
+        $response = [
+            'siswa' => [
+                'id' => $siswa->id,
+                'nisn' => $siswa->nisn,
+                'nis' => $siswa->nis,
+                'nama' => $siswa->nama,
+                'alamat' => $siswa->alamat,
+                'no_telp' => $siswa->no_telp,
+                'kelas' => [
+                    'id' => $siswa->kelas?->id,
+                    'nama_kelas' => $siswa->kelas?->nama_kelas,
+                    'kompetensi_keahlian' => $siswa->kelas?->kompetensi_keahlian,
+                ],
+                'spp' => [
+                    'id' => $siswa->spp?->id,
+                    'tahun' => $siswa->spp?->tahun,
+                    'nominal' => $siswa->spp?->nominal,
+                    'formatted_nominal' => 'Rp ' . number_format($siswa->spp?->nominal ?? 0, 0, ',', '.'),
+                ],
+            ],
+            'ringkasan_keuangan' => [
+                'status_lunas' => $infoTunggakan['total_bulan'] === 0,
+                'total_bulan_tunggakan' => $infoTunggakan['total_bulan'],
+                'total_rupiah_tunggakan' => $infoTunggakan['total_rupiah'],
+                'formatted_tunggakan' => 'Rp ' . number_format($infoTunggakan['total_rupiah'], 0, ',', '.'),
+                'bulan_nunggak' => $infoTunggakan['list_bulan'],
+                'list_bulan' => $infoTunggakan['list_bulan'],
+                'total_terbayar_rupiah' => (int) $siswa->pembayarans->sum('jumlah_bayar'),
+                'formatted_total_terbayar' => 'Rp ' . number_format($siswa->pembayarans->sum('jumlah_bayar'), 0, ',', '.'),
+                'total_transaksi' => $siswa->pembayarans->count(),
+            ],
+            'riwayat_pembayaran' => $siswa->pembayarans->sortByDesc('tgl_bayar')->values()->map(function ($p) {
+                return [
+                    'id' => $p->id,
+                    'nomor_kwitansi' => 'KWT-' . str_pad((string) $p->id, 6, '0', STR_PAD_LEFT),
+                    'tgl_bayar' => $p->tgl_bayar,
+                    'bulan_dibayar' => $p->bulan_dibayar,
+                    'tahun_dibayar' => $p->tahun_dibayar,
+                    'jumlah_bayar' => (int) $p->jumlah_bayar,
+                    'formatted_jumlah_bayar' => 'Rp ' . number_format($p->jumlah_bayar, 0, ',', '.'),
+                    'petugas' => $p->petugas?->name ?? 'System',
+                ];
+            }),
+        ];
+
+        return $this->sendResponse($response, 'Data tagihan dan riwayat pembayaran siswa berhasil ditemukan.');
+    }
+}

@@ -1,0 +1,832 @@
+{
+  "info": {
+    "_postman_id": "web-spp-flagship-pro-collection",
+    "name": "Web SPP Flagship Pro - RESTful API Documentation (Sanctum)",
+    "description": "Dokumentasi RESTful API Aplikasi Pembayaran SPP Sekolah berbasis Laravel 11 & Laravel Sanctum untuk Ujian Akhir Semester (UAS). Dilengkapi fitur Multi-Bulan Batch Payment, Kalkulasi Tunggakan Dinamis, Kwitansi Terbilang, dan Rekapitulasi Laporan.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearer_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "0. Portal Mandiri Siswa (Public)",
+      "item": [
+        {
+          "name": "Cek Tagihan & Riwayat Siswa (NISN)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/portal/siswa/0051234567",
+              "host": ["{{base_url}}"],
+              "path": ["portal", "siswa", "0051234567"]
+            },
+            "description": "Endpoint publik untuk siswa & wali murid mengecek profil, tarif SPP, status lunas/tunggakan, dan riwayat kwitansi secara mandiri menggunakan 10 digit NISN tanpa memerlukan login token."
+          }
+        }
+      ]
+    },
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "Login (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.data && jsonData.data.token) {",
+                  "        pm.environment.set(\"bearer_token\", jsonData.data.token);",
+                  "        console.log(\"Token auto-saved to environment:\", jsonData.data.token);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@sekolah.id\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login menggunakan akun Administrator untuk memperoleh Sanctum Bearer Token."
+          }
+        },
+        {
+          "name": "Login (Petugas)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.data && jsonData.data.token) {",
+                  "        pm.environment.set(\"bearer_token\", jsonData.data.token);",
+                  "        console.log(\"Token auto-saved:\", jsonData.data.token);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"petugas@sekolah.id\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login menggunakan akun Petugas Loket."
+          }
+        },
+        {
+          "name": "Register User Baru",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Petugas Baru\",\n  \"email\": \"petugas2@sekolah.id\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\",\n  \"role\": \"petugas\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "Registrasi akun pengguna baru."
+          }
+        },
+        {
+          "name": "Get Profile (Me)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "me"]
+            },
+            "description": "Mendapatkan data user yang sedang login."
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "logout"]
+            },
+            "description": "Mencabut (revoke) token autentikasi Sanctum saat ini."
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Dashboard & Laporan",
+      "item": [
+        {
+          "name": "Ringkasan Statistik Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/dashboard/summary",
+              "host": ["{{base_url}}"],
+              "path": ["dashboard", "summary"]
+            },
+            "description": "Menampilkan ringkasan data total siswa, kelas, tarif SPP, pemasukan hari ini, bulan ini, dan 5 transaksi terbaru."
+          }
+        },
+        {
+          "name": "Rekapitulasi Laporan Keuangan",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/laporan/rekap?start_date=&end_date=&id_kelas=&id_petugas=",
+              "host": ["{{base_url}}"],
+              "path": ["laporan", "rekap"],
+              "query": [
+                {
+                  "key": "start_date",
+                  "value": "",
+                  "description": "Filter dari tanggal (YYYY-MM-DD)"
+                },
+                {
+                  "key": "end_date",
+                  "value": "",
+                  "description": "Filter sampai tanggal (YYYY-MM-DD)"
+                },
+                {
+                  "key": "id_kelas",
+                  "value": "",
+                  "description": "Filter per ID kelas"
+                },
+                {
+                  "key": "id_petugas",
+            "description": "Rekapitulasi total penerimaan uang SPP dan daftar transaksi sesuai filter rentang tanggal."
+          }
+        },
+        {
+          "name": "Log Aktivitas Sistem (Audit Trail)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/activity-logs?action=&search=",
+              "host": ["{{base_url}}"],
+              "path": ["activity-logs"],
+              "query": [
+                {
+                  "key": "action",
+                  "value": "",
+                  "description": "Filter jenis aksi (LOGIN_API, PEMBAYARAN_CREATE, dll)"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Cari deskripsi, nama user, atau IP"
+                }
+              ]
+            },
+            "description": "Mendapatkan daftar log aktivitas, riwayat login, dan rekam jejak aksi pengguna (Audit Trail) terproteksi Sanctum."
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Master Data: Kelas",
+      "item": [
+        {
+          "name": "List Kelas (Paginated & Search)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/kelas?search=",
+              "host": ["{{base_url}}"],
+              "path": ["kelas"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Cari berdasarkan nama kelas atau keahlian"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Tambah Kelas Baru",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama_kelas\": \"XII SIJA 1\",\n  \"kompetensi_keahlian\": \"Sistem Informatika Jaringan dan Aplikasi\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/kelas",
+              "host": ["{{base_url}}"],
+              "path": ["kelas"]
+            }
+          }
+        },
+        {
+          "name": "Detail Kelas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/kelas/1",
+              "host": ["{{base_url}}"],
+              "path": ["kelas", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Data Kelas",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama_kelas\": \"XII RPL 1 Unggulan\",\n  \"kompetensi_keahlian\": \"Rekayasa Perangkat Lunak & AI\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/kelas/1",
+              "host": ["{{base_url}}"],
+              "path": ["kelas", "1"]
+            }
+          }
+        },
+        {
+          "name": "Hapus Kelas",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/kelas/4",
+              "host": ["{{base_url}}"],
+              "path": ["kelas", "4"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Master Data: SPP",
+      "item": [
+        {
+          "name": "List Tarif SPP",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/spp",
+              "host": ["{{base_url}}"],
+              "path": ["spp"]
+            }
+          }
+        },
+        {
+          "name": "Tambah Tarif SPP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tahun\": 2027,\n  \"nominal\": 400000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/spp",
+              "host": ["{{base_url}}"],
+              "path": ["spp"]
+            }
+          }
+        },
+        {
+          "name": "Detail Tarif SPP",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/spp/1",
+              "host": ["{{base_url}}"],
+              "path": ["spp", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Tarif SPP",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nominal\": 275000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/spp/1",
+              "host": ["{{base_url}}"],
+              "path": ["spp", "1"]
+            }
+          }
+        },
+        {
+          "name": "Hapus Tarif SPP",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/spp/3",
+              "host": ["{{base_url}}"],
+              "path": ["spp", "3"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Data Siswa & Tagihan",
+      "item": [
+        {
+          "name": "List Siswa (Search & Filter)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/siswa?search=&id_kelas=",
+              "host": ["{{base_url}}"],
+              "path": ["siswa"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Cari berdasarkan Nama, NISN, atau NIS"
+                },
+                {
+                  "key": "id_kelas",
+                  "value": "",
+                  "description": "Filter berdasarkan ID Kelas"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Tambah Siswa Baru",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nisn\": \"0059998877\",\n  \"nis\": \"2122099\",\n  \"nama\": \"Rian Pratama\",\n  \"id_kelas\": 1,\n  \"alamat\": \"Jl. Anggrek No. 10, Bandung\",\n  \"no_telp\": \"081399887766\",\n  \"id_spp\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/siswa",
+              "host": ["{{base_url}}"],
+              "path": ["siswa"]
+            }
+          }
+        },
+        {
+          "name": "Detail Siswa (dengan Relasi & Riwayat)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/siswa/1",
+              "host": ["{{base_url}}"],
+              "path": ["siswa", "1"]
+            }
+          }
+        },
+        {
+          "name": "Cek Tagihan & Tunggakan Siswa",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "description": "Menghitung daftar bulan yang belum dibayar serta total nominal tunggakan SPP siswa."
+          }
+        },
+        {
+          "name": "Generate Surat Tagihan Resmi Siswa",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/siswa/1/surat-tagihan",
+              "host": ["{{base_url}}"],
+              "path": ["siswa", "1", "surat-tagihan"]
+            },
+            "description": "Menghasilkan data terstruktur untuk surat tagihan resmi (KOP sekolah, nomor surat, nominal tunggakan, nomor virtual account)."
+          }
+        },
+        {
+          "name": "Update Data Siswa",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"Ahmad Fauzi Pratama\",\n  \"no_telp\": \"081234567899\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/siswa/1",
+              "host": ["{{base_url}}"],
+              "path": ["siswa", "1"]
+            }
+          }
+        },
+        {
+          "name": "Hapus Siswa",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/siswa/3",
+              "host": ["{{base_url}}"],
+              "path": ["siswa", "3"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Transaksi Pembayaran & Kwitansi",
+      "item": [
+        {
+          "name": "List Riwayat Transaksi",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/pembayaran?search=&bulan_dibayar=&tahun_dibayar=",
+              "host": ["{{base_url}}"],
+              "path": ["pembayaran"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Cari berdasarkan nama/NISN siswa"
+                },
+                {
+                  "key": "bulan_dibayar",
+                  "value": "",
+                  "description": "Filter nama bulan"
+                },
+                {
+                  "key": "tahun_dibayar",
+                  "value": "",
+                  "description": "Filter tahun bayar"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Catat Transaksi Pembayaran (Single Bulan)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_siswa\": 1,\n  \"tgl_bayar\": \"2025-09-10\",\n  \"bulan_dibayar\": \"September\",\n  \"tahun_dibayar\": 2025\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/pembayaran",
+              "host": ["{{base_url}}"],
+              "path": ["pembayaran"]
+            },
+            "description": "Mencatat pembayaran SPP bulanan siswa. Petugas otomatis dicatat dari token login."
+          }
+        },
+        {
+          "name": "Catat Pembayaran Multi-Bulan (Batch Payment)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_siswa\": 1,\n  \"bulan_list\": [\"Oktober\", \"November\", \"Desember\"],\n  \"tahun_dibayar\": 2025,\n  \"tgl_bayar\": \"2025-10-05\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/pembayaran/batch",
+              "host": ["{{base_url}}"],
+              "path": ["pembayaran", "batch"]
+            },
+            "description": "Mencatat transaksi pembayaran SPP untuk beberapa bulan sekaligus dalam 1 kali request."
+          }
+        },
+        {
+          "name": "Detail Transaksi Pembayaran",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/pembayaran/1",
+              "host": ["{{base_url}}"],
+              "path": ["pembayaran", "1"]
+            }
+          }
+        },
+        {
+          "name": "Cetak Kwitansi Pembayaran (JSON)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/pembayaran/1/kwitansi",
+              "host": ["{{base_url}}"],
+              "path": ["pembayaran", "1", "kwitansi"]
+            },
+            "description": "Mendapatkan payload cetak kwitansi digital resmi lengkap dengan nomor kwitansi dan kalimat terbilang rupiah."
+          }
+        },
+        {
+          "name": "Update Data Pembayaran",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tgl_bayar\": \"2025-07-11\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/pembayaran/1",
+              "host": ["{{base_url}}"],
+              "path": ["pembayaran", "1"]
+            }
+          }
+        },
+        {
+          "name": "Hapus / Batalkan Transaksi Pembayaran",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/pembayaran/3",
+              "host": ["{{base_url}}"],
+              "path": ["pembayaran", "3"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
