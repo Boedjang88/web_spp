@@ -25,10 +25,12 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// --- Public Routes: Portal Siswa Mandiri & Interactive API Docs ---
+// --- Public Routes: Portal Siswa Mandiri, Employer Feedback & Interactive API Docs ---
 Route::get('/', [CekTagihanController::class, 'index'])->name('cek.index');
 Route::post('/cek-tagihan', [CekTagihanController::class, 'search'])->name('cek.search');
 Route::get('/api/docs', [ApiDocsController::class, 'index'])->name('api.docs');
+Route::get('/survey/employer/{token}', [\App\Http\Controllers\Web\EmployerFeedbackPortalController::class, 'show'])->name('employer.feedback.show');
+Route::put('/survey/employer/{token}', [\App\Http\Controllers\Web\EmployerFeedbackPortalController::class, 'update'])->name('employer.feedback.update');
 
 // --- Guest Authentication Routes ---
 Route::middleware('guest')->group(function () {
@@ -47,6 +49,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::put('/profile', [ProfileController::class, 'updateProfile'])->name('profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+
+    // --- Next-Gen Smart KRS Portal ---
+    Route::get('siakad/krs', [\App\Http\Controllers\Web\SmartKrsController::class, 'index'])->name('siakad.krs.index');
+    Route::post('siakad/krs', [\App\Http\Controllers\Web\SmartKrsController::class, 'store'])->name('siakad.krs.store');
+    Route::delete('siakad/krs/{id}', [\App\Http\Controllers\Web\SmartKrsController::class, 'destroy'])->name('siakad.krs.destroy');
+    Route::get('siakad/analytics/performance', function () {
+        $siswa = auth()->user()->siswa;
+        return view('siakad.analytics.performance', compact('siswa'));
+    })->name('siakad.analytics.performance');
 
     // --- Super Admin & Admin TU Only: User Management ---
     Route::middleware('role:superadmin,admin')->group(function () {
@@ -76,4 +87,16 @@ Route::middleware('auth')->group(function () {
     Route::get('web/siswa/{id}/surat-tagihan', [SiswaController::class, 'suratTagihan'])->name('web.siswa.suratTagihan');
     Route::get('web/siswa/{id}/kartu-ujian', [SiswaController::class, 'kartuUjian'])->name('web.siswa.kartuUjian');
     Route::get('web/pembayaran/{id}/cetak', [PembayaranController::class, 'cetakKwitansi'])->name('web.pembayaran.cetak');
+
+    // --- Enterprise Print Endpoints: SKPI & Digital BAP ---
+    Route::get('siakad/skpi/print', function () {
+        $service = app(\App\Services\Skpi\SkpiService::class);
+        $skpi = $service->generateBilingualSupplement(auth()->user()->id_siswa ?? 1);
+        return view('siakad.skpi.print', compact('skpi'));
+    })->name('siakad.skpi.print');
+
+    Route::get('siakad/bap/{id}/print', function ($id) {
+        $bap = \App\Models\BapPerkuliahan::with(['kelasKuliah.mataKuliah', 'dosen', 'ruangan'])->findOrFail($id);
+        return view('siakad.bap.print', compact('bap'));
+    })->name('siakad.bap.print');
 });

@@ -29,6 +29,9 @@ Route::prefix('auth')->group(function () {
 });
 Route::get('/portal/siswa/{nisn}', [PortalController::class, 'cekSiswa'])->name('api.portal.siswa');
 
+// Real-time Bank Host-to-Host (H2H) Webhook
+Route::post('/h2h/webhook', [\App\Http\Controllers\Api\H2hWebhookController::class, 'callback'])->name('api.h2h.webhook');
+
 // --- Protected Routes (Requires Bearer Token) ---
 Route::middleware('auth:sanctum')->group(function () {
     
@@ -45,6 +48,21 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Dashboard & Metrics
     Route::get('/dashboard/summary', [DashboardController::class, 'summary'])->name('api.dashboard.summary');
+
+    // --- Smart KRS Registration (Pessimistic Locking & SKS Caps) ---
+    Route::get('/krs', [\App\Http\Controllers\Api\SmartKrsController::class, 'index'])->name('api.krs.index');
+    Route::post('/krs', [\App\Http\Controllers\Api\SmartKrsController::class, 'store'])->name('api.krs.store');
+    Route::delete('/krs/{id}', [\App\Http\Controllers\Api\SmartKrsController::class, 'destroy'])->name('api.krs.destroy');
+
+    // --- Geo-fenced QR Attendance ---
+    Route::post('/presensi/qr-session/{idBap}', [\App\Http\Controllers\Api\GeoAttendanceController::class, 'generateSessionToken'])->name('api.presensi.qr-session');
+    Route::post('/presensi/submit-qr', [\App\Http\Controllers\Api\GeoAttendanceController::class, 'submitAttendance'])->name('api.presensi.submit-qr');
+
+    // --- OBE Competency Radar Analytics ---
+    Route::get('/analytics/obe-radar/{idSiswa}', function ($idSiswa) {
+        $service = app(\App\Services\Analytics\ObeMatrixService::class);
+        return response()->json(['success' => true, 'data' => $service->computeStudentCplRadar((int) $idSiswa)]);
+    })->name('api.obe.radar');
 
     // --- User Management (Super Admin & Admin TU Only) ---
     Route::middleware('role:superadmin,admin')->group(function () {
