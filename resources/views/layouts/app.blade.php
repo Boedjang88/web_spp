@@ -59,13 +59,94 @@
             -moz-osx-font-smoothing: grayscale;
         }
         html.dark body {
-            background-color: #0b1120;
-            color: #f1f5f9;
+            background-color: #070b14 !important;
+            color: #f1f5f9 !important;
         }
         html:not(.dark) body {
             background-color: #f8fafc;
             color: #0f172a;
         }
+
+        /* Complete Dark Mode Global Styles & Overrides */
+        html.dark .bg-white {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+        }
+        html.dark .bg-slate-50,
+        html.dark .bg-slate-50\/50,
+        html.dark .bg-slate-50\/60 {
+            background-color: #1e293b !important;
+            color: #e2e8f0 !important;
+        }
+        html.dark .bg-slate-100 {
+            background-color: #1e293b !important;
+            color: #f1f5f9 !important;
+        }
+        html.dark .bg-slate-900\/80,
+        html.dark .bg-slate-950\/90 {
+            background-color: rgba(7, 11, 20, 0.95) !important;
+        }
+        html.dark .text-slate-900,
+        html.dark .text-slate-800,
+        html.dark .text-slate-700 {
+            color: #f8fafc !important;
+        }
+        html.dark .text-slate-600,
+        html.dark .text-slate-500 {
+            color: #94a3b8 !important;
+        }
+        html.dark .text-slate-400 {
+            color: #cbd5e1 !important;
+        }
+        html.dark .border-slate-200,
+        html.dark .border-slate-200\/80,
+        html.dark .border-slate-200\/60,
+        html.dark .border-slate-100 {
+            border-color: #1e293b !important;
+        }
+        html.dark input[type="text"],
+        html.dark input[type="email"],
+        html.dark input[type="password"],
+        html.dark input[type="number"],
+        html.dark input[type="date"],
+        html.dark select,
+        html.dark textarea {
+            background-color: #1e293b !important;
+            color: #f8fafc !important;
+            border-color: #334155 !important;
+        }
+        html.dark input::placeholder,
+        html.dark textarea::placeholder {
+            color: #64748b !important;
+        }
+        html.dark table thead tr {
+            background-color: #1e293b !important;
+            color: #94a3b8 !important;
+            border-color: #334155 !important;
+        }
+        html.dark table tbody tr {
+            border-color: #1e293b !important;
+        }
+        html.dark table tbody tr:hover {
+            background-color: #1e293b !important;
+        }
+        html.dark header.hidden.md\:flex {
+            background-color: rgba(15, 23, 42, 0.95) !important;
+            border-color: #1e293b !important;
+        }
+        html.dark footer {
+            background-color: #0f172a !important;
+            border-color: #1e293b !important;
+            color: #64748b !important;
+        }
+        html.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]) {
+            border-color: #1e293b !important;
+        }
+        html.dark .shadow-soft,
+        html.dark .shadow-card {
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5) !important;
+        }
+
         .font-mono { font-family: 'JetBrains Mono', monospace; }
         
         .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
