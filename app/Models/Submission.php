@@ -14,6 +14,7 @@ class Submission extends Model
 
     protected $fillable = [
         'id_assignment',
+        'id_mahasiswa',
         'id_siswa',
         'file_path',
         'original_filename',
@@ -22,11 +23,13 @@ class Submission extends Model
         'submitted_at',
         'submission_microtime',
         'submission_token',
+        'hash_receipt',
         'device_fingerprint',
         'client_ip',
         'is_late',
         'nilai',
         'feedback',
+        'catatan_dosen',
         'graded_at',
         'graded_by_dosen',
     ];
@@ -47,6 +50,11 @@ class Submission extends Model
 
     public function mahasiswa(): BelongsTo
     {
+        return $this->belongsTo(Mahasiswa::class, 'id_mahasiswa');
+    }
+
+    public function siswa(): BelongsTo
+    {
         return $this->belongsTo(Siswa::class, 'id_siswa');
     }
 
@@ -60,6 +68,7 @@ class Submission extends Model
      */
     public function getMaskedIdentityAttribute(): string
     {
-        return 'ANON-STUDENT-' . strtoupper(substr(md5((string) $this->id_siswa), 0, 8));
+        $id = $this->id_mahasiswa ?? $this->id_siswa ?? $this->id;
+        return 'ANON-STUDENT-' . strtoupper(substr(hash('sha256', (string) $id), 0, 8));
     }
 }

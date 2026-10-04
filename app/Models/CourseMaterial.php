@@ -46,6 +46,15 @@ class CourseMaterial extends Model
             });
     }
 
+    public function scopeAvailableForStudent($query)
+    {
+        return $query->where('is_active', true)
+            ->where(function ($q) {
+                $q->whereNull('publish_at')
+                  ->orWhere('publish_at', '<=', now());
+            });
+    }
+
     public function isAvailable(): bool
     {
         if (!$this->is_active) {

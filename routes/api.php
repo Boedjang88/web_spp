@@ -69,8 +69,11 @@ Route::middleware('auth:sanctum')->group(function () {
     // --- Geo-fenced QR Attendance ---
     Route::post('/presensi/qr-session/{idBap}', [\App\Http\Controllers\Api\GeoAttendanceController::class, 'generateSessionToken'])->name('api.presensi.qr-session');
     Route::post('/v1/attendance/bap/{idBap}/token', [\App\Http\Controllers\Api\GeoAttendanceController::class, 'generateSessionToken'])->name('api.v1.attendance.token');
+    Route::post('/v1/attendance/kelas/{idKelasKuliah}/token', [\App\Http\Controllers\Api\GeoAttendanceController::class, 'generateClassToken'])->name('api.v1.attendance.class.token');
     Route::post('/presensi/submit-qr', [\App\Http\Controllers\Api\GeoAttendanceController::class, 'submitAttendance'])->name('api.presensi.submit-qr');
+    Route::post('/presensi/store', [\App\Http\Controllers\Api\GeoAttendanceController::class, 'store'])->name('api.presensi.store');
     Route::post('/v1/attendance/submit', [\App\Http\Controllers\Api\GeoAttendanceController::class, 'submitAttendance'])->name('api.v1.attendance.submit');
+    Route::post('/v1/attendance/store', [\App\Http\Controllers\Api\GeoAttendanceController::class, 'store'])->name('api.v1.attendance.store');
 
     // --- OBE Competency Radar Analytics ---
     Route::get('/analytics/obe-radar/{idSiswa}', function ($idSiswa) {

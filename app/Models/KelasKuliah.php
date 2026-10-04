@@ -17,8 +17,13 @@ class KelasKuliah extends Model
 
     protected $fillable = [
         'id_mk',
+        'id_dosen',
         'id_tahun_akademik',
         'nama_kelas',
+        'ruang',
+        'hari',
+        'jam_mulai',
+        'jam_selesai',
         'kuota_maksimal',
         'total_terisi',
     ];
@@ -26,6 +31,11 @@ class KelasKuliah extends Model
     public function mataKuliah(): BelongsTo
     {
         return $this->belongsTo(MataKuliah::class, 'id_mk');
+    }
+
+    public function dosen(): BelongsTo
+    {
+        return $this->belongsTo(Dosen::class, 'id_dosen');
     }
 
     public function tahunAkademik(): BelongsTo
@@ -58,6 +68,21 @@ class KelasKuliah extends Model
     public function baps(): HasMany
     {
         return $this->hasMany(BapPerkuliahan::class, 'id_kelas_kuliah');
+    }
+
+    public function presensiMahasiswas(): HasMany
+    {
+        return $this->hasMany(PresensiMahasiswa::class, 'id_kelas_kuliah');
+    }
+
+    public function courseMaterials(): HasMany
+    {
+        return $this->hasMany(CourseMaterial::class, 'id_kelas_kuliah');
+    }
+
+    public function assignments(): HasMany
+    {
+        return $this->hasMany(Assignment::class, 'id_kelas_kuliah');
     }
 
     public function getSisaKuotaAttribute(): int

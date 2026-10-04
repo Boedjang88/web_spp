@@ -55,7 +55,7 @@ class UploadSecurityGateway
         $originalName = $file instanceof UploadedFile ? $file->getClientOriginalName() : basename($filePath);
         $fileSize = $file instanceof UploadedFile ? $file->getSize() : filesize($filePath);
 
-        // 1. File Size Verification
+        // 1. File Size Verification (Max 10MB)
         if ($fileSize > self::MAX_FILE_SIZE_BYTES) {
             return [
                 'is_safe' => false,
@@ -171,5 +171,33 @@ class UploadSecurityGateway
         if (!$result['is_safe']) {
             throw new InvalidArgumentException($result['error']);
         }
+    }
+
+    /**
+     * Inspect binary headers, scan for malware, and store securely with SHA-256 hash receipt.
+     *
+     * @param UploadedFile $file
+     * @param string $directory
+     * @param array $allowedExtensions
+     * @return array
+     */
+    public function inspectAndStore(UploadedFile $file, string $directory = 'lms/submissions', array $allowedExtensions = ['pdf', 'docx', 'zip']): array
+    {
+        $this->assertSafeFile($file, $allowedExtensions);
+
+        $authId = auth()->id() ?? 'guest';
+        $microtime = microtime(true);
+        $fileContents = file_get_contents($file->getRealPath());
+        $hashReceipt = hash('sha256', $authId . '|' . $microtime . '|' . $fileContents);
+
+        $storedPath = $file->store($directory, 'local');
+
+        return [
+            'path' => $storedPath,
+            'hash_receipt' => $hashReceipt,
+            'size' => $file->getSize(),
+            'mime' => $file->getMimeType() ?? 'application/octet-stream',
+            'original_name' => $file->getClientOriginalName(),
+        ];
     }
 }

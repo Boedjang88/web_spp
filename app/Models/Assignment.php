@@ -19,9 +19,12 @@ class Assignment extends Model
         'target_kelas_ids',
         'judul',
         'deskripsi',
+        'file_path',
         'attachment_path',
         'komponen_penilaian',
         'bobot_persen',
+        'bobot_nilai_bap',
+        'deadline',
         'deadline_at',
         'allow_late_submission',
         'late_grace_minutes',
@@ -32,6 +35,8 @@ class Assignment extends Model
     protected $casts = [
         'target_kelas_ids' => 'array',
         'bobot_persen' => 'decimal:2',
+        'bobot_nilai_bap' => 'decimal:2',
+        'deadline' => 'datetime',
         'deadline_at' => 'datetime',
         'allow_late_submission' => 'boolean',
         'late_grace_minutes' => 'integer',
@@ -55,11 +60,20 @@ class Assignment extends Model
     }
 
     /**
+     * Get effective deadline Carbon instance.
+     */
+    public function getEffectiveDeadlineAttribute(): ?Carbon
+    {
+        return $this->deadline ?? $this->deadline_at;
+    }
+
+    /**
      * Determine if a submission timestamp is considered late.
      */
     public function isTimestampLate(Carbon $timestamp): bool
     {
-        $cutoff = $this->deadline_at->copy()->addMinutes($this->late_grace_minutes);
+        $deadline = $this->effective_deadline ?? now();
+        $cutoff = $deadline->copy()->addMinutes($this->late_grace_minutes ?? 0);
         return $timestamp->greaterThan($cutoff);
     }
 
@@ -76,7 +90,8 @@ class Assignment extends Model
             return true;
         }
 
-        $cutoff = $this->deadline_at->copy()->addMinutes($this->late_grace_minutes);
+        $deadline = $this->effective_deadline ?? now();
+        $cutoff = $deadline->copy()->addMinutes($this->late_grace_minutes ?? 0);
         return $timestamp->lessThanOrEqualTo($cutoff);
     }
 }

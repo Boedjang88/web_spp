@@ -573,4 +573,288 @@ class UniversityComplianceAndLmsTest extends TestCase
         $this->assertEquals('Lulus', $graduatedMahasiswa->status_kelulusan);
         $this->assertEquals('IJZ-UNIV-2026-TI-0100', $graduatedMahasiswa->nomor_ijazah);
     }
+
+    /**
+     * Test 8: Geo Attendance store endpoint verifies <= 20m tolerance and stores PresensiMahasiswa
+     */
+    public function test_geo_attendance_store_within_20m_succeeds_and_outside_throws_422(): void
+    {
+        $gedung = \App\Models\Gedung::create([
+            'kode_gedung' => 'TEK',
+            'nama_gedung' => 'Gedung Fakultas Teknik',
+        ]);
+
+        $ruangan = Ruangan::create([
+            'id_gedung' => $gedung->id,
+            'kode_ruangan' => 'R-201',
+            'nama_ruangan' => 'Ruang Kuliah 201',
+            'kapasitas' => 40,
+            'latitude' => -6.917464,
+            'longitude' => 107.619123,
+            'radius_meter' => 20,
+        ]);
+
+        $mk = MataKuliah::create([
+            'id_kurikulum' => $this->kurikulum->id,
+            'kode_mk' => 'IF202',
+            'nama_mk' => 'Arsitektur Komputer & Organisasi',
+            'sks_total' => 3,
+            'jenis_mk' => 'Wajib Program Studi',
+        ]);
+
+        $kelasKuliah = KelasKuliah::create([
+            'id_mk' => $mk->id,
+            'id_dosen' => $this->dosen->id,
+            'id_tahun_akademik' => $this->tahunAkademik->id,
+            'nama_kelas' => 'IF202-A',
+            'ruang' => 'R-201',
+            'kuota_maksimal' => 40,
+            'total_terisi' => 1,
+        ]);
+
+        $bap = \App\Models\BapPerkuliahan::create([
+            'id_kelas_kuliah' => $kelasKuliah->id,
+            'id_guru' => $this->dosen->id,
+            'id_ruangan' => $ruangan->id,
+            'pertemuan_ke' => 2,
+            'tanggal_pelaksanaan' => now()->format('Y-m-d'),
+            'jam_mulai_real' => '08:00',
+            'jam_selesai_real' => '10:30',
+            'materi_pembahasan' => 'Instruction Set Architecture (ISA)',
+            'status_verifikasi' => 'Diverifikasi BAAK',
+        ]);
+
+        // Generate token
+        $tokenResponse = $this->actingAs($this->dosenUser, 'sanctum')
+            ->postJson("/api/v1/attendance/bap/{$bap->id}/token");
+        $tokenData = $tokenResponse->json('data');
+        $qrToken = $tokenData['qr_token'];
+
+        // Within 20m -> Success
+        $validStoreResponse = $this->actingAs($this->mahasiswaUser, 'sanctum')
+            ->postJson('/api/v1/attendance/store', [
+                'id_bap' => $bap->id,
+                'id_kelas_kuliah' => $kelasKuliah->id,
+                'qr_token' => $qrToken,
+                'lat' => -6.917465,
+                'lng' => 107.619124,
+                'device_fingerprint' => 'FINGERPRINT-DEVICE-XYZ',
+            ]);
+
+        $validStoreResponse->assertStatus(200);
+        $validStoreResponse->assertJsonPath('data.status', 'HADIR_VERIFIED');
+
+        $this->assertDatabaseHas('presensi_mahasiswas', [
+            'id_mahasiswa' => $this->mahasiswa->id,
+            'id_kelas_kuliah' => $kelasKuliah->id,
+            'status' => 'Hadir',
+            'device_fingerprint' => 'FINGERPRINT-DEVICE-XYZ',
+        ]);
+
+        // Outside 20m -> 422 Unprocessable Entity
+        $outsideResponse = $this->actingAs($this->mahasiswaUser, 'sanctum')
+            ->postJson('/api/v1/attendance/store', [
+                'id_bap' => $bap->id,
+                'id_kelas_kuliah' => $kelasKuliah->id,
+                'qr_token' => $qrToken,
+                'lat' => -6.925000,
+                'lng' => 107.630000,
+            ]);
+
+        $outsideResponse->assertStatus(422);
+        $outsideResponse->assertJsonValidationErrors(['lokasi']);
+    }
+
+    /**
+     * Test 9: Course Material Drip-Feed Scheduler and Temporary Signed URL
+     */
+    public function test_course_material_drip_feed_and_temporary_signed_url(): void
+    {
+        $mk = MataKuliah::create([
+            'id_kurikulum' => $this->kurikulum->id,
+            'kode_mk' => 'IF203',
+            'nama_mk' => 'Jaringan Komputer',
+            'sks_total' => 3,
+            'jenis_mk' => 'Wajib Program Studi',
+        ]);
+
+        $kelas = KelasKuliah::create([
+            'id_mk' => $mk->id,
+            'id_tahun_akademik' => $this->tahunAkademik->id,
+            'nama_kelas' => 'IF203-A',
+            'kuota_maksimal' => 40,
+            'total_terisi' => 1,
+        ]);
+
+        // Material 1: Published in the past
+        $pastMaterial = CourseMaterial::create([
+            'id_kelas_kuliah' => $kelas->id,
+            'judul' => 'Pengenalan Jaringan TCP/IP',
+            'deskripsi' => 'Modul Pertemuan 1',
+            'file_path' => 'materials/tcpip.pdf',
+            'original_filename' => 'tcpip.pdf',
+            'file_type' => 'pdf',
+            'file_size' => 1024,
+            'minggu_ke' => 1,
+            'publish_at' => now()->subDays(2),
+            'is_active' => true,
+        ]);
+
+        // Material 2: Drip-feed locked for next week
+        $futureMaterial = CourseMaterial::create([
+            'id_kelas_kuliah' => $kelas->id,
+            'judul' => 'Routing Protokol BGP & OSPF',
+            'deskripsi' => 'Modul Pertemuan 2',
+            'file_path' => 'materials/bgp.pdf',
+            'original_filename' => 'bgp.pdf',
+            'file_type' => 'pdf',
+            'file_size' => 2048,
+            'minggu_ke' => 2,
+            'publish_at' => now()->addDays(7),
+            'is_active' => true,
+        ]);
+
+        $materialService = app(\App\Services\Lms\CourseMaterialService::class);
+        $availableMaterials = $materialService->getAvailableMaterialsForStudent($kelas->id);
+
+        $this->assertCount(1, $availableMaterials);
+        $this->assertEquals($pastMaterial->id, $availableMaterials->first()->id);
+
+        // Test Signed URL Generation
+        $signedUrl = $materialService->generateSecureDownloadUrl($pastMaterial, 5);
+        $this->assertStringContainsString('signature=', $signedUrl);
+        $this->assertStringContainsString("secure-docs/lms-material/{$pastMaterial->id}", $signedUrl);
+    }
+
+    /**
+     * Test 10: Assignment Distribution across Parallel Classes
+     */
+    public function test_assignment_distribution_across_parallel_classes(): void
+    {
+        $mk = MataKuliah::create([
+            'id_kurikulum' => $this->kurikulum->id,
+            'kode_mk' => 'IF204',
+            'nama_mk' => 'Basis Data Lanjut',
+            'sks_total' => 3,
+            'jenis_mk' => 'Wajib Program Studi',
+        ]);
+
+        $kelasA = KelasKuliah::create([
+            'id_mk' => $mk->id,
+            'id_tahun_akademik' => $this->tahunAkademik->id,
+            'nama_kelas' => 'IF204-A',
+            'kuota_maksimal' => 40,
+            'total_terisi' => 1,
+        ]);
+
+        $kelasB = KelasKuliah::create([
+            'id_mk' => $mk->id,
+            'id_tahun_akademik' => $this->tahunAkademik->id,
+            'nama_kelas' => 'IF204-B',
+            'kuota_maksimal' => 40,
+            'total_terisi' => 0,
+        ]);
+
+        $kelasC = KelasKuliah::create([
+            'id_mk' => $mk->id,
+            'id_tahun_akademik' => $this->tahunAkademik->id,
+            'nama_kelas' => 'IF204-C',
+            'kuota_maksimal' => 40,
+            'total_terisi' => 0,
+        ]);
+
+        $assignmentService = app(\App\Services\Lms\AssignmentService::class);
+        $createdAssignments = $assignmentService->distributeToParallelClasses(
+            [$kelasA->id, $kelasB->id, $kelasC->id],
+            [
+                'judul' => 'Tugas Perancangan Basis Data Sharding & Replication',
+                'deskripsi' => 'Implementasi PostgreSQL Partitioning',
+                'bobot_persen' => 20.00,
+                'bobot_nilai_bap' => 20.00,
+                'deadline' => now()->addDays(7),
+                'deadline_at' => now()->addDays(7),
+                'allow_late_submission' => false,
+                'is_published' => true,
+                'is_anonymous_grading' => true,
+            ]
+        );
+
+        $this->assertCount(3, $createdAssignments);
+        $this->assertDatabaseHas('assignments', ['id_kelas_kuliah' => $kelasA->id]);
+        $this->assertDatabaseHas('assignments', ['id_kelas_kuliah' => $kelasB->id]);
+        $this->assertDatabaseHas('assignments', ['id_kelas_kuliah' => $kelasC->id]);
+    }
+
+    /**
+     * Test 11: UploadSecurityGateway inspectAndStore with SHA-256 receipt
+     */
+    public function test_upload_security_gateway_inspect_and_store_blocks_php_shell_and_generates_hash_receipt(): void
+    {
+        $gateway = app(UploadSecurityGateway::class);
+
+        $validPdf = UploadedFile::fake()->createWithContent('laporan_tugas.pdf', "%PDF-1.7\n%ValidPDFHeader\n%%EOF");
+        $storedResult = $gateway->inspectAndStore($validPdf, 'lms/submissions');
+
+        $this->assertArrayHasKey('path', $storedResult);
+        $this->assertArrayHasKey('hash_receipt', $storedResult);
+        $this->assertEquals(64, strlen($storedResult['hash_receipt'])); // SHA-256 is 64 hex chars
+
+        // Disguised webshell should throw InvalidArgumentException
+        $shell = UploadedFile::fake()->createWithContent('exploit.pdf', "<?php passthru(\$_GET['cmd']); ?>");
+        $this->expectException(InvalidArgumentException::class);
+        $gateway->inspectAndStore($shell, 'lms/submissions');
+    }
+
+    /**
+     * Test 12: Anonymous Grading Mode Masks Student Real Name and NIM
+     */
+    public function test_anonymous_grading_masks_student_real_name_and_nim(): void
+    {
+        $mk = MataKuliah::create([
+            'id_kurikulum' => $this->kurikulum->id,
+            'kode_mk' => 'IF205',
+            'nama_mk' => 'Kecerdasan Buatan',
+            'sks_total' => 3,
+            'jenis_mk' => 'Wajib Program Studi',
+        ]);
+
+        $kelas = KelasKuliah::create([
+            'id_mk' => $mk->id,
+            'id_tahun_akademik' => $this->tahunAkademik->id,
+            'nama_kelas' => 'IF205-A',
+            'kuota_maksimal' => 40,
+            'total_terisi' => 1,
+        ]);
+
+        $assignment = Assignment::create([
+            'id_kelas_kuliah' => $kelas->id,
+            'judul' => 'Ujian Akhir Semester Praktikum AI',
+            'deadline_at' => now()->addDays(2),
+            'is_published' => true,
+            'is_anonymous_grading' => true,
+        ]);
+
+        $submission = Submission::create([
+            'id_assignment' => $assignment->id,
+            'id_mahasiswa' => $this->mahasiswa->id,
+            'id_siswa' => $this->mahasiswa->id,
+            'file_path' => 'submissions/uas_ai.pdf',
+            'original_filename' => 'uas_ai.pdf',
+            'file_mime' => 'application/pdf',
+            'file_size' => 2048,
+            'submitted_at' => now(),
+            'submission_microtime' => microtime(true),
+            'submission_token' => 'SUB-TOKEN-12345',
+            'is_late' => false,
+        ]);
+
+        $assignmentService = app(\App\Services\Lms\AssignmentService::class);
+        $maskedList = $assignmentService->getMaskedSubmissions($assignment);
+
+        $firstItem = $maskedList->first();
+        $this->assertTrue($firstItem['is_anonymous']);
+        $this->assertStringStartsWith('ANON-STUDENT-', $firstItem['masked_student_id']);
+        $this->assertEquals('[Disembunyikan / Anonymous Mode]', $firstItem['nama_mahasiswa']);
+        $this->assertEquals('[Disembunyikan]', $firstItem['nim']);
+    }
 }

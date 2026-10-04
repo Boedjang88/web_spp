@@ -3,16 +3,19 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\BapPerkuliahan;
+use App\Models\KelasKuliah;
 use App\Models\PresensiKuliah;
+use App\Models\PresensiMahasiswa;
 use App\Models\Ruangan;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Validation\ValidationException;
 
 class GeoAttendanceController extends BaseApiController
 {
     /**
-     * Generate Expiring QR Token for Lecturer BAP Session (Valid for 10 seconds)
+     * Generate Expiring QR Token for Lecturer Session (Valid for 10 seconds).
      */
     public function generateSessionToken(int $idBap): JsonResponse
     {
@@ -26,6 +29,7 @@ class GeoAttendanceController extends BaseApiController
 
         return $this->sendResponse([
             'id_bap' => $bap->id,
+            'id_kelas_kuliah' => $bap->id_kelas_kuliah,
             'pertemuan_ke' => $bap->pertemuan_ke,
             'qr_token' => $token,
             'expires_in_seconds' => 10,
@@ -37,81 +41,164 @@ class GeoAttendanceController extends BaseApiController
     }
 
     /**
-     * Submit Student QR Scan with Geo-fencing Haversine validation
+     * Generate Expiring QR Token for Kelas Kuliah directly (Valid for 10 seconds).
      */
-    public function submitAttendance(Request $request): JsonResponse
+    public function generateClassToken(int $idKelasKuliah): JsonResponse
     {
+        $kelas = KelasKuliah::findOrFail($idKelasKuliah);
+        $token = 'ATT-QR-' . strtoupper(bin2hex(random_bytes(8)));
+        $cacheKey = "qr_attendance_kelas_{$idKelasKuliah}";
+
+        Cache::put($cacheKey, $token, now()->addSeconds(10));
+
+        return $this->sendResponse([
+            'id_kelas_kuliah' => $kelas->id,
+            'nama_kelas' => $kelas->nama_kelas,
+            'qr_token' => $token,
+            'expires_in_seconds' => 10,
+            'radius_meter' => 20,
+        ], 'Token QR Presensi Kelas berhasil dibuat.');
+    }
+
+    /**
+     * Store student attendance with strict 20m Haversine validation and 10s token check.
+     */
+    public function store(Request $request): JsonResponse
+    {
+        $lat = $request->input('lat', $request->input('latitude'));
+        $lng = $request->input('lng', $request->input('longitude'));
+
+        $request->merge([
+            'latitude' => $lat,
+            'longitude' => $lng,
+        ]);
+
         $validated = $request->validate([
-            'id_bap' => 'required|exists:bap_perkuliahans,id',
+            'id_kelas_kuliah' => 'nullable|exists:kelas_kuliahs,id',
+            'id_bap' => 'nullable|exists:bap_perkuliahans,id',
             'qr_token' => 'required|string',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
             'device_fingerprint' => 'nullable|string',
         ]);
 
+        if (empty($validated['id_kelas_kuliah']) && empty($validated['id_bap'])) {
+            throw ValidationException::withMessages([
+                'id_kelas_kuliah' => 'ID Kelas Kuliah atau ID BAP wajib disertakan.',
+            ]);
+        }
+
         $user = $request->user();
-        $studentId = $user->id_mahasiswa ?? $user->id_siswa;
+        $studentId = $user->id_mahasiswa ?? $user->id_siswa ?? $user->mahasiswa?->id;
         if (!$studentId) {
             return $this->sendError('Akses ditolak. Anda bukan mahasiswa.', [], 403);
         }
 
-        $idBap = (int) $validated['id_bap'];
-        $cacheKey = "qr_attendance_bap_{$idBap}";
-        $cachedToken = Cache::get($cacheKey);
+        $idKelas = !empty($validated['id_kelas_kuliah']) ? (int) $validated['id_kelas_kuliah'] : null;
+        $idBap = !empty($validated['id_bap']) ? (int) $validated['id_bap'] : null;
 
-        // 1. Verify Expiring QR Token (10s window)
-        if (!$cachedToken || $cachedToken !== $validated['qr_token']) {
+        // 1. Token Guard (10-second rotating Redis/Cache check)
+        $validToken = false;
+        if ($idBap) {
+            $cachedBap = Cache::get("qr_attendance_bap_{$idBap}");
+            if ($cachedBap && $cachedBap === $validated['qr_token']) {
+                $validToken = true;
+            }
+        } elseif ($idKelas) {
+            $cachedKelas = Cache::get("qr_attendance_kelas_{$idKelas}");
+            if ($cachedKelas && $cachedKelas === $validated['qr_token']) {
+                $validToken = true;
+            }
+        }
+
+        if ($idBap && !$idKelas) {
+            $bap = BapPerkuliahan::find($idBap);
+            $idKelas = $bap?->id_kelas_kuliah;
+        }
+
+        if (!$validToken) {
             return $this->sendError('Token QR Presensi tidak valid atau telah kadaluarsa (Expired > 10 detik). Silakan scan ulang.', [], 422);
         }
 
-        $bap = BapPerkuliahan::with('ruangan')->findOrFail($idBap);
-        $ruangan = $bap->ruangan;
+        // 2. Resolve Target Coordinates (Room / Lecture Hall)
+        $targetLat = -6.917464;
+        $targetLong = 107.619123;
+        $allowedRadius = 20; // Strict 20 meters tolerance
 
-        $targetLat = (float) ($ruangan?->latitude ?? -6.917464);
-        $targetLong = (float) ($ruangan?->longitude ?? 107.619123);
-        $allowedRadius = min(20, (int) ($ruangan?->radius_meter ?? 20)); // Enforce maximum 20 meters threshold
+        if ($idBap) {
+            $bap = BapPerkuliahan::with('ruangan')->find($idBap);
+            if ($bap && $bap->ruangan) {
+                $targetLat = (float) $bap->ruangan->latitude;
+                $targetLong = (float) $bap->ruangan->longitude;
+            }
+        }
 
-        // 2. Haversine Distance Calculation
+        // 3. Haversine Distance Calculation
         $submitLat = (float) $validated['latitude'];
         $submitLong = (float) $validated['longitude'];
-
         $distanceMeter = $this->calculateHaversineDistance($submitLat, $submitLong, $targetLat, $targetLong);
 
         if ($distanceMeter > $allowedRadius) {
-            return $this->sendError("Presensi Ditolak! Anda berada di luar jangkauan ruangan ({$distanceMeter} meter dari {$ruangan?->nama_ruangan}, batas maksimal {$allowedRadius} meter).", [
-                'jarak_meter' => $distanceMeter,
-                'radius_maksimal' => $allowedRadius,
-            ], 422);
+            throw ValidationException::withMessages([
+                'lokasi' => 'Anda berada di luar jangkauan ruang perkuliahan!',
+            ]);
         }
 
-        // 3. Record Attendance
-        $presensi = PresensiKuliah::updateOrCreate(
+        // 4. Save Presensi Mahasiswa Record
+        $presensi = PresensiMahasiswa::updateOrCreate(
             [
-                'id_bap' => $idBap,
-                'id_siswa' => $user->id_siswa,
+                'id_mahasiswa' => $studentId,
+                'id_kelas_kuliah' => $idKelas,
             ],
             [
-                'status_kehadiran' => 'Hadir',
-                'submit_lat' => $submitLat,
-                'submit_long' => $submitLong,
-                'jarak_meter_dari_ruangan' => $distanceMeter,
+                'id_bap' => $idBap,
+                'waktu_hadir' => now(),
+                'latitude' => $submitLat,
+                'longitude' => $submitLong,
+                'status' => 'Hadir',
                 'device_fingerprint' => $validated['device_fingerprint'] ?? null,
-                'waktu_scan' => now(),
+                'verified_at' => now(),
             ]
         );
+
+        // Also update PresensiKuliah for backward compatibility if bap exists
+        if ($idBap) {
+            PresensiKuliah::updateOrCreate(
+                [
+                    'id_bap' => $idBap,
+                    'id_siswa' => $studentId,
+                ],
+                [
+                    'status_kehadiran' => 'Hadir',
+                    'submit_lat' => $submitLat,
+                    'submit_long' => $submitLong,
+                    'jarak_meter_dari_ruangan' => $distanceMeter,
+                    'device_fingerprint' => $validated['device_fingerprint'] ?? null,
+                    'waktu_scan' => now(),
+                ]
+            );
+        }
 
         return $this->sendResponse([
             'presensi' => $presensi,
             'status' => 'HADIR_VERIFIED',
             'jarak_meter' => $distanceMeter,
-            'waktu_scan' => now()->toDateTimeString(),
+            'waktu_hadir' => now()->toDateTimeString(),
         ], 'Presensi kehadiran perkuliahan berhasil diverifikasi.');
+    }
+
+    /**
+     * Legacy submitAttendance route wrapper
+     */
+    public function submitAttendance(Request $request): JsonResponse
+    {
+        return $this->store($request);
     }
 
     /**
      * Compute Haversine distance in meters
      */
-    protected function calculateHaversineDistance(float $lat1, float $lon1, float $lat2, float $lon2): int
+    public function calculateHaversineDistance(float $lat1, float $lon1, float $lat2, float $lon2): int
     {
         $earthRadius = 6371000; // in meters
 
