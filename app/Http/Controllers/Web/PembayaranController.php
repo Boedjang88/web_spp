@@ -108,6 +108,38 @@ class PembayaranController extends Controller
         }
 
         $totalNominal = count($createdPayments) * $nominalPerBulan;
+
+        // Auto-sync FinancialClearance & TagihanUkt status if student is now fully paid
+        $activeTa = \App\Models\TahunAkademik::where('is_active', true)->first()
+            ?? \App\Models\TahunAkademik::latest()->first();
+
+        if ($activeTa) {
+            $tunggakan = $siswa->fresh()->info_tunggakan;
+            if (($tunggakan['total_bulan'] ?? 0) === 0) {
+                \App\Models\FinancialClearance::updateOrCreate(
+                    ['id_siswa' => $siswa->id, 'id_tahun_akademik' => $activeTa->id],
+                    [
+                        'is_cleared' => true,
+                        'is_krs_unlocked' => true,
+                        'is_uts_unlocked' => true,
+                        'is_uas_unlocked' => true,
+                        'status' => 'CLEARED',
+                        'catatan' => 'Lunas via Kasir BAAK.',
+                        'cleared_at' => now(),
+                        'unlocked_at' => now(),
+                        'unlocked_by_channel' => 'KASIR_BAAK',
+                    ]
+                );
+
+                \App\Models\TagihanUkt::where('id_mahasiswa', $siswa->id)
+                    ->where('id_tahun_akademik', $activeTa->id)
+                    ->update([
+                        'status_pembayaran' => 'Lunas',
+                        'tgl_lunas' => now(),
+                    ]);
+            }
+        }
+
         \App\Models\ActivityLog::record(
             'PEMBAYARAN_CREATE',
             "Menerima pembayaran SPP siswa {$siswa->nama} (NISN: {$siswa->nisn}) sebanyak " . count($createdPayments) . " bulan ({$validated['tahun_dibayar']}) total Rp " . number_format($totalNominal, 0, ',', '.')

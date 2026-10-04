@@ -12,6 +12,7 @@ use App\Models\MataKuliahPrasyarat;
 use App\Models\Siswa;
 use App\Models\TahunAkademik;
 use App\Services\Audit\AuditTrailService;
+use App\Models\TagihanUkt;
 use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -43,11 +44,62 @@ class SmartKrsService
      */
     public function isFinanciallyCleared(int $idSiswa, int $idTahunAkademik): bool
     {
+        // 1. Direct FinancialClearance table check
         $clearance = FinancialClearance::where('id_siswa', $idSiswa)
             ->where('id_tahun_akademik', $idTahunAkademik)
             ->first();
 
-        return $clearance ? $clearance->is_krs_unlocked : false;
+        if ($clearance && ($clearance->is_cleared || $clearance->is_krs_unlocked || $clearance->status === 'CLEARED')) {
+            return true;
+        }
+
+        // 2. Check TagihanUkt status for this academic year
+        $tagihan = TagihanUkt::where('id_mahasiswa', $idSiswa)
+            ->where('id_tahun_akademik', $idTahunAkademik)
+            ->first();
+
+        if ($tagihan && ($tagihan->status_pembayaran === 'Lunas' || $tagihan->total_sudah_bayar >= $tagihan->total_harus_bayar)) {
+            FinancialClearance::updateOrCreate(
+                ['id_siswa' => $idSiswa, 'id_tahun_akademik' => $idTahunAkademik],
+                [
+                    'is_cleared' => true,
+                    'is_krs_unlocked' => true,
+                    'is_uts_unlocked' => true,
+                    'is_uas_unlocked' => true,
+                    'status' => 'CLEARED',
+                    'catatan' => 'Lunas Tagihan UKT.',
+                    'cleared_at' => now(),
+                    'unlocked_at' => now(),
+                    'unlocked_by_channel' => 'AUTO_SYNC_UKT',
+                ]
+            );
+            return true;
+        }
+
+        // 3. Check Siswa info_tunggakan
+        $siswa = Siswa::find($idSiswa);
+        if ($siswa) {
+            $tunggakan = $siswa->info_tunggakan;
+            if (($tunggakan['total_bulan'] ?? 0) === 0 || ($tunggakan['total_rupiah'] ?? 0) === 0) {
+                FinancialClearance::updateOrCreate(
+                    ['id_siswa' => $idSiswa, 'id_tahun_akademik' => $idTahunAkademik],
+                    [
+                        'is_cleared' => true,
+                        'is_krs_unlocked' => true,
+                        'is_uts_unlocked' => true,
+                        'is_uas_unlocked' => true,
+                        'status' => 'CLEARED',
+                        'catatan' => 'Bebas Tunggakan SPP/UKT.',
+                        'cleared_at' => now(),
+                        'unlocked_at' => now(),
+                        'unlocked_by_channel' => 'AUTO_SYNC_SPP',
+                    ]
+                );
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

@@ -52,17 +52,33 @@ class Siswa extends Model
 
     public function getInfoTunggakanAttribute()
     {
+        // 0. Cek Verifikasi Lunas Terpusat (TagihanUKT / FinancialClearance)
+        $hasLunasUkt = TagihanUkt::where('id_mahasiswa', $this->id)
+            ->where(function ($q) {
+                $q->where('status_pembayaran', 'Lunas')
+                  ->orWhereColumn('total_sudah_bayar', '>=', 'total_harus_bayar');
+            })->exists();
+
+        $hasClearance = FinancialClearance::where('id_siswa', $this->id)
+            ->where(function ($q) {
+                $q->where('is_cleared', true)
+                  ->orWhere('is_krs_unlocked', true)
+                  ->orWhere('status', 'CLEARED');
+            })->exists();
+
+        if ($hasLunasUkt || $hasClearance) {
+            return ['total_bulan' => 0, 'total_rupiah' => 0, 'list_bulan' => []];
+        }
+
         // 1. Ambil Data SPP Siswa
         $spp = $this->spp;
         if (!$spp) return ['total_bulan' => 0, 'total_rupiah' => 0, 'list_bulan' => []];
 
         // 2. Tentukan Rentang Tahun Ajaran
-        // Misal tahun SPP = 2025, berarti periode: Juli 2025 - Juni 2026
         $tahunMulai = (int) $spp->tahun;
         $tahunSelesai = $tahunMulai + 1;
 
         // 3. Bikin Daftar 12 Bulan Sesuai Tahun Ajaran
-        // Format: [Nama Bulan, Tahunnya, Angka Bulan Buat Cek]
         $kalenderSPP = [
             ['nama' => 'Juli',      'tahun' => $tahunMulai,   'bulan_angka' => 7],
             ['nama' => 'Agustus',   'tahun' => $tahunMulai,   'bulan_angka' => 8],
@@ -78,9 +94,7 @@ class Siswa extends Model
             ['nama' => 'Juni',      'tahun' => $tahunSelesai, 'bulan_angka' => 6],
         ];
 
-        // 4. Ambil Data Pembayaran Siswa Ini dari Database
-        // Kita ambil array format "Bulan-Tahun" biar gampang dicocokin
-        // Contoh data: ["Juli-2025", "Agustus-2025"]
+        // 4. Ambil Data Pembayaran Siswa Ini (SPP + UKT)
         $pembayaranDB = $this->hasMany(Pembayaran::class, 'id_siswa')
             ->where('id_spp', $spp->id)
             ->get()
@@ -88,39 +102,32 @@ class Siswa extends Model
                 return $bayar->bulan_dibayar . '-' . $bayar->tahun_dibayar;
             })->toArray();
 
+        $hasPembayaranUkt = PembayaranUkt::where('id_mahasiswa', $this->id)->exists();
+
         // 5. LOGIKA UTAMA: Loop Kalender vs Hari Ini
         $listNunggak = [];
-        $sekarang = now(); // Waktu Real-time Server (Januari 2026)
+        $sekarang = now();
 
         foreach ($kalenderSPP as $item) {
-            // Bikin tanggal virtual buat bulan yg lagi dicek (tgl 1 bulan tsb)
             $tanggalCek = \Carbon\Carbon::createFromDate($item['tahun'], $item['bulan_angka'], 1);
 
-            // A. Cek Apakah Bulan ini SUDAH JATUH TEMPO?
-            // (Apakah tanggal bulan ini <= hari ini?)
-            // Pakai startOfMonth() biar aman perbandingannya
             if ($tanggalCek->startOfMonth() <= $sekarang->startOfMonth()) {
-                
-                // B. Kalau Sudah Jatuh Tempo, Cek Apakah SUDAH BAYAR?
-                // Kita gabungin nama bulan & tahun buat kunci pencarian (misal: "Januari-2026")
                 $kunciCek = $item['nama'] . '-' . $item['tahun'];
+                $isPaidSPP = in_array($kunciCek, $pembayaranDB);
 
-                if (!in_array($kunciCek, $pembayaranDB)) {
-                    // Kalau gak ada di database, catat sebagai NUNGGAK
-                    $listNunggak[] = $item['nama']; // Cukup simpan nama bulannya
+                if (!$isPaidSPP && !$hasPembayaranUkt) {
+                    $listNunggak[] = $item['nama'];
                 }
             }
         }
 
-        // 6. Hitung Total Duit
         $totalNunggak = count($listNunggak) * $spp->nominal;
 
         return [
             'total_bulan' => count($listNunggak),
             'total_rupiah' => $totalNunggak,
             'list_bulan' => $listNunggak,
-     
-   ];
+        ];
     }
 
     public function user(): \Illuminate\Database\Eloquent\Relations\HasOne

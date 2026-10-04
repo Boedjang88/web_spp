@@ -16,10 +16,12 @@ class CekTagihanController extends Controller
     public function search(Request $request)
     {
         $request->validate([
-            'nisn' => 'required|string|max:10'
+            'nisn' => 'required|string|max:50'
         ], [
-            'nisn.required' => 'NISN wajib diisi.',
+            'nisn.required' => 'NIM / NISN mahasiswa wajib diisi.',
         ]);
+
+        $searchKey = trim($request->nisn);
 
         $siswa = Siswa::with([
             'kelas',
@@ -28,13 +30,18 @@ class CekTagihanController extends Controller
             'nilais.mapel',
             'nilais.guru',
             'presensis'
-        ])->where('nisn', $request->nisn)->first();
+        ])->where(function ($q) use ($searchKey) {
+            $q->where('nisn', $searchKey)
+              ->orWhere('nis', $searchKey)
+              ->orWhere('nik', $searchKey)
+              ->orWhere('nama', 'like', "%{$searchKey}%");
+        })->first();
 
         if (!$siswa) {
-            return redirect()->route('cek.index')->with('error', 'Data siswa dengan NISN tersebut tidak terdaftar dalam sistem akademik.');
+            return redirect()->route('cek.index')->with('error', "Data mahasiswa dengan NIM/NISN '{$searchKey}' tidak ditemukan dalam sistem akademik.");
         }
 
-        ActivityLog::record('PORTAL_CEK_NISN', "Pencarian data siswa {$siswa->nama} (NISN: {$siswa->nisn}) via Portal Siswa Mandiri.");
+        ActivityLog::record('PORTAL_CEK_NISN', "Pencarian data mahasiswa {$siswa->nama} (NIM: {$siswa->nis}) via Portal Layanan Mandiri.");
 
         return view('cek-tagihan', compact('siswa'));
     }
