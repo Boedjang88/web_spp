@@ -76,9 +76,9 @@
             <!-- Jadwal Hari Ini -->
             <div class="bg-white rounded-2xl border border-slate-200/80 shadow-soft p-6 space-y-4">
                 <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                    <div>
-                        <h2 class="font-bold text-slate-900 text-sm"><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg> Jadwal Pelajaran Hari Ini ({{ $hariIni }})</h2>
-                        <p class="text-[11px] text-slate-400">Jadwal mata pelajaran kelas Anda hari ini.</p>
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <h2 class="font-bold text-slate-900 text-sm">Jadwal Pelajaran Hari Ini ({{ $hariIni }})</h2>
                     </div>
                 </div>
 
@@ -109,9 +109,9 @@
             <!-- Transkrip Nilai Terkini -->
             <div class="bg-white rounded-2xl border border-slate-200/80 shadow-soft p-6 space-y-4">
                 <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                    <div>
-                        <h2 class="font-bold text-slate-900 text-sm"><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg> Transkrip &amp; Rekap Nilai</h2>
-                        <p class="text-[11px] text-slate-400">Hasil evaluasi belajar dan capaian KKM.</p>
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                        <h2 class="font-bold text-slate-900 text-sm">Transkrip &amp; Rekap Nilai</h2>
                     </div>
                     @if($siswa)
                         <a href="{{ route('web.nilai.rapor', $siswa->id) }}" target="_blank" class="text-xs text-indigo-600 font-semibold hover:underline">Lihat Rapor Lengkap &rarr;</a>
@@ -164,7 +164,10 @@
             <!-- Tunggakan Box -->
             <div class="bg-white rounded-2xl border border-slate-200/80 shadow-soft p-6 space-y-4">
                 <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                    <h2 class="font-bold text-slate-900 text-sm"><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg> Status Tagihan SPP</h2>
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                        <h2 class="font-bold text-slate-900 text-sm">Status Tagihan SPP</h2>
+                    </div>
                     @if($siswa)
                         <a href="{{ route('web.siswa.suratTagihan', $siswa->id) }}" target="_blank" class="text-xs text-indigo-600 font-semibold hover:underline">Surat Tagihan &rarr;</a>
                     @endif
@@ -182,8 +185,9 @@
                         </div>
                     </div>
                 @else
-                    <div class="p-4 bg-emerald-50/70 border border-emerald-200/80 rounded-xl text-center text-xs text-emerald-800 font-medium">
-                        <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg> Pembayaran SPP Anda lunas hingga periode berjalan. Terima kasih!
+                    <div class="p-4 bg-emerald-50/70 border border-emerald-200/80 rounded-xl text-center text-xs text-emerald-800 font-medium flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        <span>Pembayaran SPP Anda lunas hingga periode berjalan. Terima kasih!</span>
                     </div>
                 @endif
             </div>
@@ -191,7 +195,10 @@
             <!-- Riwayat Kwitansi Pembayaran Terakhir -->
             <div class="bg-white rounded-2xl border border-slate-200/80 shadow-soft p-6 space-y-4">
                 <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                    <h2 class="font-bold text-slate-900 text-sm"><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg> Riwayat Pembayaran SPP</h2>
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>
+                        <h2 class="font-bold text-slate-900 text-sm">Riwayat Pembayaran SPP</h2>
+                    </div>
                 </div>
 
                 <div class="divide-y divide-slate-100">
