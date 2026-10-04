@@ -13,8 +13,12 @@ use Illuminate\View\View;
 
 class PresensiController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request)
     {
+        if ($request->user()?->isMahasiswa()) {
+            return redirect()->route('siakad.presensi.index');
+        }
+
         $selectedKelasId = $request->get('id_kelas');
         $selectedTanggal = $request->get('tanggal', now()->toDateString());
 

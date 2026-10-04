@@ -56,6 +56,7 @@ Route::middleware(['auth', 'pdp.consent'])->group(function () {
 
     // --- Next-Gen Smart KRS Portal ---
     Route::get('siakad/krs', [\App\Http\Controllers\Web\SmartKrsController::class, 'index'])->name('siakad.krs.index');
+    Route::get('krs', [\App\Http\Controllers\Web\SmartKrsController::class, 'index'])->name('krs.index');
     Route::post('siakad/krs', [\App\Http\Controllers\Web\SmartKrsController::class, 'store'])->name('siakad.krs.store');
     Route::delete('siakad/krs/{id}', [\App\Http\Controllers\Web\SmartKrsController::class, 'destroy'])->name('siakad.krs.destroy');
     Route::get('siakad/analytics/performance', function () {
@@ -65,21 +66,32 @@ Route::middleware(['auth', 'pdp.consent'])->group(function () {
 
     // --- Student Presensi Perkuliahan (GPS & QR Portal) ---
     Route::get('siakad/presensi', [\App\Http\Controllers\Web\StudentAttendanceController::class, 'index'])->name('siakad.presensi.index');
+    Route::get('presensi', [\App\Http\Controllers\Web\StudentAttendanceController::class, 'index'])->name('presensi.index');
     Route::post('siakad/presensi/check-in', [\App\Http\Controllers\Web\StudentAttendanceController::class, 'checkIn'])->name('siakad.presensi.checkIn');
+    Route::post('presensi/check-in', [\App\Http\Controllers\Web\StudentAttendanceController::class, 'checkIn'])->name('presensi.checkIn');
 
     // --- Student Tasks & LMS Submissions ---
     Route::get('siakad/tugas', [\App\Http\Controllers\Web\StudentAssignmentController::class, 'index'])->name('siakad.tugas.index');
+    Route::get('tugas', [\App\Http\Controllers\Web\StudentAssignmentController::class, 'index'])->name('tugas.index');
+    Route::get('lms', [\App\Http\Controllers\Web\StudentAssignmentController::class, 'index'])->name('lms.index');
     Route::get('siakad/tugas/{id}', [\App\Http\Controllers\Web\StudentAssignmentController::class, 'show'])->name('siakad.tugas.show');
+    Route::get('tugas/{id}', [\App\Http\Controllers\Web\StudentAssignmentController::class, 'show'])->name('tugas.show');
     Route::post('siakad/tugas/{id}/submit', [\App\Http\Controllers\Web\StudentAssignmentController::class, 'submit'])->name('siakad.tugas.submit');
+    Route::post('tugas/{id}/submit', [\App\Http\Controllers\Web\StudentAssignmentController::class, 'submit'])->name('tugas.submit');
 
     // --- UKT Portal & Billing Breakdown ---
     Route::get('siakad/ukt', [\App\Http\Controllers\Web\UktPortalController::class, 'index'])->name('siakad.ukt.index');
+    Route::get('ukt', [\App\Http\Controllers\Web\UktPortalController::class, 'index'])->name('ukt.index');
     Route::post('siakad/ukt/bayar/{id}', [\App\Http\Controllers\Web\UktPortalController::class, 'bayar'])->name('siakad.ukt.bayar');
+    Route::post('ukt/bayar/{id}', [\App\Http\Controllers\Web\UktPortalController::class, 'bayar'])->name('ukt.bayar');
     Route::get('siakad/ukt/kwitansi/{id}', [\App\Http\Controllers\Web\UktPortalController::class, 'cetakKwitansi'])->name('siakad.ukt.kwitansi');
 
     // --- Student Biodata & PDP Profile Completion ---
     Route::get('siakad/biodata', [\App\Http\Controllers\Web\StudentBiodataController::class, 'edit'])->name('siakad.biodata.edit');
+    Route::get('biodata', [\App\Http\Controllers\Web\StudentBiodataController::class, 'edit'])->name('biodata.edit');
+    Route::get('isi-data', [\App\Http\Controllers\Web\StudentBiodataController::class, 'edit'])->name('biodata.isi');
     Route::put('siakad/biodata/update', [\App\Http\Controllers\Web\StudentBiodataController::class, 'update'])->name('siakad.biodata.update');
+    Route::put('biodata/update', [\App\Http\Controllers\Web\StudentBiodataController::class, 'update'])->name('biodata.update');
 
     // --- Super Admin & Admin TU Only: User Management ---
     Route::middleware('role:superadmin,admin')->group(function () {
