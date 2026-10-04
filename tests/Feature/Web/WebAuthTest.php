@@ -15,8 +15,8 @@ class WebAuthTest extends TestCase
     {
         $response = $this->get('/login');
         $response->assertStatus(200)
-            ->assertSee('Web SPP Sekolah')
-            ->assertSee('Masuk ke Sistem');
+            ->assertSee('SIAKAD Enterprise')
+            ->assertSee('Masuk Portal SIAKAD');
     }
 
     public function test_user_can_login_via_web_form(): void

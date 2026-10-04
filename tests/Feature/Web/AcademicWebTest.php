@@ -70,7 +70,7 @@ class AcademicWebTest extends TestCase
     {
         $response = $this->actingAs($this->admin)->get('/web/guru');
         $response->assertStatus(200)
-            ->assertSee('Data Guru')
+            ->assertSee('Data Dosen')
             ->assertSee('Budi Santoso, S.Kom');
     }
 

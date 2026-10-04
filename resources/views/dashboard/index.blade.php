@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard SIAKAD & Keuangan')
+@section('title', 'Dashboard SIAKAD Enterprise & Keuangan')
 
 @section('content')
 <div class="space-y-6">
@@ -10,18 +10,18 @@
         <div class="relative z-10">
             <div class="flex items-center gap-2 mb-2">
                 <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white/10 text-slate-200 border border-white/10">
-                    Sistem Akademik &amp; Keuangan Terpadu
+                    Sistem Akademik &amp; Keuangan Perguruan Tinggi
                 </span>
                 <span class="text-xs text-indigo-300">T.A. 2025/2026</span>
             </div>
             <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-white">Selamat Datang, {{ auth()->user()->name }}!</h1>
             <p class="text-slate-300 text-xs md:text-sm mt-1 max-w-xl leading-relaxed">
-                Pantau proses pembelajaran akademik, data pengajar, jadwal kelas, e-rapor, serta arus kas pembayaran SPP secara real-time.
+                Pantau perkuliahan akademik, data dosen pengajar, jadwal kelas kuliah, e-khs/rapor, serta arus kas pembayaran UKT secara real-time.
             </p>
         </div>
         <div class="relative z-10 flex flex-wrap items-center gap-2.5">
             <a href="{{ route('web.pembayaran.create') }}" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-4 py-2.5 rounded-xl text-xs shadow-sm transition inline-flex items-center gap-1.5">
-                <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></span> Catat SPP
+                <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></span> Catat UKT
             </a>
             <a href="{{ route('web.nilai.create') }}" class="bg-white/10 hover:bg-white/15 text-white font-semibold px-4 py-2.5 rounded-xl text-xs backdrop-blur transition inline-flex items-center gap-1.5 border border-white/10">
                 <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></span> Input Nilai
@@ -31,34 +31,34 @@
 
     <!-- Core Metrics Stats Cards (4 Columns) -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <!-- Total Siswa -->
+        <!-- Total Mahasiswa -->
         <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft flex items-center justify-between">
             <div>
-                <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block mb-1">Peserta Didik Aktif</span>
-                <div class="text-2xl font-bold text-slate-900">{{ $totalSiswa }} Siswa</div>
-                <p class="text-[11px] text-slate-500 mt-1">Tersebar di {{ $totalKelas }} Kelas</p>
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block mb-1">Mahasiswa Aktif</span>
+                <div class="text-2xl font-bold text-slate-900">{{ $totalSiswa }} Mahasiswa</div>
+                <p class="text-[11px] text-slate-500 mt-1">Tersebar di {{ $totalKelas }} Kelas Kuliah</p>
             </div>
             <div class="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg flex-shrink-0 border border-blue-100">
                 <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
             </div>
         </div>
 
-        <!-- Total Guru -->
+        <!-- Total Dosen -->
         <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft flex items-center justify-between">
             <div>
-                <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block mb-1">Dewan Guru</span>
-                <div class="text-2xl font-bold text-slate-900">{{ $totalGuru }} Guru</div>
-                <p class="text-[11px] text-slate-500 mt-1">{{ $totalMapel }} Mata Pelajaran</p>
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block mb-1">Dosen Pengajar</span>
+                <div class="text-2xl font-bold text-slate-900">{{ $totalGuru }} Dosen</div>
+                <p class="text-[11px] text-slate-500 mt-1">{{ $totalMapel }} Mata Kuliah</p>
             </div>
             <div class="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg flex-shrink-0 border border-indigo-100">
                 <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
             </div>
         </div>
 
-        <!-- Total Pemasukan SPP -->
+        <!-- Total Pemasukan UKT -->
         <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft flex items-center justify-between">
             <div>
-                <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block mb-1">Total Kas SPP</span>
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block mb-1">Total Kas UKT</span>
                 <div class="text-2xl font-bold text-slate-900">Rp {{ number_format($totalPemasukan, 0, ',', '.') }}</div>
                 <p class="text-[11px] text-slate-500 mt-1">Bulan Ini: Rp {{ number_format($pemasukanBulanIni, 0, ',', '.') }}</p>
             </div>
@@ -87,8 +87,8 @@
         <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-soft">
             <div class="flex items-center justify-between mb-4">
                 <div>
-                    <h2 class="font-bold text-slate-900 text-sm">Tren Penerimaan Kas SPP (Tahun {{ $currentYear }})</h2>
-                    <p class="text-xs text-slate-400">Statistik transaksi pembayaran SPP bulanan</p>
+                    <h2 class="font-bold text-slate-900 text-sm">Tren Penerimaan Kas UKT (Tahun {{ $currentYear }})</h2>
+                    <p class="text-xs text-slate-400">Statistik transaksi pembayaran UKT bulanan</p>
                 </div>
                 <span class="text-[10px] font-semibold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 uppercase tracking-wider">
                     Kas Bulanan
@@ -104,8 +104,8 @@
             <div>
                 <div class="flex items-center justify-between mb-3 border-b border-slate-100 pb-3">
                     <div>
-                        <h2 class="font-bold text-slate-900 text-sm">Jadwal Hari {{ $hariIni }}</h2>
-                        <p class="text-[11px] text-slate-400">Sesi pelajaran aktif</p>
+                        <h2 class="font-bold text-slate-900 text-sm">Jadwal Perkuliahan {{ $hariIni }}</h2>
+                        <p class="text-[11px] text-slate-400">Sesi perkuliahan aktif</p>
                     </div>
                     <a href="{{ route('web.jadwal.index') }}" class="text-xs text-indigo-600 hover:underline font-semibold">Semua &rarr;</a>
                 </div>
@@ -123,7 +123,7 @@
                         </div>
                     @empty
                         <div class="py-8 text-center text-slate-400 text-xs">
-                            Tidak ada jadwal pelajaran untuk hari {{ $hariIni }}.
+                            Tidak ada jadwal perkuliahan untuk hari {{ $hariIni }}.
                         </div>
                     @endforelse
                 </div>
@@ -131,7 +131,7 @@
 
             <div class="pt-3 border-t border-slate-100 text-center">
                 <a href="{{ route('web.presensi.index') }}" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition">
-                    Buka Formulir Presensi Kehadiran Siswa &rarr;
+                    Buka Presensi Kehadiran Mahasiswa &rarr;
                 </a>
             </div>
         </div>
@@ -145,7 +145,7 @@
         <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200/80 shadow-soft overflow-hidden">
             <div class="p-5 border-b border-slate-100 flex items-center justify-between">
                 <div>
-                    <h2 class="font-bold text-slate-900 text-sm">Transaksi Pembayaran SPP Terbaru</h2>
+                    <h2 class="font-bold text-slate-900 text-sm">Transaksi Pembayaran UKT Terbaru</h2>
                     <p class="text-xs text-slate-400">6 transaksi pembayaran terakhir yang berhasil diverifikasi</p>
                 </div>
                 <a href="{{ route('web.pembayaran.index') }}" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800">
@@ -158,8 +158,8 @@
                     <thead>
                         <tr class="border-b border-slate-100 bg-slate-50/50 text-slate-400 uppercase tracking-wider text-[10px] font-semibold">
                             <th class="py-3 px-4 font-semibold">No. Kwitansi</th>
-                            <th class="py-3 px-4 font-semibold">Nama Siswa</th>
-                            <th class="py-3 px-4 font-semibold">Periode SPP</th>
+                            <th class="py-3 px-4 font-semibold">Nama Mahasiswa</th>
+                            <th class="py-3 px-4 font-semibold">Periode UKT</th>
                             <th class="py-3 px-4 font-semibold">Nominal</th>
                             <th class="py-3 px-4 font-semibold text-right">Kwitansi</th>
                         </tr>
@@ -189,7 +189,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="py-8 text-center text-slate-400">Belum ada transaksi pembayaran SPP yang tercatat.</td>
+                                <td colspan="5" class="py-8 text-center text-slate-400">Belum ada transaksi pembayaran UKT yang tercatat.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -200,14 +200,14 @@
         <!-- Right 1 Col: Student Distribution Chart -->
         <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-soft flex flex-col justify-between">
             <div>
-                <h2 class="font-bold text-slate-900 text-sm mb-1">Distribusi Siswa per Kelas</h2>
-                <p class="text-xs text-slate-400 mb-4">Proporsi siswa aktif di setiap kelas</p>
+                <h2 class="font-bold text-slate-900 text-sm mb-1">Distribusi Mahasiswa per Kelas</h2>
+                <p class="text-xs text-slate-400 mb-4">Proporsi mahasiswa aktif di setiap kelas kuliah</p>
                 <div class="h-48 flex items-center justify-center">
                     <canvas id="classChart"></canvas>
                 </div>
             </div>
             <div class="pt-3 border-t border-slate-100 text-center">
-                <span class="text-xs text-slate-500 font-medium">Total: <strong>{{ $totalSiswa }} Siswa</strong> di <strong>{{ $totalKelas }} Kelas</strong></span>
+                <span class="text-xs text-slate-500 font-medium">Total: <strong>{{ $totalSiswa }} Mahasiswa</strong> di <strong>{{ $totalKelas }} Kelas Kuliah</strong></span>
             </div>
         </div>
 

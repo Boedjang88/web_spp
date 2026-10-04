@@ -129,7 +129,7 @@ class RbacWebTest extends TestCase
     {
         $response = $this->actingAs($this->siswa)->get(route('dashboard'));
         $response->assertStatus(200)
-            ->assertSee('Portal Mandiri Siswa')
+            ->assertSee('Portal Mahasiswa')
             ->assertSee('Muhammad Fauzan');
     }
 
@@ -137,7 +137,7 @@ class RbacWebTest extends TestCase
     {
         $response = $this->actingAs($this->guru)->get(route('dashboard'));
         $response->assertStatus(200)
-            ->assertSee('Portal Pengajar / Dewan Guru')
+            ->assertSee('Portal Dosen Pengajar')
             ->assertSee('Budi Santoso');
     }
 

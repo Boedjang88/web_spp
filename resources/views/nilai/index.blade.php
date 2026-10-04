@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Nilai Akademik Siswa')
+@section('title', 'Nilai Akademik Mahasiswa')
 
 @section('content')
 <div class="space-y-5">
@@ -9,28 +9,28 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
             <div class="flex items-center gap-2">
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-800">SIAKAD</span>
-                <span class="text-xs text-slate-400">Penilaian &amp; E-Rapor</span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-indigo-100 text-indigo-800">SIAKAD</span>
+                <span class="text-xs text-slate-400">Evaluasi Akademik &amp; KHS</span>
             </div>
-            <h1 class="text-xl font-black text-slate-900 mt-1">Nilai Akademik &amp; E-Rapor</h1>
-            <p class="text-xs text-slate-500 mt-0.5">Input nilai Tugas, UTS, UAS, kalkulasi nilai akhir otomatis, predikat, dan cetak rapor</p>
+            <h1 class="text-xl font-black text-slate-900 mt-1">Nilai Akademik &amp; E-KHS Mahasiswa</h1>
+            <p class="text-xs text-slate-500 mt-0.5">Input nilai Tugas, UTS, UAS, kalkulasi IPS/IPK akhir otomatis, predikat, dan cetak KHS</p>
         </div>
-        <a href="{{ route('web.nilai.create') }}" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-600/20 transition inline-flex items-center gap-1.5">
-            <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></span> Input Nilai Siswa
+        <a href="{{ route('web.nilai.create') }}" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-600/20 transition inline-flex items-center gap-1.5">
+            <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></span> Input Nilai Mahasiswa
         </a>
     </div>
 
     <!-- Filter Card -->
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4">
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-soft p-4">
         <form method="GET" action="{{ route('web.nilai.index') }}" class="flex flex-col md:flex-row items-center gap-3 text-xs">
             <div class="w-full md:flex-1">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama siswa atau NISN..."
-                    class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama mahasiswa atau NIM..."
+                    class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
 
             <div class="w-full md:w-48">
-                <select name="id_kelas" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="">-- Semua Kelas --</option>
+                <select name="id_kelas" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="">-- Semua Kelas Kuliah --</option>
                     @foreach($kelasList as $k)
                         <option value="{{ $k->id }}" {{ request('id_kelas') == $k->id ? 'selected' : '' }}>{{ $k->nama_kelas }}</option>
                     @endforeach
@@ -38,8 +38,8 @@
             </div>
 
             <div class="w-full md:w-48">
-                <select name="id_mapel" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="">-- Semua Mapel --</option>
+                <select name="id_mapel" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="">-- Semua Mata Kuliah --</option>
                     @foreach($mapelList as $m)
                         <option value="{{ $m->id }}" {{ request('id_mapel') == $m->id ? 'selected' : '' }}>{{ $m->nama_mapel }}</option>
                     @endforeach
@@ -54,13 +54,13 @@
     </div>
 
     <!-- Table Card -->
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-soft overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
                 <thead>
-                    <tr class="border-b border-slate-200 bg-slate-50 text-slate-500 uppercase tracking-wider">
-                        <th class="py-3.5 px-4 font-semibold">Siswa &amp; Kelas</th>
-                        <th class="py-3.5 px-4 font-semibold">Mata Pelajaran</th>
+                    <tr class="border-b border-slate-200/80 bg-slate-50/50 text-slate-500 uppercase tracking-wider text-[10px] font-semibold">
+                        <th class="py-3.5 px-4 font-semibold">Mahasiswa &amp; Kelas</th>
+                        <th class="py-3.5 px-4 font-semibold">Mata Kuliah</th>
                         <th class="py-3.5 px-4 font-semibold text-center">Tugas (30%)</th>
                         <th class="py-3.5 px-4 font-semibold text-center">UTS (30%)</th>
                         <th class="py-3.5 px-4 font-semibold text-center">UAS (40%)</th>
@@ -74,7 +74,7 @@
                         <tr class="hover:bg-slate-50 transition">
                             <td class="py-3 px-4">
                                 <div class="font-bold text-slate-900">{{ $n->siswa?->nama }}</div>
-                                <div class="text-[10px] text-slate-400 font-mono">{{ $n->siswa?->nisn }} &bull; {{ $n->siswa?->kelas?->nama_kelas }}</div>
+                                <div class="text-[10px] text-slate-400 font-mono">NIM: {{ $n->siswa?->nim ?? $n->siswa?->nisn }} &bull; {{ $n->siswa?->kelas?->nama_kelas }}</div>
                             </td>
                             <td class="py-3 px-4">
                                 <div class="font-semibold text-slate-800">{{ $n->mapel?->nama_mapel }}</div>
@@ -84,28 +84,30 @@
                             <td class="py-3 px-4 text-center font-mono">{{ (float) $n->nilai_uts }}</td>
                             <td class="py-3 px-4 text-center font-mono">{{ (float) $n->nilai_uas }}</td>
                             <td class="py-3 px-4 text-center">
-                                <span class="px-2.5 py-1 rounded-lg text-xs font-mono font-black {{ $n->nilai_akhir >= ($n->mapel?->kkm ?? 75) ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700' }}">
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-mono font-black {{ $n->nilai_akhir >= ($n->mapel?->kkm ?? 75) ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60' : 'bg-rose-50 text-rose-700 border border-rose-200/60' }}">
                                     {{ (float) $n->nilai_akhir }}
                                 </span>
                             </td>
                             <td class="py-3 px-4 text-center">
-                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-800">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-800 border border-slate-200">
                                     {{ $n->predikat }}
                                 </span>
                             </td>
-                            <td class="py-3 px-4 text-right space-x-2 whitespace-nowrap">
-                                <a href="{{ route('web.nilai.rapor', $n->id_siswa) }}" target="_blank" class="text-blue-600 hover:text-blue-700 font-bold" title="Cetak E-Rapor"><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> Rapor</a>
-                                <a href="{{ route('web.nilai.edit', $n->id) }}" class="text-amber-600 hover:text-amber-700 font-semibold">Edit</a>
+                            <td class="py-3 px-4 text-right space-x-1.5 whitespace-nowrap">
+                                <a href="{{ route('web.nilai.rapor', $n->id_siswa) }}" target="_blank" class="text-indigo-600 hover:text-indigo-700 font-bold bg-indigo-50 border border-indigo-200/60 px-2 py-1 rounded-lg text-[11px] inline-flex items-center gap-1" title="Cetak KHS Mahasiswa">
+                                    <span><svg class="w-3.5 h-3.5 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></span> E-KHS
+                                </a>
+                                <a href="{{ route('web.nilai.edit', $n->id) }}" class="text-amber-600 hover:text-amber-700 font-semibold text-[11px]">Edit</a>
                                 <form action="{{ route('web.nilai.destroy', $n->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus data nilai ini?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-rose-600 hover:text-rose-700 font-semibold">Hapus</button>
+                                    <button type="submit" class="text-rose-600 hover:text-rose-700 font-semibold text-[11px]">Hapus</button>
                                 </form>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="py-10 text-center text-slate-400">Belum ada data nilai akademik yang diinput.</td>
+                            <td colspan="8" class="py-10 text-center text-slate-400">Belum ada data nilai akademik yang tercatat.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -113,7 +115,7 @@
         </div>
 
         @if($nilais->hasPages())
-            <div class="p-4 border-t border-slate-200">
+            <div class="p-4 border-t border-slate-200/80">
                 {{ $nilais->links() }}
             </div>
         @endif

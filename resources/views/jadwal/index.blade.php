@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Jadwal Pelajaran Sekolah')
+@section('title', 'Jadwal Perkuliahan')
 
 @section('content')
 <div class="space-y-5">
@@ -9,23 +9,23 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
             <div class="flex items-center gap-2">
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-800">SIAKAD</span>
-                <span class="text-xs text-slate-400">Jadwal &amp; Ruangan</span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-indigo-100 text-indigo-800">SIAKAD</span>
+                <span class="text-xs text-slate-400">Jadwal &amp; Ruangan Kuliah</span>
             </div>
-            <h1 class="text-xl font-black text-slate-900 mt-1">Jadwal Pelajaran</h1>
-            <p class="text-xs text-slate-500 mt-0.5">Atur alokasi jam mengajar, kelas, mata pelajaran, guru pengampu, dan ruangan</p>
+            <h1 class="text-xl font-black text-slate-900 mt-1">Jadwal Perkuliahan</h1>
+            <p class="text-xs text-slate-500 mt-0.5">Atur alokasi jam tatap muka, kelas kuliah, mata kuliah, dosen pengampu, dan ruang perkuliahan</p>
         </div>
-        <a href="{{ route('web.jadwal.create') }}" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-600/20 transition inline-flex items-center gap-1.5">
-            <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></span> Tambah Jadwal Baru
+        <a href="{{ route('web.jadwal.create') }}" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-600/20 transition inline-flex items-center gap-1.5">
+            <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></span> Tambah Jadwal Kuliah Baru
         </a>
     </div>
 
     <!-- Filter Card -->
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4">
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-soft p-4">
         <form method="GET" action="{{ route('web.jadwal.index') }}" class="flex flex-col sm:flex-row items-center gap-3 text-xs">
             <div class="w-full sm:w-60">
-                <select name="id_kelas" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="">-- Semua Kelas --</option>
+                <select name="id_kelas" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="">-- Semua Kelas Kuliah --</option>
                     @foreach($kelasList as $k)
                         <option value="{{ $k->id }}" {{ request('id_kelas') == $k->id ? 'selected' : '' }}>{{ $k->nama_kelas }}</option>
                     @endforeach
@@ -33,7 +33,7 @@
             </div>
 
             <div class="w-full sm:w-48">
-                <select name="hari" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select name="hari" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     <option value="">-- Semua Hari --</option>
                     @foreach(['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'] as $h)
                         <option value="{{ $h }}" {{ request('hari') == $h ? 'selected' : '' }}>{{ $h }}</option>
@@ -49,16 +49,16 @@
     </div>
 
     <!-- Table Card -->
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-soft overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
                 <thead>
-                    <tr class="border-b border-slate-200 bg-slate-50 text-slate-500 uppercase tracking-wider">
+                    <tr class="border-b border-slate-200/80 bg-slate-50/50 text-slate-500 uppercase tracking-wider text-[10px] font-semibold">
                         <th class="py-3.5 px-4 font-semibold">Hari &amp; Jam</th>
-                        <th class="py-3.5 px-4 font-semibold">Kelas</th>
-                        <th class="py-3.5 px-4 font-semibold">Mata Pelajaran</th>
-                        <th class="py-3.5 px-4 font-semibold">Guru Pengampu</th>
-                        <th class="py-3.5 px-4 font-semibold">Ruangan</th>
+                        <th class="py-3.5 px-4 font-semibold">Kelas Kuliah</th>
+                        <th class="py-3.5 px-4 font-semibold">Mata Kuliah</th>
+                        <th class="py-3.5 px-4 font-semibold">Dosen Pengampu</th>
+                        <th class="py-3.5 px-4 font-semibold">Ruang Perkuliahan</th>
                         <th class="py-3.5 px-4 font-semibold text-right">Aksi</th>
                     </tr>
                 </thead>
@@ -66,7 +66,7 @@
                     @forelse($jadwals as $jadwal)
                         <tr class="hover:bg-slate-50 transition">
                             <td class="py-3.5 px-4 whitespace-nowrap">
-                                <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-blue-50 text-blue-800 mr-2">
+                                <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-indigo-50 text-indigo-800 border border-indigo-200/60 mr-2">
                                     {{ $jadwal->hari }}
                                 </span>
                                 <span class="font-mono text-slate-700 font-semibold">
@@ -84,13 +84,13 @@
                                 {{ $jadwal->guru?->nama_guru }}
                             </td>
                             <td class="py-3.5 px-4 text-slate-600">
-                                <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 text-[11px]">
-                                    {{ $jadwal->ruangan ?? 'Kelas' }}
+                                <span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[11px] font-mono border border-slate-200">
+                                    {{ $jadwal->ruangan ?? 'Ruang Kuliah' }}
                                 </span>
                             </td>
                             <td class="py-3.5 px-4 text-right space-x-2 whitespace-nowrap">
                                 <a href="{{ route('web.jadwal.edit', $jadwal->id) }}" class="text-amber-600 hover:text-amber-700 font-semibold">Edit</a>
-                                <form action="{{ route('web.jadwal.destroy', $jadwal->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus jadwal ini?');">
+                                <form action="{{ route('web.jadwal.destroy', $jadwal->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus jadwal perkuliahan ini?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-rose-600 hover:text-rose-700 font-semibold">Hapus</button>
@@ -99,7 +99,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="py-10 text-center text-slate-400">Belum ada data jadwal pelajaran yang sesuai.</td>
+                            <td colspan="6" class="py-10 text-center text-slate-400">Belum ada jadwal perkuliahan yang tercatat.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -107,7 +107,7 @@
         </div>
 
         @if($jadwals->hasPages())
-            <div class="p-4 border-t border-slate-200">
+            <div class="p-4 border-t border-slate-200/80">
                 {{ $jadwals->links() }}
             </div>
         @endif
