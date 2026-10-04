@@ -566,7 +566,7 @@
         </header>
 
         <!-- Main Body -->
-        <main class="flex-1 p-4 sm:p-6 md:p-8 max-w-7xl w-full mx-auto space-y-6">
+        <main class="flex-1 p-4 sm:p-6 md:p-8 max-w-7xl w-full mx-auto space-y-6 animate-card-in">
             @yield('content')
         </main>
 

@@ -8,6 +8,12 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        @keyframes cardFadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-card-in { animation: cardFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white relative overflow-x-hidden">
@@ -17,7 +23,7 @@
     <div class="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-emerald-600/10 rounded-full blur-[120px] pointer-events-none"></div>
 
     <!-- Navigation Header -->
-    <header class="w-full max-w-7xl mx-auto px-6 py-6 flex items-center justify-between relative z-10">
+    <header class="w-full max-w-7xl mx-auto px-6 py-6 flex items-center justify-between relative z-10 animate-card-in">
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-600/30 border border-indigo-400/30">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -32,16 +38,16 @@
         </div>
 
         <nav class="flex items-center gap-3">
-            <a href="{{ route('cek.index') }}" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition border border-transparent">
+            <a href="{{ route('cek.index') }}" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 active:scale-[0.98] transition-all duration-150 border border-transparent">
                 Cek Tagihan UKT Publik
             </a>
             @auth
-                <a href="{{ url('/dashboard') }}" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30 transition flex items-center gap-2">
+                <a href="{{ url('/dashboard') }}" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] text-white shadow-lg shadow-indigo-600/30 transition-all duration-150 flex items-center gap-2">
                     <span>Buka Dashboard</span>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                 </a>
             @else
-                <a href="{{ route('login') }}" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30 transition flex items-center gap-2">
+                <a href="{{ route('login') }}" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] text-white shadow-lg shadow-indigo-600/30 transition-all duration-150 flex items-center gap-2">
                     <span>Masuk Portal</span>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                 </a>
@@ -50,7 +56,7 @@
     </header>
 
     <!-- Hero Content -->
-    <main class="w-full max-w-7xl mx-auto px-6 py-12 md:py-20 my-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+    <main class="w-full max-w-7xl mx-auto px-6 py-12 md:py-20 my-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center animate-card-in">
         <div class="lg:col-span-7 space-y-6 text-left">
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold">
                 <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
