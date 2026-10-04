@@ -12,7 +12,7 @@ class PortalController extends BaseApiController
      */
     public function cekSiswa(string $nisn): JsonResponse
     {
-        $siswa = Siswa::with(['kelas', 'spp', 'pembayarans.petugas'])
+        $siswa = Siswa::with(['kelas', 'spp', 'pembayarans.petugas', 'nilais.mapel', 'nilais.guru', 'presensis'])
             ->where('nisn', $nisn)
             ->first();
 
@@ -46,6 +46,25 @@ class PortalController extends BaseApiController
                     'formatted_nominal' => 'Rp ' . number_format($siswa->spp?->nominal ?? 0, 0, ',', '.'),
                 ],
             ],
+            'akademik' => [
+                'total_mapel_dinilai' => $siswa->nilais->count(),
+                'rata_rata_nilai' => $siswa->nilais->count() > 0 ? round($siswa->nilais->avg('nilai_akhir'), 2) : 0,
+                'daftar_nilai' => $siswa->nilais->map(fn($n) => [
+                    'mapel' => $n->mapel?->nama_mapel,
+                    'kkm' => $n->mapel?->kkm,
+                    'nilai_akhir' => (float) $n->nilai_akhir,
+                    'predikat' => $n->predikat,
+                    'tuntas' => $n->nilai_akhir >= ($n->mapel?->kkm ?? 75),
+                    'semester' => $n->semester,
+                    'tahun_ajaran' => $n->tahun_ajaran,
+                ]),
+                'rekap_kehadiran' => [
+                    'hadir' => $siswa->presensis->where('status', 'Hadir')->count(),
+                    'izin' => $siswa->presensis->where('status', 'Izin')->count(),
+                    'sakit' => $siswa->presensis->where('status', 'Sakit')->count(),
+                    'alpa' => $siswa->presensis->where('status', 'Alpa')->count(),
+                ],
+            ],
             'ringkasan_keuangan' => [
                 'status_lunas' => $infoTunggakan['total_bulan'] === 0,
                 'total_bulan_tunggakan' => $infoTunggakan['total_bulan'],
@@ -71,6 +90,6 @@ class PortalController extends BaseApiController
             }),
         ];
 
-        return $this->sendResponse($response, 'Data tagihan dan riwayat pembayaran siswa berhasil ditemukan.');
+        return $this->sendResponse($response, 'Data akademik, tagihan, dan riwayat pembayaran siswa berhasil ditemukan.');
     }
 }

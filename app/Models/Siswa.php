@@ -101,4 +101,14 @@ class Siswa extends Model
     {
         return $this->hasMany(Pembayaran::class, 'id_siswa');
     }
+
+    public function nilais(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Nilai::class, 'id_siswa');
+    }
+
+    public function presensis(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Presensi::class, 'id_siswa');
+    }
 }

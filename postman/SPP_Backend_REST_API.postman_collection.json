@@ -827,6 +827,246 @@
           }
         }
       ]
+    },
+    {
+      "name": "6. SIAKAD - Guru & Tenaga Pendidik",
+      "item": [
+        {
+          "name": "Daftar Guru (List & Filter)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/guru?search=Budi",
+              "host": ["{{base_url}}"],
+              "path": ["guru"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "Budi"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Tambah Guru Baru",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nip\": \"198501012010011005\",\n  \"nama_guru\": \"Dr. Siti Rahma, M.Pd\",\n  \"jenis_kelamin\": \"P\",\n  \"mata_pelajaran_utama\": \"Bahasa Inggris\",\n  \"no_telp\": \"081298765432\",\n  \"email\": \"siti.rahma@sekolah.id\",\n  \"status\": \"Aktif\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/guru",
+              "host": ["{{base_url}}"],
+              "path": ["guru"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. SIAKAD - Mata Pelajaran",
+      "item": [
+        {
+          "name": "Daftar Mata Pelajaran",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mapel",
+              "host": ["{{base_url}}"],
+              "path": ["mapel"]
+            }
+          }
+        },
+        {
+          "name": "Tambah Mata Pelajaran",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"kode_mapel\": \"PROG-WEB-01\",\n  \"nama_mapel\": \"Pemrograman Web & Backend\",\n  \"kkm\": 78,\n  \"kelompok\": \"Produktif Kejuruan\",\n  \"alokasi_jam\": 4\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/mapel",
+              "host": ["{{base_url}}"],
+              "path": ["mapel"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. SIAKAD - Jadwal Pelajaran",
+      "item": [
+        {
+          "name": "Daftar Jadwal Pelajaran (Filter Hari / Kelas)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/jadwal?hari=Senin",
+              "host": ["{{base_url}}"],
+              "path": ["jadwal"],
+              "query": [
+                {
+                  "key": "hari",
+                  "value": "Senin"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. SIAKAD - Penilaian & E-Rapor",
+      "item": [
+        {
+          "name": "Daftar Nilai Siswa",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/nilai",
+              "host": ["{{base_url}}"],
+              "path": ["nilai"]
+            }
+          }
+        },
+        {
+          "name": "E-Rapor Digital & Rekap Nilai Siswa",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/nilai/rapor/1",
+              "host": ["{{base_url}}"],
+              "path": ["nilai", "rapor", "1"]
+            },
+            "description": "Menghasilkan rekap nilai lengkap seluruh mata pelajaran, bobot nilai akhir (30% Tugas + 30% UTS + 40% UAS), status kelulusan KKM, dan rata-rata nilai akademik."
+          }
+        },
+        {
+          "name": "Input / Simpan Nilai Siswa",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_siswa\": 1,\n  \"id_mapel\": 1,\n  \"id_guru\": 1,\n  \"semester\": \"Ganjil\",\n  \"tahun_ajaran\": \"2025/2026\",\n  \"nilai_tugas\": 88,\n  \"nilai_uts\": 85,\n  \"nilai_uas\": 90,\n  \"catatan\": \"Prestasi akademik sangat baik, aktif dalam diskusi kelas\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/nilai",
+              "host": ["{{base_url}}"],
+              "path": ["nilai"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. SIAKAD - Presensi & Kehadiran",
+      "item": [
+        {
+          "name": "Daftar Presensi Kehadiran Siswa",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/presensi",
+              "host": ["{{base_url}}"],
+              "path": ["presensi"]
+            }
+          }
+        },
+        {
+          "name": "Input Presensi Batch Satu Kelas",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tanggal\": \"2025-10-04\",\n  \"presensi\": {\n    \"1\": \"Hadir\",\n    \"2\": \"Hadir\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/presensi/batch",
+              "host": ["{{base_url}}"],
+              "path": ["presensi", "batch"]
+            }
+          }
+        }
+      ]
     }
   ]
 }

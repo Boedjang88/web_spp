@@ -1,17 +1,24 @@
 <?php
 
+use App\Http\Controllers\Api\ActivityLogController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\GuruController;
+use App\Http\Controllers\Api\JadwalController;
 use App\Http\Controllers\Api\KelasController;
 use App\Http\Controllers\Api\LaporanController;
+use App\Http\Controllers\Api\MapelController;
+use App\Http\Controllers\Api\NilaiController;
 use App\Http\Controllers\Api\PembayaranController;
+use App\Http\Controllers\Api\PortalController;
+use App\Http\Controllers\Api\PresensiController;
 use App\Http\Controllers\Api\SiswaController;
 use App\Http\Controllers\Api\SppController;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| API Routes - RESTful API Pembayaran SPP (Sanctum Protected)
+| API Routes - RESTful API SIAKAD & SPP (Sanctum Protected)
 |--------------------------------------------------------------------------
 */
 
@@ -20,7 +27,7 @@ Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('api.auth.login');
     Route::post('/register', [AuthController::class, 'register'])->name('api.auth.register');
 });
-Route::get('/portal/siswa/{nisn}', [\App\Http\Controllers\Api\PortalController::class, 'cekSiswa'])->name('api.portal.siswa');
+Route::get('/portal/siswa/{nisn}', [PortalController::class, 'cekSiswa'])->name('api.portal.siswa');
 
 // --- Protected Routes (Requires Bearer Token) ---
 Route::middleware('auth:sanctum')->group(function () {
@@ -38,12 +45,28 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/laporan/rekap', [LaporanController::class, 'rekap'])->name('api.laporan.rekap');
 
     // Audit Trail: Log Aktivitas
-    Route::get('/activity-logs', [\App\Http\Controllers\Api\ActivityLogController::class, 'index'])->name('api.activity-logs.index');
+    Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('api.activity-logs.index');
 
-    // Master Data: Kelas
+    // --- Academic Modules (SIAKAD) ---
+    // 1. Data Guru / Tenaga Pendidik
+    Route::apiResource('guru', GuruController::class);
+
+    // 2. Mata Pelajaran
+    Route::apiResource('mapel', MapelController::class);
+
+    // 3. Jadwal Pelajaran
+    Route::apiResource('jadwal', JadwalController::class);
+
+    // 4. Nilai & E-Rapor Siswa
+    Route::get('/nilai/rapor/{id}', [NilaiController::class, 'rapor'])->name('api.nilai.rapor');
+    Route::apiResource('nilai', NilaiController::class);
+
+    // 5. Presensi Kehadiran Siswa
+    Route::get('/presensi', [PresensiController::class, 'index'])->name('api.presensi.index');
+    Route::post('/presensi/batch', [PresensiController::class, 'storeBatch'])->name('api.presensi.batch');
+
+    // --- Master Data Sekolah ---
     Route::apiResource('kelas', KelasController::class);
-
-    // Master Data: SPP
     Route::apiResource('spp', SppController::class);
 
     // Data Siswa, Tagihan, & Surat Tagihan Resmi

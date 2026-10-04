@@ -21,4 +21,14 @@ class Kelas extends Model
     {
         return $this->hasMany(Siswa::class, 'id_kelas');
     }
+
+    public function jadwals(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(JadwalPelajaran::class, 'id_kelas');
+    }
+
+    public function presensis(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Presensi::class, 'id_kelas');
+    }
 }

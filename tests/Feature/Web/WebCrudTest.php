@@ -39,7 +39,7 @@ class WebCrudTest extends TestCase
     {
         $response = $this->actingAs($this->user)->get('/dashboard');
         $response->assertStatus(200)
-            ->assertSee('Dashboard Pembayaran SPP');
+            ->assertSee('Sistem Akademik');
     }
 
     public function test_can_create_kelas_via_web(): void

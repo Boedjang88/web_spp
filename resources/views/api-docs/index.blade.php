@@ -203,6 +203,82 @@
                 </div>
             </div>
 
+            <!-- 5. SIAKAD: Guru & Tenaga Pendidik -->
+            <div class="bg-slate-800 rounded-2xl border border-slate-700 p-5 space-y-3">
+                <h3 class="font-bold text-sm text-indigo-400 uppercase tracking-wider">5. SIAKAD: Guru &amp; Tenaga Pendidik</h3>
+                <div class="space-y-2 text-xs">
+                    <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700 flex items-center justify-between">
+                        <div>
+                            <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 font-bold font-mono mr-2">GET</span>
+                            <code class="text-slate-200">/api/guru</code>
+                            <p class="text-[11px] text-slate-400 mt-1">Daftar tenaga pengajar, NIP, status kepegawaian, &amp; spesialisasi</p>
+                        </div>
+                        <button onclick="testApi('GET', '/api/guru', null, true)" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold transition">Test</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. SIAKAD: Mata Pelajaran & Jadwal -->
+            <div class="bg-slate-800 rounded-2xl border border-slate-700 p-5 space-y-3">
+                <h3 class="font-bold text-sm text-indigo-400 uppercase tracking-wider">6. SIAKAD: Mapel &amp; Jadwal Pelajaran</h3>
+                <div class="space-y-2 text-xs">
+                    <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700 flex items-center justify-between">
+                        <div>
+                            <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 font-bold font-mono mr-2">GET</span>
+                            <code class="text-slate-200">/api/mapel</code>
+                            <p class="text-[11px] text-slate-400 mt-1">Kurikulum mata pelajaran, KKM standar, &amp; alokasi jam</p>
+                        </div>
+                        <button onclick="testApi('GET', '/api/mapel', null, true)" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold transition">Test</button>
+                    </div>
+                    <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700 flex items-center justify-between">
+                        <div>
+                            <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 font-bold font-mono mr-2">GET</span>
+                            <code class="text-slate-200">/api/jadwal</code>
+                            <p class="text-[11px] text-slate-400 mt-1">Jadwal pelajaran kelas terpadu dengan jam &amp; ruangan</p>
+                        </div>
+                        <button onclick="testApi('GET', '/api/jadwal', null, true)" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold transition">Test</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. SIAKAD: Penilaian & E-Rapor -->
+            <div class="bg-slate-800 rounded-2xl border border-slate-700 p-5 space-y-3">
+                <h3 class="font-bold text-sm text-indigo-400 uppercase tracking-wider">7. SIAKAD: Penilaian &amp; E-Rapor</h3>
+                <div class="space-y-2 text-xs">
+                    <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700 flex items-center justify-between">
+                        <div>
+                            <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 font-bold font-mono mr-2">GET</span>
+                            <code class="text-slate-200">/api/nilai</code>
+                            <p class="text-[11px] text-slate-400 mt-1">Data nilai komprehensif (Tugas, UTS, UAS, Nilai Akhir &amp; Predikat)</p>
+                        </div>
+                        <button onclick="testApi('GET', '/api/nilai', null, true)" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold transition">Test</button>
+                    </div>
+                    <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700 flex items-center justify-between">
+                        <div>
+                            <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 font-bold font-mono mr-2">GET</span>
+                            <code class="text-slate-200">/api/nilai/rapor/1</code>
+                            <p class="text-[11px] text-slate-400 mt-1">Kalkulasi E-Rapor lengkap beserta IPK rata-rata siswa</p>
+                        </div>
+                        <button onclick="testApi('GET', '/api/nilai/rapor/1', null, true)" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold transition">Test</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. SIAKAD: Presensi Siswa -->
+            <div class="bg-slate-800 rounded-2xl border border-slate-700 p-5 space-y-3">
+                <h3 class="font-bold text-sm text-indigo-400 uppercase tracking-wider">8. SIAKAD: Presensi Kehadiran</h3>
+                <div class="space-y-2 text-xs">
+                    <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700 flex items-center justify-between">
+                        <div>
+                            <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 font-bold font-mono mr-2">GET</span>
+                            <code class="text-slate-200">/api/presensi</code>
+                            <p class="text-[11px] text-slate-400 mt-1">Riwayat presensi harian siswa (Hadir, Izin, Sakit, Alpa)</p>
+                        </div>
+                        <button onclick="testApi('GET', '/api/presensi', null, true)" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold transition">Test</button>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <!-- Right: Live Response Console (5 Cols) -->
