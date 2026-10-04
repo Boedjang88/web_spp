@@ -102,12 +102,12 @@
 
     <!-- Official Header -->
     <div class="header">
-        <div class="school-title">SMK NEGERI / SWASTA CONTOH</div>
-        <div class="meta-info">Jl. Pendidikan No. 123, Bandung, Jawa Barat | Telp: (022) 1234567 | Website: www.sekolah.sch.id</div>
-        <div class="report-subtitle">LAPORAN REKAPITULASI PEMBAYARAN SPP</div>
+        <div class="school-title">UNIVERSITAS SIAKAD ENTERPRISE</div>
+        <div class="meta-info">Jl. Kampus Utama No. 123, Indonesia | Telp: (021) 789-0123 | Website: www.siakad.ac.id</div>
+        <div class="report-subtitle">LAPORAN REKAPITULASI PEMBAYARAN UKT</div>
         <div class="meta-info">
             Periode: {{ $startDate ?? 'Awal' }} s/d {{ $endDate ?? 'Sekarang' }} 
-            @if($filterKelas) | Kelas: {{ $filterKelas->nama_kelas }} @endif
+            @if($filterKelas) | Kelas Kuliah: {{ $filterKelas->nama_kelas }} @endif
         </div>
     </div>
 
@@ -118,9 +118,9 @@
                 <th class="text-center" style="width: 30px;">No</th>
                 <th>No. Kwitansi</th>
                 <th>Tanggal</th>
-                <th>NISN / Nama Siswa</th>
-                <th>Kelas</th>
-                <th>Periode SPP</th>
+                <th>NIM / Nama Mahasiswa</th>
+                <th>Kelas Kuliah</th>
+                <th>Periode UKT</th>
                 <th>Petugas</th>
                 <th class="text-right">Nominal (Rp)</th>
             </tr>
@@ -133,7 +133,7 @@
                     <td>{{ $p->tgl_bayar }}</td>
                     <td>
                         <strong>{{ $p->siswa?->nama }}</strong>
-                        <div style="font-size: 9px; color: #64748b;">NISN: {{ $p->siswa?->nisn }}</div>
+                        <div style="font-size: 9px; color: #64748b;">NIM: {{ $p->siswa?->nim ?? $p->siswa?->nisn }}</div>
                     </td>
                     <td>{{ $p->siswa?->kelas?->nama_kelas }}</td>
                     <td>{{ $p->bulan_dibayar }} {{ $p->tahun_dibayar }}</td>
@@ -160,18 +160,18 @@
     <div class="signatures">
         <div class="sig-col">
             <div>Mengetahui,</div>
-            <div>Kepala Sekolah</div>
+            <div>Kepala BAAK / Dekan</div>
             <div class="sig-space"></div>
-            <div class="sig-name">Dr. H. Hendra Wijaya, M.Pd.</div>
-            <div style="font-size: 9px; color: #64748b;">NIP. 197508152000031001</div>
+            <div class="sig-name">Dr. H. Hendra Wijaya, M.Kom.</div>
+            <div style="font-size: 9px; color: #64748b;">NIDN. 197508152000031001</div>
         </div>
 
         <div class="sig-col">
-            <div>Bandung, {{ now()->translatedFormat('d F Y') }}</div>
-            <div>Bendahara / Petugas SPP</div>
+            <div>Kota Kampus, {{ now()->translatedFormat('d F Y') }}</div>
+            <div>Bendahara / Petugas UKT</div>
             <div class="sig-space"></div>
-            <div class="sig-name">{{ auth()->user()->name ?? 'Administrator SPP' }}</div>
-            <div style="font-size: 9px; color: #64748b;">Petugas Loket Terverifikasi</div>
+            <div class="sig-name">{{ auth()->user()->name ?? 'Administrator UKT' }}</div>
+            <div style="font-size: 9px; color: #64748b;">Petugas BAAK Terverifikasi</div>
         </div>
     </div>
 

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Laporan & Rekapitulasi SPP')
+@section('title', 'Laporan & Rekapitulasi UKT')
 
 @section('content')
 <div class="space-y-6">
@@ -8,7 +8,7 @@
     <!-- Header & Action -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-            <h1 class="text-xl font-bold text-slate-900">Rekapitulasi & Laporan Keuangan SPP</h1>
+            <h1 class="text-xl font-bold text-slate-900">Rekapitulasi & Laporan Keuangan UKT</h1>
             <p class="text-xs text-slate-500 mt-0.5">Filter transaksi, cetak rekapitulasi resmi, dan ekspor ke format CSV / Excel</p>
         </div>
         <div class="flex items-center gap-2">

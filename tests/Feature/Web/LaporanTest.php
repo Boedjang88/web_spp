@@ -49,7 +49,7 @@ class LaporanTest extends TestCase
     {
         $response = $this->actingAs($this->user)->get('/web/laporan');
         $response->assertStatus(200)
-            ->assertSee('Laporan Keuangan SPP')
+            ->assertSee('Laporan Keuangan UKT')
             ->assertSee('Ahmad Fauzi');
     }
 
@@ -57,7 +57,7 @@ class LaporanTest extends TestCase
     {
         $response = $this->actingAs($this->user)->get('/web/laporan/cetak');
         $response->assertStatus(200)
-            ->assertSeeText('LAPORAN REKAPITULASI PEMBAYARAN SPP')
+            ->assertSeeText('LAPORAN REKAPITULASI PEMBAYARAN UKT')
             ->assertSeeText('Ahmad Fauzi');
     }
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Portal Siswa &amp; Wali Murid - SMK Merdeka Belajar</title>
+    <title>Portal Layanan Mahasiswa - SIAKAD Enterprise</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
@@ -15,18 +15,18 @@
     <!-- Top Navigation Bar -->
     <div class="w-full max-w-4xl flex justify-between items-center py-2 px-4 mb-4 text-white">
         <div class="flex items-center gap-2.5">
-            <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center font-black text-white text-base shadow-md"><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg></div>
+            <div class="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center font-black text-white text-base shadow-md"><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg></div>
             <div>
-                <span class="font-extrabold text-base tracking-tight block">SMK Merdeka Belajar</span>
-                <span class="text-[11px] text-blue-300 block">Portal Layanan Mandiri Siswa &amp; Wali Murid (SIAKAD &amp; SPP)</span>
+                <span class="font-extrabold text-base tracking-tight block">SIAKAD Enterprise</span>
+                <span class="text-[11px] text-indigo-300 block">Portal Layanan Mandiri Mahasiswa &amp; Civitas Akademika (SIAKAD &amp; UKT)</span>
             </div>
         </div>
         <div class="flex items-center gap-3 text-xs">
             <a href="{{ url('/api/docs') }}" target="_blank" class="hidden sm:inline-flex items-center gap-1 bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg font-medium transition">
                 <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> API Docs
             </a>
-            <a href="{{ route('login') }}" class="bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-1.5 rounded-lg font-semibold transition shadow-sm">
-                Login Pegawai &rarr;
+            <a href="{{ route('login') }}" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3.5 py-1.5 rounded-lg font-semibold transition shadow-sm">
+                Login Portal &rarr;
             </a>
         </div>
     </div>
@@ -35,13 +35,13 @@
     <div class="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100 mb-8">
         
         <!-- Header Hero Banner -->
-        <div class="bg-gradient-to-r from-blue-700 via-indigo-700 to-slate-900 p-6 md:p-8 text-white relative overflow-hidden">
+        <div class="bg-gradient-to-r from-indigo-700 via-blue-800 to-slate-900 p-6 md:p-8 text-white relative overflow-hidden">
             <div class="relative z-10 text-center max-w-xl mx-auto">
-                <span class="px-3 py-1 bg-white/15 text-blue-100 rounded-full text-[11px] font-bold uppercase tracking-wider mb-2 inline-block">
-                    Sistem Akademik &amp; Keuangan Mandiri
+                <span class="px-3 py-1 bg-white/15 text-indigo-100 rounded-full text-[11px] font-bold uppercase tracking-wider mb-2 inline-block">
+                    Sistem Informasi Akademik &amp; Keuangan Mandiri
                 </span>
-                <h1 class="text-2xl md:text-3xl font-black tracking-tight">Cek Nilai, Rapor, Presensi &amp; SPP</h1>
-                <p class="text-blue-100 text-xs md:text-sm mt-1">Masukkan 10 digit NISN peserta didik untuk melihat hasil belajar akademik dan status pembayaran.</p>
+                <h1 class="text-2xl md:text-3xl font-black tracking-tight">Cek Nilai, E-KHS, Presensi &amp; UKT</h1>
+                <p class="text-indigo-100 text-xs md:text-sm mt-1">Masukkan NIM / NISN mahasiswa untuk melihat hasil belajar akademik dan status pembayaran UKT.</p>
             </div>
         </div>
 
@@ -56,8 +56,8 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                             </svg>
                         </div>
-                        <input type="text" name="nisn" placeholder="Masukkan 10 digit NISN siswa (cth: 0051234567)..." required
-                            class="w-full pl-11 pr-4 py-3.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition shadow-sm text-sm md:text-base font-mono"
+                        <input type="text" name="nisn" placeholder="Masukkan NIM / NISN mahasiswa..." required
+                            class="w-full pl-11 pr-4 py-3.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition shadow-sm text-sm md:text-base font-mono"
                             value="{{ request('nisn', $siswa->nisn ?? '') }}">
                     </div>
                     
