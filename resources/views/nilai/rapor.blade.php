@@ -38,20 +38,20 @@
                     <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
                 </div>
                 <div class="text-center flex-1">
-                    <h2 class="text-xs uppercase tracking-widest font-bold text-slate-500">Pemerintah Daerah - Dinas Pendidikan</h2>
-                    <h1 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">SMK MERDEKA BELAJAR</h1>
-                    <p class="text-[11px] text-slate-600 mt-0.5 font-medium">Jl. Pendidikan No. 45, Kompleks Akademika | Akreditasi: A (Unggul)</p>
+                    <h2 class="text-xs uppercase tracking-widest font-bold text-slate-500">KEMENTERIAN PENDIDIKAN TINGGI, RISET, DAN TEKNOLOGI</h2>
+                    <h1 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">UNIVERSITAS SIAKAD ENTERPRISE</h1>
+                    <p class="text-[11px] text-slate-600 mt-0.5 font-medium">Jl. Kampus Utama No. 123, Indonesia | Akreditasi: Unggul (A)</p>
                 </div>
                 <div class="w-16 flex-shrink-0 text-right">
-                    <span class="text-[9px] font-mono uppercase bg-slate-100 text-slate-600 px-2 py-1 rounded border border-slate-200">RAPOR-SIAKAD</span>
+                    <span class="text-[9px] font-mono uppercase bg-slate-100 text-slate-600 px-2 py-1 rounded border border-slate-200">KHS-SIAKAD</span>
                 </div>
             </div>
         </div>
 
         <!-- Document Title -->
         <div class="text-center my-4">
-            <h2 class="text-sm font-black uppercase tracking-wider text-slate-900">LAPORAN HASIL CAPAIAN KOMPETENSI PESERTA DIDIK</h2>
-            <p class="text-slate-500 text-[11px] font-semibold">Tahun Ajaran {{ $tahunAjaran }} &bull; Semester {{ $semester }}</p>
+            <h2 class="text-sm font-black uppercase tracking-wider text-slate-900">KARTU HASIL STUDI (E-KHS) MAHASISWA</h2>
+            <p class="text-slate-500 text-[11px] font-semibold">Tahun Akademik {{ $tahunAjaran }} &bull; Semester {{ $semester }}</p>
         </div>
 
         <!-- Student Meta Details -->
@@ -159,21 +159,21 @@
             </div>
 
             <div>
-                <p class="text-slate-500 mb-16">Jakarta, {{ now()->translatedFormat('d F Y') }}<br>Wali Kelas,</p>
+                <p class="text-slate-500 mb-16">Kota Kampus, {{ now()->translatedFormat('d F Y') }}<br>Dosen Pembimbing Akademik,</p>
                 <div class="border-b border-slate-800 w-36 mx-auto"></div>
                 <p class="font-bold text-slate-900 mt-1">{{ $siswa->kelas?->nama_kelas }} Advisor</p>
-                <p class="text-[10px] text-slate-500">NIP. 19820311 200801 1 004</p>
+                <p class="text-[10px] text-slate-500">NIDN. 198203112008011004</p>
             </div>
 
             <div class="relative">
                 <div class="absolute right-4 top-2 w-20 h-20 border-2 border-blue-600/40 rounded-full flex items-center justify-center -rotate-12 pointer-events-none opacity-60">
-                    <span class="text-[7px] uppercase tracking-tighter font-black text-blue-700 text-center">KEPALA SEKOLAH<br>SMK MERDEKA<br>BELAJAR</span>
+                    <span class="text-[7px] uppercase tracking-tighter font-black text-blue-700 text-center">BAAK / DEKAN<br>UNIVERSITAS SIAKAD<br>ENTERPRISE</span>
                 </div>
 
-                <p class="text-slate-500 mb-16">Mengetahui,<br>Kepala Sekolah,</p>
+                <p class="text-slate-500 mb-16">Mengetahui,<br>Dekan Fakultas / Kepala BAAK,</p>
                 <div class="border-b border-slate-800 w-36 mx-auto"></div>
-                <p class="font-bold text-slate-900 mt-1">Dr. Ir. H. Suryadi, M.Kom</p>
-                <p class="text-[10px] text-slate-500">NIP. 19710920 199703 1 003</p>
+                <p class="font-bold text-slate-900 mt-1">Dr. H. Hendra Wijaya, M.Kom.</p>
+                <p class="text-[10px] text-slate-500">NIDN. 197508152000031001</p>
             </div>
         </div>
 

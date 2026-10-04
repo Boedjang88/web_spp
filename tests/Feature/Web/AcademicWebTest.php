@@ -162,8 +162,8 @@ class AcademicWebTest extends TestCase
         $response = $this->actingAs($this->admin)->get("/web/nilai/rapor/{$this->siswa->id}");
 
         $response->assertStatus(200)
-            ->assertSee('SMK MERDEKA BELAJAR')
-            ->assertSee('LAPORAN HASIL CAPAIAN KOMPETENSI')
+            ->assertSee('UNIVERSITAS SIAKAD ENTERPRISE')
+            ->assertSee('KARTU HASIL STUDI')
             ->assertSee('Ahmad Fauzi')
             ->assertSee('Pemrograman Web')
             ->assertSee('90.5');

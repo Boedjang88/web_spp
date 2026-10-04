@@ -199,5 +199,60 @@ function detectGPS() {
         statusText.innerText = 'Geolocation tidak didukung browser.';
     }
 }
+
+// PWA Offline Attendance Mode & Auto-Sync Handler
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('attendanceForm');
+    const statusText = document.getElementById('gpsStatus');
+
+    function syncOfflineQueue() {
+        const queue = JSON.parse(localStorage.getItem('offline_presensi_queue') || '[]');
+        if (queue.length === 0) return;
+
+        statusText.innerText = `Mengirimkan ${queue.length} presensi terpending saat offline...`;
+        
+        queue.forEach((item, index) => {
+            fetch('{{ route("siakad.presensi.checkIn") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(item)
+            }).then(res => res.json()).then(data => {
+                queue.splice(index, 1);
+                localStorage.setItem('offline_presensi_queue', JSON.stringify(queue));
+                statusText.innerText = 'Presensi offline berhasil disinkronkan ke server!';
+                setTimeout(() => window.location.reload(), 1500);
+            }).catch(() => {});
+        });
+    }
+
+    window.addEventListener('online', syncOfflineQueue);
+    if (navigator.onLine) {
+        syncOfflineQueue();
+    }
+
+    form.addEventListener('submit', (e) => {
+        if (!navigator.onLine) {
+            e.preventDefault();
+            const payload = {
+                id_bap: document.getElementById('id_bap').value,
+                qr_token: document.getElementById('qr_token').value,
+                latitude: document.getElementById('latInput').value,
+                longitude: document.getElementById('lngInput').value,
+                timestamp: new Date().toISOString()
+            };
+
+            const queue = JSON.parse(localStorage.getItem('offline_presensi_queue') || '[]');
+            queue.push(payload);
+            localStorage.setItem('offline_presensi_queue', JSON.stringify(queue));
+
+            statusText.innerText = 'Status Offline: Presensi Anda disimpan secara lokal & otomatis dikirim saat online.';
+            alert('Koneksi terputus. Presensi Anda telah disimpan di perangkat (Offline Mode) dan akan disinkronkan otomatis saat koneksi internet kembali terhubung.');
+        }
+    });
+});
 </script>
 @endsection

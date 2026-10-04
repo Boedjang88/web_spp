@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\AttendanceQrRotated;
 use App\Models\BapPerkuliahan;
 use App\Models\KelasKuliah;
 use App\Models\PresensiKuliah;
@@ -26,6 +27,9 @@ class GeoAttendanceController extends BaseApiController
 
         // Store in cache for 10 seconds rotating token
         Cache::put($cacheKey, $token, now()->addSeconds(10));
+
+        // Broadcast websocket event for live listener updates
+        event(new AttendanceQrRotated($bap->id, $bap->id_kelas_kuliah, $token, 10));
 
         return $this->sendResponse([
             'id_bap' => $bap->id,
