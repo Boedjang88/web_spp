@@ -69,9 +69,38 @@
         button:active, a.btn:active, [role="button"]:active {
             transform: scale(0.97);
         }
+        /* Native CSS View Transitions API & Smooth Page Navigation */
+        @view-transition {
+            navigation: auto;
+        }
+
+        ::view-transition-old(root) {
+            animation: 120ms ease-out cubic-bezier(0.4, 0, 1, 1) both pageExit;
+        }
+        ::view-transition-new(root) {
+            animation: 200ms ease-in cubic-bezier(0, 0, 0.2, 1) both pageEnter;
+        }
+
+        @keyframes pageExit {
+            from { opacity: 1; transform: translateY(0) scale(1); }
+            to { opacity: 0; transform: translateY(-4px) scale(0.995); }
+        }
+        @keyframes pageEnter {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page-exit-active {
+            opacity: 0 !important;
+            transform: translateY(-6px) scale(0.995) !important;
+            transition: opacity 0.12s ease-out, transform 0.12s ease-out !important;
+        }
     </style>
 </head>
 <body class="bg-zinc-950 min-h-screen flex items-center justify-center p-4 antialiased">
+
+    <!-- Top Sleek Page Loading Progress Bar -->
+    <div id="topProgressBar" class="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-zinc-500 via-indigo-500 to-emerald-400 z-[9999] opacity-0 pointer-events-none transition-all duration-300 transform -translate-x-full"></div>
 
     <div class="max-w-md w-full animate-card-in">
         <!-- Logo & Header -->
@@ -301,6 +330,48 @@
                         submitBtn.innerHTML = origText;
                     }
                 }, 10000);
+            }
+        });
+
+        // Instant Link Click Page Navigation Transition & Top Progress Bar
+        document.addEventListener('click', function(e) {
+            const link = e.target.closest('a');
+            if (!link) return;
+
+            const href = link.getAttribute('href');
+            const target = link.getAttribute('target');
+
+            if (!href || href.startsWith('#') || href.startsWith('javascript:') || href.startsWith('mailto:') || href.startsWith('tel:') || target === '_blank' || e.metaKey || e.ctrlKey || e.shiftKey) {
+                return;
+            }
+
+            if (href.startsWith('/') || href.startsWith(window.location.origin)) {
+                const bar = document.getElementById('topProgressBar');
+                if (bar) {
+                    bar.style.transition = 'none';
+                    bar.style.transform = 'translateX(-100%)';
+                    bar.style.opacity = '1';
+                    requestAnimationFrame(() => {
+                        bar.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+                        bar.style.transform = 'translateX(-20%)';
+                    });
+                }
+
+                const cardEl = document.querySelector('.animate-card-in');
+                if (cardEl) {
+                    cardEl.classList.add('page-exit-active');
+                }
+            }
+        });
+
+        window.addEventListener('pageshow', function() {
+            const bar = document.getElementById('topProgressBar');
+            if (bar) {
+                bar.style.transition = 'transform 0.2s ease-out, opacity 0.2s ease-out';
+                bar.style.transform = 'translateX(0%)';
+                setTimeout(() => {
+                    bar.style.opacity = '0';
+                }, 200);
             }
         });
 

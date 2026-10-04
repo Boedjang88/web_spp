@@ -61,17 +61,38 @@
         .animate-backdrop-leave { animation: modalBackdropLeave 0.15s ease-in forwards; }
         .animate-card-in { animation: cardFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-        /* Global Fluid Micro-Interactions */
-        a, button, input, select, textarea, [role="button"] {
-            transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease, transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+        /* Native CSS View Transitions API & Smooth Page Navigation */
+        @view-transition {
+            navigation: auto;
         }
 
-        button:active, a.btn:active, [role="button"]:active {
-            transform: scale(0.97);
+        ::view-transition-old(root) {
+            animation: 120ms ease-out cubic-bezier(0.4, 0, 1, 1) both pageExit;
+        }
+        ::view-transition-new(root) {
+            animation: 200ms ease-in cubic-bezier(0, 0, 0.2, 1) both pageEnter;
+        }
+
+        @keyframes pageExit {
+            from { opacity: 1; transform: translateY(0) scale(1); }
+            to { opacity: 0; transform: translateY(-4px) scale(0.995); }
+        }
+        @keyframes pageEnter {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page-exit-active {
+            opacity: 0 !important;
+            transform: translateY(-6px) scale(0.995) !important;
+            transition: opacity 0.12s ease-out, transform 0.12s ease-out !important;
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between items-center p-3 sm:p-6 bg-zinc-950 text-zinc-100 antialiased">
+
+    <!-- Top Sleek Page Loading Progress Bar -->
+    <div id="topProgressBar" class="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-zinc-500 via-indigo-500 to-emerald-400 z-[9999] opacity-0 pointer-events-none transition-all duration-300 transform -translate-x-full"></div>
 
     <!-- Top Navigation Bar -->
     <div class="w-full max-w-4xl flex justify-between items-center py-3 px-4 mb-4 text-white border-b border-zinc-800">
