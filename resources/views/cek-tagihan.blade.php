@@ -93,7 +93,7 @@
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
                         <div>
                             <div class="flex items-center gap-2">
-                                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-800">Siswa Aktif</span>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-800">Mahasiswa Aktif</span>
                                 <span class="text-xs text-slate-400">NIS: {{ $siswa->nis }}</span>
                             </div>
                             <h2 class="text-xl md:text-2xl font-black text-slate-900 mt-1">{{ $siswa->nama }}</h2>
