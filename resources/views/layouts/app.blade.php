@@ -5,10 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>@yield('title', 'SIAKAD Enterprise') - Sistem Informasi Akademik &amp; Keuangan</title>
     
+    <!-- Inline Theme Script (Prevents FOUC) -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -45,10 +55,16 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: #f8fafc; 
-            color: #0f172a; 
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+        }
+        html.dark body {
+            background-color: #0b1120;
+            color: #f1f5f9;
+        }
+        html:not(.dark) body {
+            background-color: #f8fafc;
+            color: #0f172a;
         }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
         
@@ -87,6 +103,11 @@
         </div>
 
         <div class="flex items-center gap-2">
+            <!-- Mobile Theme Switcher Button -->
+            <button type="button" onclick="toggleTheme()" class="w-8 h-8 rounded-xl bg-slate-900 text-slate-300 hover:text-white border border-slate-800 flex items-center justify-center transition active:scale-95" title="Ganti Tema">
+                <svg class="theme-icon-sun w-4 h-4 text-amber-400 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                <svg class="theme-icon-moon w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+            </button>
             @auth
             <a href="{{ route('profile.index') }}" class="w-8 h-8 rounded-xl bg-slate-900 text-brand-300 border border-slate-800 flex items-center justify-center font-bold text-xs" title="Profil">
                 {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
@@ -412,19 +433,26 @@
     <div class="flex-1 flex flex-col min-h-screen pb-24 md:pb-0 overflow-x-hidden">
         
         <!-- Desktop Header Bar -->
-        <header class="hidden md:flex bg-white/90 border-b border-slate-200/80 px-8 py-3.5 justify-between items-center sticky top-0 z-20 shadow-soft backdrop-blur-md">
+        <header class="hidden md:flex bg-white/90 dark:bg-slate-900/90 border-b border-slate-200/80 dark:border-slate-800 px-8 py-3.5 justify-between items-center sticky top-0 z-20 shadow-soft backdrop-blur-md">
             <div class="flex items-center space-x-3 text-xs">
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-brand-50 text-brand-700 border border-brand-200">Production</span>
-                <span class="font-semibold text-slate-500">SIAKAD Enterprise &bull; {{ now()->translatedFormat('l, d F Y') }}</span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-brand-50 dark:bg-brand-950 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800">Production</span>
+                <span class="font-semibold text-slate-500 dark:text-slate-400">SIAKAD Enterprise &bull; {{ now()->translatedFormat('l, d F Y') }}</span>
             </div>
 
             <div class="flex items-center space-x-3">
-                <a href="{{ route('cek.index') }}" target="_blank" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200/80 text-slate-700 text-xs font-semibold transition inline-flex items-center gap-1.5 border border-slate-200/60">
-                    <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <!-- Theme Switcher Button -->
+                <button type="button" onclick="toggleTheme()" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200/80 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold transition inline-flex items-center gap-1.5 border border-slate-200/60 dark:border-slate-700 cursor-pointer select-none" title="Ganti Tema (Terang / Gelap)">
+                    <svg class="theme-icon-sun w-3.5 h-3.5 text-amber-500 dark:text-amber-400 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <svg class="theme-icon-moon w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                    <span>Tema: <strong class="theme-label-text">Terang</strong></span>
+                </button>
+
+                <a href="{{ route('cek.index') }}" target="_blank" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200/80 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold transition inline-flex items-center gap-1.5 border border-slate-200/60 dark:border-slate-700">
+                    <svg class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                     <span>Cek Publik</span>
                 </a>
-                <a href="{{ url('/api/docs') }}" target="_blank" class="px-3 py-1.5 rounded-xl bg-brand-50 hover:bg-brand-100/80 text-brand-700 text-xs font-semibold transition inline-flex items-center gap-1.5 border border-brand-200/60">
-                    <svg class="w-3.5 h-3.5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                <a href="{{ url('/api/docs') }}" target="_blank" class="px-3 py-1.5 rounded-xl bg-brand-50 dark:bg-brand-900/40 hover:bg-brand-100/80 dark:hover:bg-brand-900/60 text-brand-700 dark:text-brand-300 text-xs font-semibold transition inline-flex items-center gap-1.5 border border-brand-200/60 dark:border-brand-800/60">
+                    <svg class="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     <span>API Console</span>
                 </a>
             </div>
@@ -580,8 +608,36 @@
             }
         });
 
-        // Flash session toasts
+        // Theme Switcher Functions
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.contains('dark');
+            if (isDark) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+            updateThemeIcons();
+        }
+
+        function updateThemeIcons() {
+            const isDark = document.documentElement.classList.contains('dark');
+            document.querySelectorAll('.theme-icon-sun').forEach(el => {
+                if (isDark) el.classList.remove('hidden'); else el.classList.add('hidden');
+            });
+            document.querySelectorAll('.theme-icon-moon').forEach(el => {
+                if (isDark) el.classList.add('hidden'); else el.classList.remove('hidden');
+            });
+            document.querySelectorAll('.theme-label-text').forEach(el => {
+                el.textContent = isDark ? 'Gelap' : 'Terang';
+            });
+        }
+
+        // Flash session toasts & theme state init
         document.addEventListener('DOMContentLoaded', function() {
+            updateThemeIcons();
+
             @if(session('success'))
                 showToast('success', 'Berhasil', '{{ session('success') }}');
             @endif
