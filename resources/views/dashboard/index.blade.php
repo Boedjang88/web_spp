@@ -20,7 +20,7 @@
             </p>
         </div>
         <div class="relative z-10 flex flex-wrap items-center gap-2.5">
-            <a href="{{ route('web.pembayaran.create') }}" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-4 py-2.5 rounded-xl text-xs shadow-sm transition inline-flex items-center gap-1.5">
+            <a href="{{ route('web.pembayaran.create') }}" class="bg-zinc-100 hover:bg-zinc-200 text-zinc-900 font-semibold px-4 py-2.5 rounded-xl text-xs transition inline-flex items-center gap-1.5 border border-zinc-300">
                 <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></span> Catat UKT
             </a>
             <a href="{{ route('web.nilai.create') }}" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold px-4 py-2.5 rounded-xl text-xs transition inline-flex items-center gap-1.5 border border-slate-700">
@@ -29,52 +29,52 @@
         </div>
     </div>
 
-    <!-- Core Metrics Stats Cards (4 Columns) -->
+    <!-- Core Metrics Stats Cards (4 Columns - Monochrome Crisp) -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <!-- Total Mahasiswa -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft flex items-center justify-between">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 flex items-center justify-between">
             <div>
                 <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block mb-1">Mahasiswa Aktif</span>
-                <div class="text-2xl font-bold text-slate-900">{{ $totalSiswa }} Mahasiswa</div>
+                <div class="text-2xl font-bold font-mono text-slate-900">{{ $totalSiswa }}</div>
                 <p class="text-[11px] text-slate-500 mt-1">Tersebar di {{ $totalKelas }} Kelas Kuliah</p>
             </div>
-            <div class="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg flex-shrink-0 border border-blue-100">
-                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center flex-shrink-0 border border-slate-200">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
             </div>
         </div>
 
         <!-- Total Dosen -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft flex items-center justify-between">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 flex items-center justify-between">
             <div>
                 <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block mb-1">Dosen Pengajar</span>
-                <div class="text-2xl font-bold text-slate-900">{{ $totalGuru }} Dosen</div>
+                <div class="text-2xl font-bold font-mono text-slate-900">{{ $totalGuru }}</div>
                 <p class="text-[11px] text-slate-500 mt-1">{{ $totalMapel }} Mata Kuliah</p>
             </div>
-            <div class="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg flex-shrink-0 border border-indigo-100">
+            <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center flex-shrink-0 border border-slate-200">
                 <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
             </div>
         </div>
 
         <!-- Total Pemasukan UKT -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft flex items-center justify-between">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 flex items-center justify-between">
             <div>
                 <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block mb-1">Total Kas UKT</span>
-                <div class="text-2xl font-bold text-slate-900">Rp {{ number_format($totalPemasukan, 0, ',', '.') }}</div>
-                <p class="text-[11px] text-slate-500 mt-1">Bulan Ini: Rp {{ number_format($pemasukanBulanIni, 0, ',', '.') }}</p>
+                <div class="text-2xl font-bold font-mono text-slate-900">Rp {{ number_format($totalPemasukan, 0, ',', '.') }}</div>
+                <p class="text-[11px] text-slate-500 mt-1 font-mono">Bulan Ini: Rp {{ number_format($pemasukanBulanIni, 0, ',', '.') }}</p>
             </div>
-            <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg flex-shrink-0 border border-emerald-100">
+            <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center flex-shrink-0 border border-slate-200">
                 <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
         </div>
 
         <!-- Presensi Hari Ini -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft flex items-center justify-between">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 flex items-center justify-between">
             <div>
                 <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block mb-1">Kehadiran Hari Ini</span>
-                <div class="text-2xl font-bold text-slate-900">{{ $presensiHariIni['hadir'] }} Hadir</div>
-                <p class="text-[11px] text-slate-500 mt-1">{{ $presensiHariIni['izin'] + $presensiHariIni['sakit'] }} Izin/Sakit &bull; {{ $presensiHariIni['alpa'] }} Alpa</p>
+                <div class="text-2xl font-bold font-mono text-slate-900">{{ $presensiHariIni['hadir'] }} Sesi</div>
+                <p class="text-[11px] text-slate-500 mt-1 font-mono">{{ $presensiHariIni['izin'] + $presensiHariIni['sakit'] }} Izin/Sakit &bull; {{ $presensiHariIni['alpa'] }} Alpa</p>
             </div>
-            <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg flex-shrink-0 border border-amber-100">
+            <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center flex-shrink-0 border border-slate-200">
                 <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
             </div>
         </div>
