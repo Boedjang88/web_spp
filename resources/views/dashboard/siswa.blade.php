@@ -22,7 +22,10 @@
         @if($siswa)
             <div class="relative z-10 flex flex-wrap items-center gap-2">
                 <a href="{{ route('web.nilai.rapor', $siswa->id) }}" target="_blank" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-4 py-2.5 rounded-xl text-xs shadow-sm transition inline-flex items-center gap-1.5">
-                    <span>📄</span> Cetak E-Rapor Saya
+                    <span>📄</span> Cetak E-Rapor
+                </a>
+                <a href="{{ route('web.siswa.kartuUjian', $siswa->id) }}" target="_blank" class="bg-white/10 hover:bg-white/15 text-white font-semibold px-4 py-2.5 rounded-xl text-xs backdrop-blur transition inline-flex items-center gap-1.5 border border-white/10">
+                    <span>🪪</span> Kartu Ujian
                 </a>
             </div>
         @endif

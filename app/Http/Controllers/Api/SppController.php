@@ -96,8 +96,8 @@ class SppController extends BaseApiController
             return $this->sendError('Data tarif SPP tidak ditemukan.', [], 404);
         }
 
-        if ($spp->siswas_count > 0) {
-            return $this->sendError('Tarif SPP tidak dapat dihapus karena masih digunakan oleh siswa.', [], 422);
+        if ($spp->siswas()->count() > 0 || $spp->pembayarans()->count() > 0) {
+            return $this->sendError('Tarif SPP tidak dapat dihapus karena masih digunakan oleh data siswa atau riwayat transaksi pembayaran.', [], 422);
         }
 
         $spp->delete();

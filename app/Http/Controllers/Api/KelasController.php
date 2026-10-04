@@ -92,10 +92,14 @@ class KelasController extends BaseApiController
      */
     public function destroy(string|int $id): JsonResponse
     {
-        $kelas = Kelas::withCount('siswas')->find($id);
+        $kelas = Kelas::find($id);
 
         if (!$kelas) {
             return $this->sendError('Data kelas tidak ditemukan.', [], 404);
+        }
+
+        if ($kelas->siswas()->count() > 0 || $kelas->jadwals()->count() > 0 || $kelas->presensis()->count() > 0) {
+            return $this->sendError('Kelas tidak dapat dihapus karena masih memiliki relasi data siswa, jadwal, atau presensi.', [], 422);
         }
 
         $kelas->delete();

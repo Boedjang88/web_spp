@@ -83,6 +83,10 @@ class GuruController extends BaseApiController
             return $this->sendError('Data guru tidak ditemukan.', [], 404);
         }
 
+        if ($guru->jadwals()->count() > 0 || $guru->nilais()->count() > 0) {
+            return $this->sendError('Data guru tidak dapat dihapus karena masih terhubung dengan data jadwal mengajar atau nilai siswa.', [], 422);
+        }
+
         $guru->delete();
 
         return $this->sendResponse(null, 'Data guru berhasil dihapus.');

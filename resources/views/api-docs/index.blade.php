@@ -74,16 +74,16 @@
                 </div>
             </div>
 
-            <!-- 1. Authentication -->
+            <!-- 1. Authentication & Profile -->
             <div class="bg-slate-800 rounded-2xl border border-slate-700 p-5 space-y-3">
-                <h3 class="font-bold text-sm text-blue-400 uppercase tracking-wider">1. Autentikasi (Sanctum)</h3>
+                <h3 class="font-bold text-sm text-blue-400 uppercase tracking-wider">1. Autentikasi &amp; Profil Mandiri (Sanctum)</h3>
                 <div class="space-y-2 text-xs">
                     
                     <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700 flex items-center justify-between">
                         <div>
                             <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold font-mono mr-2">POST</span>
                             <code class="text-slate-200">/api/auth/login</code>
-                            <p class="text-[11px] text-slate-400 mt-1">Login admin/petugas & dapatkan Bearer Token</p>
+                            <p class="text-[11px] text-slate-400 mt-1">Login pengguna &amp; dapatkan Sanctum Bearer Token</p>
                         </div>
                         <button onclick="testApi('POST', '/api/auth/login', {'email':'admin@sekolah.id', 'password':'password123'}, false)" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold transition">Test</button>
                     </div>
@@ -92,9 +92,27 @@
                         <div>
                             <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 font-bold font-mono mr-2">GET</span>
                             <code class="text-slate-200">/api/auth/me</code>
-                            <p class="text-[11px] text-slate-400 mt-1">Profil user yang sedang terautentikasi</p>
+                            <p class="text-[11px] text-slate-400 mt-1">Profil user yang sedang aktif beserta data role &amp; relasi</p>
                         </div>
                         <button onclick="testApi('GET', '/api/auth/me', null, true)" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold transition">Test</button>
+                    </div>
+
+                    <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700 flex items-center justify-between">
+                        <div>
+                            <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 font-bold font-mono mr-2">PUT</span>
+                            <code class="text-slate-200">/api/auth/profile</code>
+                            <p class="text-[11px] text-slate-400 mt-1">Perbarui nama dan email login akun mandiri</p>
+                        </div>
+                        <button onclick="testApi('PUT', '/api/auth/profile', {'name':'Admin TU Update','email':'admin@sekolah.id'}, true)" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold transition">Test</button>
+                    </div>
+
+                    <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700 flex items-center justify-between">
+                        <div>
+                            <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 font-bold font-mono mr-2">PUT</span>
+                            <code class="text-slate-200">/api/auth/change-password</code>
+                            <p class="text-[11px] text-slate-400 mt-1">Ubah kata sandi akun (validasi sandi saat ini)</p>
+                        </div>
+                        <button onclick="testApi('PUT', '/api/auth/change-password', {'current_password':'password123','password':'newpassword123','password_confirmation':'newpassword123'}, true)" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold transition">Test</button>
                     </div>
 
                 </div>
@@ -181,6 +199,15 @@
                             <p class="text-[11px] text-slate-400 mt-1">Generate format surat tagihan resmi SPP siswa</p>
                         </div>
                         <button onclick="testApi('GET', '/api/siswa/1/surat-tagihan', null, true)" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold transition">Test</button>
+                    </div>
+
+                    <div class="p-3 bg-slate-900/60 rounded-xl border border-emerald-500/30 flex items-center justify-between">
+                        <div>
+                            <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold font-mono mr-2">GET</span>
+                            <code class="text-slate-200">/api/siswa/1/kartu-ujian</code>
+                            <p class="text-[11px] text-slate-400 mt-1">Status kelayakan Kartu Peserta Ujian (Bebas Tanggungan SPP Lock)</p>
+                        </div>
+                        <button onclick="testApi('GET', '/api/siswa/1/kartu-ujian', null, true)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-semibold transition">Test</button>
                     </div>
 
                 </div>

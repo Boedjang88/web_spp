@@ -73,8 +73,9 @@
                                 <span class="block text-[10px] text-slate-400">Thn {{ $item->spp?->tahun }}</span>
                             </td>
                             <td class="py-3 px-4 text-slate-600">{{ $item->no_telp }}</td>
-                            <td class="py-3 px-4 text-right space-x-2">
-                                <a href="{{ route('web.pembayaran.create', ['id_siswa' => $item->id]) }}" class="text-blue-600 hover:text-blue-700 font-bold bg-blue-50 px-2 py-1 rounded">Bayar</a>
+                            <td class="py-3 px-4 text-right space-x-1.5">
+                                <a href="{{ route('web.siswa.kartuUjian', $item->id) }}" target="_blank" class="text-indigo-600 hover:text-indigo-700 font-semibold bg-indigo-50 px-2 py-1 rounded-lg">Kartu Ujian</a>
+                                <a href="{{ route('web.pembayaran.create', ['id_siswa' => $item->id]) }}" class="text-emerald-700 hover:text-emerald-800 font-bold bg-emerald-50 px-2 py-1 rounded-lg">Bayar SPP</a>
                                 <a href="{{ route('web.siswa.show', $item->id) }}" class="text-slate-600 hover:text-slate-900 font-semibold">Detail</a>
                                 <a href="{{ route('web.siswa.edit', $item->id) }}" class="text-amber-600 hover:text-amber-700 font-semibold">Edit</a>
                                 <form action="{{ route('web.siswa.destroy', $item->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus siswa ini?');">

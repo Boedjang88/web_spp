@@ -78,6 +78,10 @@ class MapelController extends BaseApiController
             return $this->sendError('Mata pelajaran tidak ditemukan.', [], 404);
         }
 
+        if ($mapel->jadwals()->count() > 0 || $mapel->nilais()->count() > 0) {
+            return $this->sendError('Mata pelajaran tidak dapat dihapus karena masih terhubung dengan jadwal pelajaran atau nilai siswa.', [], 422);
+        }
+
         $mapel->delete();
 
         return $this->sendResponse(null, 'Mata pelajaran berhasil dihapus.');

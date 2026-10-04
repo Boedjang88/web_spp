@@ -32,9 +32,11 @@ Route::get('/portal/siswa/{nisn}', [PortalController::class, 'cekSiswa'])->name(
 // --- Protected Routes (Requires Bearer Token) ---
 Route::middleware('auth:sanctum')->group(function () {
     
-    // Auth & Profile
+    // Auth, Self-Service Profile & Password
     Route::prefix('auth')->group(function () {
         Route::get('/me', [AuthController::class, 'me'])->name('api.auth.me');
+        Route::put('/profile', [AuthController::class, 'updateProfile'])->name('api.auth.profile');
+        Route::put('/change-password', [AuthController::class, 'changePassword'])->name('api.auth.change-password');
         Route::post('/logout', [AuthController::class, 'logout'])->name('api.auth.logout');
         
         // Admin-Only Provisioning: Register new user
@@ -79,5 +81,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/nilai/rapor/{id}', [NilaiController::class, 'rapor'])->name('api.nilai.rapor');
     Route::get('/siswa/{id}/tunggakan', [SiswaController::class, 'tunggakan'])->name('api.siswa.tunggakan');
     Route::get('/siswa/{id}/surat-tagihan', [SiswaController::class, 'suratTagihan'])->name('api.siswa.surat-tagihan');
+    Route::get('/siswa/{id}/kartu-ujian', [SiswaController::class, 'kartuUjian'])->name('api.siswa.kartu-ujian');
     Route::get('/pembayaran/{id}/kwitansi', [PembayaranController::class, 'kwitansi'])->name('api.pembayaran.kwitansi');
 });

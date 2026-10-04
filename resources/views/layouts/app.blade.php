@@ -257,16 +257,16 @@
         <!-- User Profile Footer -->
         @auth
         <div class="p-3 border-t border-slate-800/80 bg-slate-950/40">
-            <div class="flex items-center justify-between p-2 rounded-xl bg-slate-850 border border-slate-800/80">
-                <div class="flex items-center space-x-2.5 overflow-hidden">
-                    <div class="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 font-bold flex items-center justify-center text-xs flex-shrink-0">
+            <div class="flex items-center justify-between p-2 rounded-xl bg-slate-850 border border-slate-800/80 hover:border-slate-700 transition">
+                <a href="{{ route('profile.index') }}" class="flex items-center space-x-2.5 overflow-hidden flex-1 group">
+                    <div class="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 font-bold flex items-center justify-center text-xs flex-shrink-0 group-hover:bg-indigo-500/30 transition">
                         {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                     </div>
                     <div class="truncate">
-                        <span class="font-bold text-xs text-white block truncate">{{ auth()->user()->name }}</span>
-                        <span class="text-[10px] text-slate-400 font-mono uppercase">{{ auth()->user()->role ?? 'petugas' }}</span>
+                        <span class="font-bold text-xs text-white block truncate group-hover:text-indigo-300 transition">{{ auth()->user()->name }}</span>
+                        <span class="text-[10px] text-slate-400 font-mono uppercase">{{ auth()->user()->role ?? 'petugas' }} &bull; Profil</span>
                     </div>
-                </div>
+                </a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="p-1.5 rounded-lg text-slate-400 hover:bg-rose-500/10 hover:text-rose-400 transition" title="Keluar">

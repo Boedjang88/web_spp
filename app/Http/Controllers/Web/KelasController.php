@@ -77,10 +77,10 @@ class KelasController extends Controller
 
     public function destroy(string|int $id): RedirectResponse
     {
-        $kelas = Kelas::withCount('siswas')->findOrFail($id);
+        $kelas = Kelas::findOrFail($id);
 
-        if ($kelas->siswas_count > 0) {
-            return back()->with('error', 'Kelas tidak dapat dihapus karena memiliki data siswa terkait.');
+        if ($kelas->siswas()->count() > 0 || $kelas->jadwals()->count() > 0 || $kelas->presensis()->count() > 0) {
+            return back()->with('error', "Kelas {$kelas->nama_kelas} tidak dapat dihapus karena masih memiliki relasi data siswa, jadwal, atau presensi.");
         }
 
         $nama = $kelas->nama_kelas;

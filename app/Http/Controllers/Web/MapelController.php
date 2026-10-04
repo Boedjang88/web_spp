@@ -80,6 +80,11 @@ class MapelController extends Controller
     public function destroy(string|int $id): RedirectResponse
     {
         $mapel = Mapel::findOrFail($id);
+
+        if ($mapel->jadwals()->count() > 0 || $mapel->nilais()->count() > 0) {
+            return back()->with('error', "Mata pelajaran {$mapel->nama_mapel} tidak dapat dihapus karena masih terhubung dengan data jadwal pelajaran atau nilai siswa.");
+        }
+
         $nama = $mapel->nama_mapel;
         $mapel->delete();
 

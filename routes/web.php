@@ -12,6 +12,7 @@ use App\Http\Controllers\Web\MapelController;
 use App\Http\Controllers\Web\NilaiController;
 use App\Http\Controllers\Web\PembayaranController;
 use App\Http\Controllers\Web\PresensiController;
+use App\Http\Controllers\Web\ProfileController;
 use App\Http\Controllers\Web\SiswaController;
 use App\Http\Controllers\Web\SppController;
 use App\Http\Controllers\Web\UserController;
@@ -42,6 +43,11 @@ Route::middleware('auth')->group(function () {
     // Dashboard (Personalized per-role)
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Self-Service Profile & Password Management
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::put('/profile', [ProfileController::class, 'updateProfile'])->name('profile.update');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+
     // --- Super Admin & Admin TU Only: User Management ---
     Route::middleware('role:superadmin,admin')->group(function () {
         Route::resource('web/users', UserController::class)->names('web.users');
@@ -68,5 +74,6 @@ Route::middleware('auth')->group(function () {
     // --- Student / General Accessible Print Endpoints ---
     Route::get('web/nilai/rapor/{id}', [NilaiController::class, 'cetakRapor'])->name('web.nilai.rapor');
     Route::get('web/siswa/{id}/surat-tagihan', [SiswaController::class, 'suratTagihan'])->name('web.siswa.suratTagihan');
+    Route::get('web/siswa/{id}/kartu-ujian', [SiswaController::class, 'kartuUjian'])->name('web.siswa.kartuUjian');
     Route::get('web/pembayaran/{id}/cetak', [PembayaranController::class, 'cetakKwitansi'])->name('web.pembayaran.cetak');
 });

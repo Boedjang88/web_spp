@@ -178,7 +178,59 @@
               "host": ["{{base_url}}"],
               "path": ["auth", "me"]
             },
-            "description": "Mendapatkan data user yang sedang login."
+            "description": "Mendapatkan data user yang sedang login beserta relasi peran akademik."
+          }
+        },
+        {
+          "name": "Update Profile Mandiri",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Administrator Sekolah Baru\",\n  \"email\": \"admin@sekolah.id\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/profile",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "profile"]
+            },
+            "description": "Memperbarui nama tampilan dan email akun yang sedang login."
+          }
+        },
+        {
+          "name": "Change Password Mandiri",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"current_password\": \"password123\",\n  \"password\": \"newpassword123\",\n  \"password_confirmation\": \"newpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/change-password",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "change-password"]
+            },
+            "description": "Mengubah kata sandi login dengan verifikasi kata sandi saat ini."
           }
         },
         {
@@ -307,6 +359,11 @@
                 },
                 {
                   "key": "id_petugas",
+                  "value": "",
+                  "description": "Filter per ID petugas"
+                }
+              ]
+            },
             "description": "Rekapitulasi total penerimaan uang SPP dan daftar transaksi sesuai filter rentang tanggal."
           }
         },
@@ -664,6 +721,24 @@
               "path": ["siswa", "1", "surat-tagihan"]
             },
             "description": "Menghasilkan data terstruktur untuk surat tagihan resmi (KOP sekolah, nomor surat, nominal tunggakan, nomor virtual account)."
+          }
+        },
+        {
+          "name": "Kartu Peserta Ujian (SPP Clearance Lock)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/siswa/1/kartu-ujian",
+              "host": ["{{base_url}}"],
+              "path": ["siswa", "1", "kartu-ujian"]
+            },
+            "description": "Mengambil status kelayakan Kartu Peserta Ujian berdasarkan verifikasi pelunasan SPP (Lunas = Terbit Kartu & QR; Nunggak = Terkunci)."
           }
         },
         {

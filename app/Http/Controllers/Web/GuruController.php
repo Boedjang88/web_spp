@@ -83,6 +83,11 @@ class GuruController extends Controller
     public function destroy(string|int $id): RedirectResponse
     {
         $guru = Guru::findOrFail($id);
+
+        if ($guru->jadwals()->count() > 0 || $guru->nilais()->count() > 0) {
+            return back()->with('error', "Guru {$guru->nama_guru} tidak dapat dihapus karena masih terhubung dengan data jadwal mengajar atau rekap nilai siswa.");
+        }
+
         $nama = $guru->nama_guru;
         $guru->delete();
 

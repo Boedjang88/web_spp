@@ -119,9 +119,31 @@ class SiswaController extends Controller
         return redirect()->route('web.siswa.index')->with('success', 'Data siswa berhasil diperbarui.');
     }
 
+    public function kartuUjian(string|int $id): View|RedirectResponse
+    {
+        $siswa = Siswa::with(['kelas', 'spp'])->findOrFail($id);
+
+        // Security check for Siswa role: cannot view other students' exam pass
+        if (auth()->check() && auth()->user()->role === 'siswa') {
+            if (auth()->user()->id_siswa && auth()->user()->id_siswa != $siswa->id) {
+                abort(403, 'Akses ditolak. Anda hanya dapat mencetak kartu ujian milik Anda sendiri.');
+            }
+        }
+
+        $tunggakan = $siswa->info_tunggakan;
+        $isLunas = $tunggakan['total_bulan'] === 0;
+
+        return view('siswa.kartu-ujian', compact('siswa', 'tunggakan', 'isLunas'));
+    }
+
     public function destroy(string|int $id): RedirectResponse
     {
         $siswa = Siswa::findOrFail($id);
+
+        if ($siswa->pembayarans()->count() > 0) {
+            return back()->with('error', "Siswa {$siswa->nama} tidak dapat dihapus karena memiliki {$siswa->pembayarans()->count()} riwayat transaksi pembayaran SPP.");
+        }
+
         $nama = $siswa->nama;
         $nisn = $siswa->nisn;
         $siswa->delete();

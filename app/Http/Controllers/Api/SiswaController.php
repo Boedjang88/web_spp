@@ -111,12 +111,60 @@ class SiswaController extends BaseApiController
             return $this->sendError('Data siswa tidak ditemukan.', [], 404);
         }
 
+        if ($siswa->pembayarans()->count() > 0) {
+            return $this->sendError("Siswa {$siswa->nama} tidak dapat dihapus karena memiliki riwayat pembayaran SPP.", [], 400);
+        }
+
         $nama = $siswa->nama;
         $siswa->delete();
 
         \App\Models\ActivityLog::record('SISWA_DELETE_API', "Menghapus data siswa {$nama} via REST API.");
 
         return $this->sendResponse(null, 'Data siswa berhasil dihapus.');
+    }
+
+    /**
+     * Get official Exam Pass (Kartu Peserta Ujian) data with SPP clearance check
+     */
+    public function kartuUjian(string|int $id): JsonResponse
+    {
+        $siswa = Siswa::with(['kelas', 'spp'])->find($id);
+
+        if (!$siswa) {
+            return $this->sendError('Data siswa tidak ditemukan.', [], 404);
+        }
+
+        // Security check for Siswa role: cannot view other students' exam pass
+        if (auth()->check() && auth()->user()->role === 'siswa') {
+            if (auth()->user()->id_siswa && auth()->user()->id_siswa != $siswa->id) {
+                return $this->sendError('Akses ditolak. Anda hanya dapat melihat kartu ujian milik Anda sendiri.', [], 403);
+            }
+        }
+
+        $tunggakan = $siswa->info_tunggakan;
+        $isLunas = $tunggakan['total_bulan'] === 0;
+
+        $kartuData = [
+            'is_eligible' => $isLunas,
+            'status_administrasi' => $isLunas ? 'LUNAS (Bebas Tanggungan)' : 'MENUNGGAK',
+            'nomor_ujian' => 'UAS-' . $siswa->nisn . '-' . date('Y'),
+            'tahun_ajaran' => '2025/2026',
+            'siswa' => [
+                'id' => $siswa->id,
+                'nisn' => $siswa->nisn,
+                'nis' => $siswa->nis,
+                'nama' => $siswa->nama,
+                'kelas' => $siswa->kelas?->nama_kelas,
+                'kompetensi_keahlian' => $siswa->kelas?->kompetensi_keahlian,
+            ],
+            'tunggakan' => $tunggakan,
+            'qr_verification_code' => 'VERIFIED-LUNAS-' . substr(md5((string) $siswa->nisn), 0, 10),
+            'pesan' => $isLunas
+                ? 'Siswa berhak mengikuti Ujian Akhir Semester.'
+                : 'Kartu Ujian terkunci. Harap menyelesaikan pembayaran SPP tertunggak sebesar Rp ' . number_format($tunggakan['total_rupiah'], 0, ',', '.') . ' (' . $tunggakan['total_bulan'] . ' bulan).',
+        ];
+
+        return $this->sendResponse($kartuData, 'Data kartu peserta ujian siswa berhasil diproses.');
     }
 
     /**

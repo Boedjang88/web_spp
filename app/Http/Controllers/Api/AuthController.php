@@ -71,9 +71,49 @@ class AuthController extends BaseApiController
     public function me(Request $request): JsonResponse
     {
         return $this->sendResponse(
-            new UserResource($request->user()),
+            new UserResource($request->user()->load(['guru', 'siswa.kelas', 'siswa.spp'])),
             'Data profil berhasil diambil.'
         );
+    }
+
+    /**
+     * Update Authenticated User Profile
+     */
+    public function updateProfile(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:100',
+            'email' => ['required', 'email', \Illuminate\Validation\Rule::unique('users', 'email')->ignore($user->id)],
+        ]);
+
+        $user->update($validated);
+
+        \App\Models\ActivityLog::record('UPDATE_PROFILE_API', "User {$user->name} memperbarui data profil via API.", $user->id);
+
+        return $this->sendResponse(new UserResource($user), 'Profil berhasil diperbarui.');
+    }
+
+    /**
+     * Change Authenticated User Password
+     */
+    public function changePassword(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'password' => ['required', 'string', 'min:6', 'confirmed', 'different:current_password'],
+        ]);
+
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        \App\Models\ActivityLog::record('CHANGE_PASSWORD_API', "User {$user->name} mengubah password via API.", $user->id);
+
+        return $this->sendResponse(null, 'Kata sandi berhasil diperbarui.');
     }
 
     /**

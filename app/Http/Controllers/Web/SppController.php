@@ -75,10 +75,10 @@ class SppController extends Controller
 
     public function destroy(string|int $id): RedirectResponse
     {
-        $spp = Spp::withCount('siswas')->findOrFail($id);
+        $spp = Spp::findOrFail($id);
 
-        if ($spp->siswas_count > 0) {
-            return back()->with('error', 'Tarif SPP tidak dapat dihapus karena masih digunakan oleh data siswa.');
+        if ($spp->siswas()->count() > 0 || $spp->pembayarans()->count() > 0) {
+            return back()->with('error', "Tarif SPP tahun {$spp->tahun} tidak dapat dihapus karena masih digunakan oleh data siswa atau riwayat transaksi pembayaran.");
         }
 
         $tahun = $spp->tahun;
