@@ -5,20 +5,20 @@
 @section('content')
 <div class="space-y-6">
 
-    <!-- Top Header Banner -->
-    <div class="bg-gradient-to-r from-slate-900 via-slate-850 to-brand-900 p-6 sm:p-8 rounded-2xl text-white shadow-soft flex flex-col md:flex-row justify-between items-start md:items-center gap-5 border border-slate-800">
+    <!-- Top Header Banner (Impeccable Anti-Slop Crisp Banner) -->
+    <div class="bg-slate-900 p-6 sm:p-8 rounded-2xl text-white shadow-soft flex flex-col md:flex-row justify-between items-start md:items-center gap-5 border border-slate-800">
         <div>
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-brand-200 border border-white/10 text-xs font-semibold mb-2">
-                <svg class="w-3.5 h-3.5 text-brand-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 text-slate-200 border border-slate-700 text-xs font-semibold mb-2">
+                <svg class="w-3.5 h-3.5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 <span>Geo-Fenced &amp; Dynamic QR Presensi</span>
             </div>
-            <h1 class="text-2xl font-bold tracking-tight">Presensi Perkuliahan Mahasiswa</h1>
+            <h1 class="text-2xl font-bold tracking-tight text-white">Presensi Perkuliahan Mahasiswa</h1>
             <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">Catat kehadiran kelas Anda secara real-time dengan verifikasi koordinat lokasi GPS (radius 20 meter) dan kode token dosen.</p>
         </div>
         <div class="flex items-center gap-3">
-            <div class="px-4 py-2.5 rounded-xl bg-white/10 border border-white/10 backdrop-blur text-right">
-                <div class="text-[10px] text-slate-300 uppercase tracking-wider font-bold">Tingkat Kehadiran</div>
-                <div class="text-xl font-black {{ $kehadiranPersen >= 75 ? 'text-emerald-400' : 'text-rose-400' }}">{{ $kehadiranPersen }}%</div>
+            <div class="px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-right">
+                <div class="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Tingkat Kehadiran</div>
+                <div class="text-xl font-mono font-bold {{ $kehadiranPersen >= 75 ? 'text-emerald-400' : 'text-rose-400' }}">{{ $kehadiranPersen }}%</div>
             </div>
         </div>
     </div>

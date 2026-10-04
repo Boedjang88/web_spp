@@ -5,20 +5,20 @@
 @section('content')
 <div class="space-y-6">
 
-    <!-- Header Section -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-gradient-to-r from-slate-900 via-slate-850 to-brand-900 p-6 sm:p-8 rounded-2xl border border-slate-800 text-white shadow-soft">
+    <!-- Header Section (Impeccable Anti-Slop Crisp Banner) -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-slate-900 p-6 sm:p-8 rounded-2xl border border-slate-800 text-white shadow-soft">
         <div>
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-brand-200 border border-white/10 text-xs font-semibold mb-2">
-                <svg class="w-3.5 h-3.5 text-brand-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 text-slate-200 border border-slate-700 text-xs font-semibold mb-2">
+                <svg class="w-3.5 h-3.5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
                 <span>Assignment &amp; Task Management</span>
             </div>
-            <h1 class="text-2xl font-bold tracking-tight">Tugas &amp; Penugasan LMS</h1>
+            <h1 class="text-2xl font-bold tracking-tight text-white">Tugas &amp; Penugasan LMS</h1>
             <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">Pantau tenggat waktu, unduh berkas instruksi, dan kumpulkan tugas perkuliahan secara aman.</p>
         </div>
         <div class="flex items-center gap-3">
-            <div class="px-4 py-2.5 rounded-xl bg-white/10 border border-white/10 backdrop-blur text-right">
-                <div class="text-[10px] text-slate-300 uppercase tracking-wider font-bold">Tugas Menunggu</div>
-                <div class="text-xl font-black text-brand-300">{{ $pendingAssignments->count() }}</div>
+            <div class="px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-right">
+                <div class="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Tugas Menunggu</div>
+                <div class="text-xl font-mono font-bold text-slate-200">{{ $pendingAssignments->count() }}</div>
             </div>
         </div>
     </div>

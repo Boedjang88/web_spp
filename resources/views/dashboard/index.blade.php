@@ -5,14 +5,14 @@
 @section('content')
 <div class="space-y-6">
 
-    <!-- Header & Welcome Banner (Calm & Modern) -->
-    <div class="bg-gradient-to-r from-slate-900 via-slate-850 to-indigo-950 rounded-2xl p-6 md:p-8 text-white shadow-soft relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center gap-5 border border-slate-800">
+    <!-- Header & Welcome Banner (Impeccable Crisp Executive Banner) -->
+    <div class="bg-slate-900 rounded-2xl p-6 md:p-8 text-white shadow-soft relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center gap-5 border border-slate-800">
         <div class="relative z-10">
             <div class="flex items-center gap-2 mb-2">
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white/10 text-slate-200 border border-white/10">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-800 text-slate-200 border border-slate-700">
                     Sistem Akademik &amp; Keuangan Perguruan Tinggi
                 </span>
-                <span class="text-xs text-indigo-300">T.A. 2025/2026</span>
+                <span class="text-xs text-slate-400 font-mono">T.A. 2025/2026</span>
             </div>
             <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-white">Selamat Datang, {{ auth()->user()->name }}!</h1>
             <p class="text-slate-300 text-xs md:text-sm mt-1 max-w-xl leading-relaxed">
@@ -23,7 +23,7 @@
             <a href="{{ route('web.pembayaran.create') }}" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-4 py-2.5 rounded-xl text-xs shadow-sm transition inline-flex items-center gap-1.5">
                 <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></span> Catat UKT
             </a>
-            <a href="{{ route('web.nilai.create') }}" class="bg-white/10 hover:bg-white/15 text-white font-semibold px-4 py-2.5 rounded-xl text-xs backdrop-blur transition inline-flex items-center gap-1.5 border border-white/10">
+            <a href="{{ route('web.nilai.create') }}" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold px-4 py-2.5 rounded-xl text-xs transition inline-flex items-center gap-1.5 border border-slate-700">
                 <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></span> Input Nilai
             </a>
         </div>

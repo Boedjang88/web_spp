@@ -34,14 +34,14 @@
     <!-- Main Card Container -->
     <div class="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100 mb-8">
         
-        <!-- Header Hero Banner -->
-        <div class="bg-gradient-to-r from-indigo-700 via-blue-800 to-slate-900 p-6 md:p-8 text-white relative overflow-hidden">
+        <!-- Header Hero Banner (Impeccable Anti-Slop Crisp Banner) -->
+        <div class="bg-slate-900 border-b border-slate-800 p-6 md:p-8 text-white relative overflow-hidden">
             <div class="relative z-10 text-center max-w-xl mx-auto">
-                <span class="px-3 py-1 bg-white/15 text-indigo-100 rounded-full text-[11px] font-bold uppercase tracking-wider mb-2 inline-block">
+                <span class="px-3 py-1 bg-slate-800 text-slate-200 border border-slate-700 rounded-full text-[11px] font-bold uppercase tracking-wider mb-2 inline-block">
                     Sistem Informasi Akademik &amp; Keuangan Mandiri
                 </span>
-                <h1 class="text-2xl md:text-3xl font-black tracking-tight">Cek Nilai, E-KHS, Presensi &amp; UKT</h1>
-                <p class="text-indigo-100 text-xs md:text-sm mt-1">Masukkan NIM / NISN mahasiswa untuk melihat hasil belajar akademik dan status pembayaran UKT.</p>
+                <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-white">Cek Nilai, E-KHS, Presensi &amp; UKT</h1>
+                <p class="text-slate-300 text-xs md:text-sm mt-1">Masukkan NIM / NISN mahasiswa untuk melihat hasil belajar akademik dan status pembayaran UKT.</p>
             </div>
         </div>
 
