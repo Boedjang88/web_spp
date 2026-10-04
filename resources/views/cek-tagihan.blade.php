@@ -115,12 +115,7 @@
             @if(isset($siswa))
                 @php 
                     $info = $siswa->info_tunggakan;
-                    $kehadiran = [
-                        'hadir' => $siswa->presensis->where('status', 'Hadir')->count(),
-                        'izin' => $siswa->presensis->where('status', 'Izin')->count(),
-                        'sakit' => $siswa->presensis->where('status', 'Sakit')->count(),
-                        'alpa' => $siswa->presensis->where('status', 'Alpa')->count(),
-                    ];
+                    $kehadiran = $siswa->rekap_kehadiran;
                 @endphp
 
                 <div class="space-y-5">

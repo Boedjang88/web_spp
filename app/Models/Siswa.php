@@ -169,4 +169,29 @@ class Siswa extends Model
     {
         return $this->hasMany(SkpiAktivitas::class, 'id_siswa');
     }
+
+    public function getRekapKehadiranAttribute(): array
+    {
+        $presensiManual = $this->presensis;
+        $presensiGeo = PresensiMahasiswa::where('id_mahasiswa', $this->id)->get();
+        $presensiKuliah = PresensiKuliah::where('id_siswa', $this->id)->get();
+
+        $hadir = $presensiManual->where('status', 'Hadir')->count()
+               + $presensiGeo->where('status', 'Hadir')->count()
+               + $presensiKuliah->where('status', 'Hadir')->count();
+
+        $izin = $presensiManual->where('status', 'Izin')->count()
+              + $presensiGeo->where('status', 'Izin')->count()
+              + $presensiKuliah->where('status', 'Izin')->count();
+
+        $sakit = $presensiManual->where('status', 'Sakit')->count()
+               + $presensiGeo->where('status', 'Sakit')->count()
+               + $presensiKuliah->where('status', 'Sakit')->count();
+
+        $alpa = $presensiManual->where('status', 'Alpa')->count()
+              + $presensiGeo->where('status', 'Alpa')->count()
+              + $presensiKuliah->where('status', 'Alpa')->count();
+
+        return compact('hadir', 'izin', 'sakit', 'alpa');
+    }
 }

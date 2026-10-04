@@ -87,6 +87,26 @@ class GradingService
         $detail->is_published = true;
         $detail->save();
 
+        // Auto-sync into Nilai model so E-KHS & classic Nilai list stay 100% synchronized
+        $krs = \App\Models\Krs::find($detail->id_krs);
+        if ($krs && $detail->kelasKuliah?->id_mk) {
+            \App\Models\Nilai::updateOrCreate(
+                [
+                    'id_siswa' => $krs->id_siswa,
+                    'id_mapel' => $detail->kelasKuliah->id_mk,
+                ],
+                [
+                    'semester' => 'Ganjil',
+                    'tahun_ajaran' => (string) date('Y'),
+                    'nilai_tugas' => (float) ($detail->nilai_tugas ?? 0),
+                    'nilai_uts' => (float) ($detail->nilai_uts ?? 0),
+                    'nilai_uas' => (float) ($detail->nilai_uas ?? 0),
+                    'nilai_akhir' => $finalNumeric,
+                    'predikat' => $huruf,
+                ]
+            );
+        }
+
         return $detail;
     }
 
