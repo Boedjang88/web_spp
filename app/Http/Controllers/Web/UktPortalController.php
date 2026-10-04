@@ -8,10 +8,13 @@ use App\Models\PembayaranUkt;
 use App\Models\TagihanUkt;
 use App\Models\TahunAkademik;
 use App\Services\Finance\UktBillingService;
+use App\Traits\ResolvesStudentUser;
 use Illuminate\Http\Request;
 
 class UktPortalController extends Controller
 {
+    use ResolvesStudentUser;
+
     public function __construct(
         protected UktBillingService $billingService
     ) {}
@@ -22,8 +25,7 @@ class UktPortalController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $studentId = $user->id_mahasiswa ?? $user->id_siswa;
-        $mahasiswa = Mahasiswa::with(['prodi.fakultas', 'ukt'])->findOrFail($studentId);
+        $mahasiswa = $this->getStudentMahasiswa($user);
 
         $activeTa = TahunAkademik::where('is_active', true)->first()
             ?? TahunAkademik::latest()->first();
@@ -43,8 +45,7 @@ class UktPortalController extends Controller
     public function bayar(Request $request, $id)
     {
         $user = $request->user();
-        $studentId = $user->id_mahasiswa ?? $user->id_siswa;
-        $mahasiswa = Mahasiswa::findOrFail($studentId);
+        $mahasiswa = $this->getStudentMahasiswa($user);
 
         $tagihan = TagihanUkt::where('id', $id)
             ->where('id_mahasiswa', $mahasiswa->id)

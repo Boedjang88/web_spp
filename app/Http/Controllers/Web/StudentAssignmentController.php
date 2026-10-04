@@ -8,12 +8,15 @@ use App\Models\Krs;
 use App\Models\Mahasiswa;
 use App\Models\Submission;
 use App\Services\Security\UploadSecurityGateway;
+use App\Traits\ResolvesStudentUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class StudentAssignmentController extends Controller
 {
+    use ResolvesStudentUser;
+
     public function __construct(
         protected UploadSecurityGateway $securityGateway
     ) {}
@@ -24,8 +27,7 @@ class StudentAssignmentController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $studentId = $user->id_mahasiswa ?? $user->id_siswa;
-        $mahasiswa = Mahasiswa::with(['prodi.fakultas'])->findOrFail($studentId);
+        $mahasiswa = $this->getStudentMahasiswa($user);
 
         // Get enrolled classes from approved KRS
         $krs = Krs::with('details.kelasKuliah.mataKuliah')
@@ -77,8 +79,7 @@ class StudentAssignmentController extends Controller
     public function show(Request $request, $id)
     {
         $user = $request->user();
-        $studentId = $user->id_mahasiswa ?? $user->id_siswa;
-        $mahasiswa = Mahasiswa::findOrFail($studentId);
+        $mahasiswa = $this->getStudentMahasiswa($user);
 
         $assignment = Assignment::with(['kelasKuliah.mataKuliah', 'kelasKuliah.dosen'])->findOrFail($id);
 
@@ -97,8 +98,7 @@ class StudentAssignmentController extends Controller
     public function submit(Request $request, $id)
     {
         $user = $request->user();
-        $studentId = $user->id_mahasiswa ?? $user->id_siswa;
-        $mahasiswa = Mahasiswa::findOrFail($studentId);
+        $mahasiswa = $this->getStudentMahasiswa($user);
 
         $assignment = Assignment::findOrFail($id);
 

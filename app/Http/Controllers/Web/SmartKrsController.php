@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\KelasKuliah;
 use App\Models\Krs;
+use App\Models\Mahasiswa;
 use App\Models\TahunAkademik;
 use App\Services\Academic\SmartKrsService;
+use App\Traits\ResolvesStudentUser;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,6 +16,8 @@ use Illuminate\View\View;
 
 class SmartKrsController extends Controller
 {
+    use ResolvesStudentUser;
+
     public function __construct(
         protected SmartKrsService $krsService
     ) {}
@@ -24,7 +28,8 @@ class SmartKrsController extends Controller
     public function index(): View
     {
         $user = auth()->user();
-        $siswa = $user->siswa;
+        $mahasiswa = $this->getStudentMahasiswa($user);
+        $siswa = $user->siswa ?? $mahasiswa;
 
         $activeYear = TahunAkademik::active()->first() ?? TahunAkademik::latest()->first();
 
@@ -32,11 +37,11 @@ class SmartKrsController extends Controller
         $availableClasses = collect();
         $isCleared = false;
 
-        if ($siswa && $activeYear) {
-            $isCleared = $this->krsService->isFinanciallyCleared($siswa->id, $activeYear->id);
+        if ($mahasiswa && $activeYear) {
+            $isCleared = $this->krsService->isFinanciallyCleared($mahasiswa->id, $activeYear->id);
 
             $krs = Krs::with(['details.kelasKuliah.mataKuliah', 'details.kelasKuliah.jadwalKuliahs.ruangan'])
-                ->where('id_siswa', $siswa->id)
+                ->where('id_siswa', $mahasiswa->id)
                 ->where('id_tahun_akademik', $activeYear->id)
                 ->first();
 
@@ -45,7 +50,7 @@ class SmartKrsController extends Controller
                 ->get();
         }
 
-        return view('siakad.krs.index', compact('siswa', 'activeYear', 'krs', 'availableClasses', 'isCleared'));
+        return view('siakad.krs.index', compact('siswa', 'mahasiswa', 'activeYear', 'krs', 'availableClasses', 'isCleared'));
     }
 
     /**
@@ -59,13 +64,11 @@ class SmartKrsController extends Controller
         ]);
 
         $user = auth()->user();
-        if (!$user->id_siswa) {
-            return back()->with('error', 'Akun Anda tidak tertaut dengan data mahasiswa.');
-        }
+        $mahasiswa = $this->getStudentMahasiswa($user);
 
         try {
             $this->krsService->enrollClassWithPessimisticLock(
-                $user->id_siswa,
+                $mahasiswa->id,
                 (int) $request->id_kelas_kuliah,
                 (int) $request->id_tahun_akademik
             );
@@ -82,12 +85,10 @@ class SmartKrsController extends Controller
     public function destroy(int $id): RedirectResponse
     {
         $user = auth()->user();
-        if (!$user->id_siswa) {
-            return back()->with('error', 'Akses ditolak.');
-        }
+        $mahasiswa = $this->getStudentMahasiswa($user);
 
         try {
-            $this->krsService->dropClass($user->id_siswa, $id);
+            $this->krsService->dropClass($mahasiswa->id, $id);
             return back()->with('success', 'Mata kuliah berhasil dibatalkan dari KRS.');
         } catch (Exception $e) {
             return back()->with('error', $e->getMessage());

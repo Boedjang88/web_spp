@@ -5,18 +5,20 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\Mahasiswa;
 use App\Models\Siswa;
+use App\Traits\ResolvesStudentUser;
 use Illuminate\Http\Request;
 
 class StudentBiodataController extends Controller
 {
+    use ResolvesStudentUser;
+
     /**
      * Display student biodata form
      */
     public function edit(Request $request)
     {
         $user = $request->user();
-        $studentId = $user->id_mahasiswa ?? $user->id_siswa;
-        $mahasiswa = Mahasiswa::with(['prodi.fakultas', 'dosenPa', 'ukt'])->findOrFail($studentId);
+        $mahasiswa = $this->getStudentMahasiswa($user);
 
         return view('siakad.profile.biodata', compact('mahasiswa'));
     }
@@ -27,8 +29,7 @@ class StudentBiodataController extends Controller
     public function update(Request $request)
     {
         $user = $request->user();
-        $studentId = $user->id_mahasiswa ?? $user->id_siswa;
-        $mahasiswa = Mahasiswa::findOrFail($studentId);
+        $mahasiswa = $this->getStudentMahasiswa($user);
 
         $validated = $request->validate([
             // Data Pribadi

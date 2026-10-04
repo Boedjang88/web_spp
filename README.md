@@ -20,15 +20,30 @@ Sistem Informasi Akademik dan Keuangan Terpadu berbasis **PHP 8.2.12** dan **Lar
 
 Aplikasi telah dilengkapi seeder akun untuk seluruh level hak akses (*4-Tier RBAC Hierarchy*).
 
-### 1. Akun Login Petugas, Pengajar, & Siswa (`/login`)
+### 1. Akun Login Petugas, Dosen / Guru, & Mahasiswa / Siswa (`/login`)
 
-| Role / Tingkat Akses | Email | Password | Deskripsi Hak Akses |
+| Role / Tingkat Akses | Email (Universitas / Sekolah) | Password | Deskripsi Hak Akses |
 | :--- | :--- | :--- | :--- |
-| **Super Admin** | `superadmin@sekolah.id` | `password123` | Akses penuh ke seluruh modul, audit trail, user provisioning, dan observability dashboard |
-| **Admin TU / Keuangan** | `admin@sekolah.id` | `password123` | Manajemen akademik, data siswa/guru, tarif SPP, laporan keuangan, dan verifikasi KRS |
-| **Petugas Loket / Kasir** | `petugas@sekolah.id` | `password123` | Entri pembayaran SPP single/batch, cetak kwitansi fisik, dan rekap penerimaan kas |
-| **Dewan Guru / Dosen** | `guru@sekolah.id` | `password123` | Manajemen jadwal mengajar, presensi kelas harian, input penilaian, dan rekap e-rapor |
-| **Siswa / Mahasiswa** | `siswa@sekolah.id` | `password123` | Portal mandiri siswa, registrasi Smart KRS, transkrip nilai, dan riwayat tagihan SPP |
+| **Super Admin** | `superadmin@univ.ac.id` / `superadmin@sekolah.id` | `password123` | Akses penuh ke seluruh modul, audit trail forensik, user provisioning, dan observability dashboard |
+| **BAAK / Admin Akademik** | `baak@univ.ac.id` / `admin@sekolah.id` | `password123` | Manajemen kurikulum, fakultas, prodi, kelas kuliah, tarif UKT/SPP, jadwal, dan verifikasi kelulusan |
+| **Petugas Loket / Kasir** | `petugas@sekolah.id` | `password123` | Entri pembayaran UKT/SPP manual, cetak kwitansi fisik, dan rekap penerimaan kas |
+| **Dosen / Pengajar** | `dosen@univ.ac.id` / `guru@sekolah.id` | `password123` | Manajemen perkuliahan, BAP digital, presensi QR dinamis, penugasan LMS, dan input nilai OBE |
+| **Mahasiswa / Siswa** | `mahasiswa@univ.ac.id` / `siswa@sekolah.id` | `password123` | Portal mandiri: Presensi GPS, Tugas LMS, Pembayaran UKT & Cetak Kwitansi, Lengkapi Biodata, Smart KRS |
+
+---
+
+### 2. Fitur Lengkap Portal Mahasiswa (Direct URL)
+
+Setelah login sebagai Mahasiswa (`mahasiswa@univ.ac.id` atau `siswa@sekolah.id`):
+
+| Fitur Portal Mahasiswa | Rute Utama | Alias Cepat | Deskripsi Fungsionalitas |
+| :--- | :--- | :--- | :--- |
+| **Presensi Perkuliahan** | `/siakad/presensi` | `/presensi` | Check-in GPS geo-fenced (radius 20m) & verifikasi QR Token rotasi 10 detik |
+| **Tugas & LMS Kuliah** | `/siakad/tugas` | `/tugas` / `/lms` | Unggah tugas berkas dengan validasi binary header & penerbitan hash receipt SHA-256 |
+| **Pembayaran UKT & Kwitansi** | `/siakad/ukt` | `/ukt` | Billing breakdown per semester, simulasi bayar VA Bank H2H, cetak kwitansi resmi ber-QR |
+| **Lengkapi Data Diri & PDP** | `/siakad/biodata` | `/biodata` / `/isi-data` | Formulir biodata lengkap (data diri, ortu, sekolah) & verifikasi digital consent UU PDP |
+| **Smart KRS & Rencana Studi** | `/siakad/krs` | `/krs` | Pemilihan kelas dengan pessimistic locking, pencegahan bentrok jadwal & kuota realtime |
+| **Analitik Performa Mahasiswa** | `/siakad/analytics/performance` | - | Grafik tren IPS & IPK per semester |
 
 ---
 
@@ -177,7 +192,7 @@ Semua respons API menggunakan standar format JSON:
 
 ## Automated Testing (PHPUnit 10.5)
 
-Sistem telah diuji menggunakan PHPUnit 10.5 dengan tingkat keberhasilan 100% pada 109 pengujian fitur:
+Sistem telah diuji menggunakan PHPUnit 10.5 dengan tingkat keberhasilan 100% pada 134 pengujian fitur:
 
 ```bash
 # Menjalankan seluruh test suite
@@ -191,10 +206,11 @@ PHPUnit 10.5.65 by Sebastian Bergmann and contributors.
 Runtime:       PHP 8.2.12
 Configuration: /home/masgansss/Projects/Dev/web_spp/phpunit.xml
 
-...............................................................  63 / 109 ( 57%)
-..............................................                  109 / 109 (100%)
+...............................................................  63 / 134 ( 47%)
+............................................................... 126 / 134 ( 94%)
+........                                                        134 / 134 (100%)
 
-Time: 00:07.652, Memory: 80.50 MB
+Time: 00:14.796, Memory: 86.50 MB
 
-OK (109 tests, 419 assertions)
+OK (134 tests, 556 assertions)
 ```

@@ -9,20 +9,22 @@ use App\Models\Krs;
 use App\Models\Mahasiswa;
 use App\Models\PresensiMahasiswa;
 use App\Models\TahunAkademik;
+use App\Traits\ResolvesStudentUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\ValidationException;
 
 class StudentAttendanceController extends Controller
 {
+    use ResolvesStudentUser;
+
     /**
      * Display student attendance dashboard and active sessions.
      */
     public function index(Request $request)
     {
         $user = $request->user();
-        $studentId = $user->id_mahasiswa ?? $user->id_siswa;
-        $mahasiswa = Mahasiswa::with(['prodi.fakultas'])->findOrFail($studentId);
+        $mahasiswa = $this->getStudentMahasiswa($user);
 
         $activeTa = TahunAkademik::where('is_active', true)->first()
             ?? TahunAkademik::latest()->first();
@@ -80,8 +82,7 @@ class StudentAttendanceController extends Controller
     public function checkIn(Request $request)
     {
         $user = $request->user();
-        $studentId = $user->id_mahasiswa ?? $user->id_siswa;
-        $mahasiswa = Mahasiswa::findOrFail($studentId);
+        $mahasiswa = $this->getStudentMahasiswa($user);
 
         $lat = $request->input('lat', $request->input('latitude'));
         $lng = $request->input('lng', $request->input('longitude'));
