@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Route;
 
 // --- Public Routes (No Auth Required) ---
 Route::prefix('auth')->group(function () {
-    Route::post('/login', [AuthController::class, 'login'])->name('api.auth.login');
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:10,1')->name('api.auth.login');
 });
 Route::get('/portal/siswa/{nisn}', [PortalController::class, 'cekSiswa'])->name('api.portal.siswa');
 
@@ -36,12 +36,12 @@ Route::get('/health', function (\App\Services\Monitoring\SystemHealthService $he
     return response()->json($report, $statusCode);
 })->name('api.health');
 
-// Real-time Bank Host-to-Host (H2H) Webhook (Protected by Idempotency Layer)
+// Real-time Bank Host-to-Host (H2H) Webhook (Protected by Idempotency Layer & Rate Limiter)
 Route::post('/h2h/webhook', [\App\Http\Controllers\Api\H2hWebhookController::class, 'callback'])
-    ->middleware('idempotent')
+    ->middleware(['idempotent', 'throttle:30,1'])
     ->name('api.h2h.webhook');
 Route::post('/v1/h2h/callback', [\App\Http\Controllers\Api\H2hWebhookController::class, 'callback'])
-    ->middleware('idempotent')
+    ->middleware(['idempotent', 'throttle:30,1'])
     ->name('api.v1.h2h.callback');
 
 // --- Protected Routes (Requires Bearer Token) ---
@@ -66,14 +66,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/krs', [\App\Http\Controllers\Api\SmartKrsController::class, 'store'])->name('api.krs.store');
     Route::delete('/krs/{id}', [\App\Http\Controllers\Api\SmartKrsController::class, 'destroy'])->name('api.krs.destroy');
 
-    // --- Geo-fenced QR Attendance ---
-    Route::post('/presensi/qr-session/{idBap}', [\App\Http\Controllers\Api\GeoAttendanceController::class, 'generateSessionToken'])->name('api.presensi.qr-session');
-    Route::post('/v1/attendance/bap/{idBap}/token', [\App\Http\Controllers\Api\GeoAttendanceController::class, 'generateSessionToken'])->name('api.v1.attendance.token');
-    Route::post('/v1/attendance/kelas/{idKelasKuliah}/token', [\App\Http\Controllers\Api\GeoAttendanceController::class, 'generateClassToken'])->name('api.v1.attendance.class.token');
-    Route::post('/presensi/submit-qr', [\App\Http\Controllers\Api\GeoAttendanceController::class, 'submitAttendance'])->name('api.presensi.submit-qr');
-    Route::post('/presensi/store', [\App\Http\Controllers\Api\GeoAttendanceController::class, 'store'])->name('api.presensi.store');
-    Route::post('/v1/attendance/submit', [\App\Http\Controllers\Api\GeoAttendanceController::class, 'submitAttendance'])->name('api.v1.attendance.submit');
-    Route::post('/v1/attendance/store', [\App\Http\Controllers\Api\GeoAttendanceController::class, 'store'])->name('api.v1.attendance.store');
+    // --- Geo-fenced QR Attendance (Protected by Rate Limiting & Idempotency) ---
+    Route::post('/presensi/qr-session/{idBap}', [\App\Http\Controllers\Api\GeoAttendanceController::class, 'generateSessionToken'])->middleware('throttle:30,1')->name('api.presensi.qr-session');
+    Route::post('/v1/attendance/bap/{idBap}/token', [\App\Http\Controllers\Api\GeoAttendanceController::class, 'generateSessionToken'])->middleware('throttle:30,1')->name('api.v1.attendance.token');
+    Route::post('/v1/attendance/kelas/{idKelasKuliah}/token', [\App\Http\Controllers\Api\GeoAttendanceController::class, 'generateClassToken'])->middleware('throttle:30,1')->name('api.v1.attendance.class.token');
+    Route::post('/presensi/submit-qr', [\App\Http\Controllers\Api\GeoAttendanceController::class, 'submitAttendance'])->middleware(['idempotent', 'throttle:20,1'])->name('api.presensi.submit-qr');
+    Route::post('/presensi/store', [\App\Http\Controllers\Api\GeoAttendanceController::class, 'store'])->middleware(['idempotent', 'throttle:20,1'])->name('api.presensi.store');
+    Route::post('/v1/attendance/submit', [\App\Http\Controllers\Api\GeoAttendanceController::class, 'submitAttendance'])->middleware(['idempotent', 'throttle:20,1'])->name('api.v1.attendance.submit');
+    Route::post('/v1/attendance/store', [\App\Http\Controllers\Api\GeoAttendanceController::class, 'store'])->middleware(['idempotent', 'throttle:20,1'])->name('api.v1.attendance.store');
 
     // --- OBE Competency Radar Analytics ---
     Route::get('/analytics/obe-radar/{idSiswa}', function ($idSiswa) {
