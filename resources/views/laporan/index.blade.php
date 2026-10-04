@@ -13,10 +13,10 @@
         </div>
         <div class="flex items-center gap-2">
             <a href="{{ route('web.laporan.exportCsv', request()->query()) }}" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold shadow-sm transition inline-flex items-center gap-1.5">
-                <span>📥</span> Export CSV / Excel
+                <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg></span> Export CSV / Excel
             </a>
             <a href="{{ route('web.laporan.cetak', request()->query()) }}" target="_blank" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-sm transition inline-flex items-center gap-1.5">
-                <span>🖨️</span> Cetak Laporan (Print / PDF)
+                <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg></span> Cetak Laporan (Print / PDF)
             </a>
         </div>
     </div>
@@ -81,7 +81,7 @@
                 <span class="text-xs font-semibold text-emerald-100 uppercase tracking-wider block">Total Pemasukan (Sesuai Filter)</span>
                 <div class="text-2xl font-black mt-1">Rp {{ number_format($totalPemasukan, 0, ',', '.') }}</div>
             </div>
-            <span class="text-3xl p-3 bg-white/10 rounded-2xl">💰</span>
+            <span class="text-3xl p-3 bg-white/10 rounded-2xl"><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
         </div>
 
         <div class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-5 text-white shadow-sm flex items-center justify-between">
@@ -89,7 +89,7 @@
                 <span class="text-xs font-semibold text-blue-100 uppercase tracking-wider block">Volume Transaksi Tercatat</span>
                 <div class="text-2xl font-black mt-1">{{ $totalTransaksi }} Transaksi</div>
             </div>
-            <span class="text-3xl p-3 bg-white/10 rounded-2xl">📑</span>
+            <span class="text-3xl p-3 bg-white/10 rounded-2xl"><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></span>
         </div>
     </div>
 

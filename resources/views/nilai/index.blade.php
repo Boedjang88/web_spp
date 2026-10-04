@@ -16,7 +16,7 @@
             <p class="text-xs text-slate-500 mt-0.5">Input nilai Tugas, UTS, UAS, kalkulasi nilai akhir otomatis, predikat, dan cetak rapor</p>
         </div>
         <a href="{{ route('web.nilai.create') }}" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-600/20 transition inline-flex items-center gap-1.5">
-            <span>➕</span> Input Nilai Siswa
+            <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></span> Input Nilai Siswa
         </a>
     </div>
 
@@ -94,7 +94,7 @@
                                 </span>
                             </td>
                             <td class="py-3 px-4 text-right space-x-2 whitespace-nowrap">
-                                <a href="{{ route('web.nilai.rapor', $n->id_siswa) }}" target="_blank" class="text-blue-600 hover:text-blue-700 font-bold" title="Cetak E-Rapor">📄 Rapor</a>
+                                <a href="{{ route('web.nilai.rapor', $n->id_siswa) }}" target="_blank" class="text-blue-600 hover:text-blue-700 font-bold" title="Cetak E-Rapor"><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> Rapor</a>
                                 <a href="{{ route('web.nilai.edit', $n->id) }}" class="text-amber-600 hover:text-amber-700 font-semibold">Edit</a>
                                 <form action="{{ route('web.nilai.destroy', $n->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus data nilai ini?');">
                                     @csrf

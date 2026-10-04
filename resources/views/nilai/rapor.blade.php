@@ -35,7 +35,7 @@
         <div class="border-b-4 border-double border-slate-800 pb-4 mb-6">
             <div class="flex items-center justify-between gap-4">
                 <div class="w-16 h-16 bg-blue-900 rounded-2xl flex items-center justify-center text-white text-3xl font-black shadow-md flex-shrink-0">
-                    🎓
+                    <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
                 </div>
                 <div class="text-center flex-1">
                     <h2 class="text-xs uppercase tracking-widest font-bold text-slate-500">Pemerintah Daerah - Dinas Pendidikan</h2>
@@ -100,7 +100,7 @@
                                     @if($n->nilai_akhir >= ($n->mapel?->kkm ?? 75))
                                         <span class="text-emerald-700 font-bold text-[11px]">✓ Tuntas</span>
                                     @else
-                                        <span class="text-rose-700 font-bold text-[11px]">⚠ Remedi</span>
+                                        <span class="text-rose-700 font-bold text-[11px]"><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg> Remedi</span>
                                     @endif
                                 </td>
                             </tr>

@@ -122,7 +122,7 @@
                 @if($siswas->count() > 0)
                     <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end">
                         <button type="submit" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-600/20 transition">
-                            💾 Simpan Presensi Kelas
+                            <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg> Simpan Presensi Kelas
                         </button>
                     </div>
                 @endif
@@ -130,7 +130,7 @@
         </div>
     @else
         <div class="p-12 text-center text-slate-400 bg-white rounded-2xl border border-dashed border-slate-200">
-            <div class="text-4xl mb-2">📋</div>
+            <div class="text-4xl mb-2"><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg></div>
             <p class="text-sm font-semibold text-slate-600">Silakan pilih kelas dan tanggal di atas</p>
             <p class="text-xs text-slate-400 mt-1">Daftar siswa akan ditampilkan untuk pengisian presensi harian.</p>
         </div>

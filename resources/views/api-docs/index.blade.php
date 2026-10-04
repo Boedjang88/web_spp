@@ -18,7 +18,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3">
                 <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-white shadow-md">
-                    ⚡
+                    <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                 </div>
                 <div>
                     <span class="font-bold text-base text-white block">Web SPP RESTful API Docs</span>
@@ -30,7 +30,7 @@
                     &larr; Web Dashboard
                 </a>
                 <button onclick="quickLogin()" class="text-xs bg-blue-600 hover:bg-blue-500 text-white px-3 py-2 rounded-lg font-semibold transition shadow-sm flex items-center gap-1.5">
-                    🔑 Auto-Login & Set Token
+                    <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg> Auto-Login & Set Token
                 </button>
             </div>
         </div>
@@ -375,7 +375,7 @@
                     currentToken = data.data.token;
                     document.getElementById('activeToken').value = currentToken;
                     showOutput('POST', '/api/auth/login', res.status, data);
-                    alert('✅ Login Berhasil! Token Sanctum otomatis aktif.');
+                    alert('<svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Login Berhasil! Token Sanctum otomatis aktif.');
                 } else {
                     showOutput('POST', '/api/auth/login', res.status, data);
                 }

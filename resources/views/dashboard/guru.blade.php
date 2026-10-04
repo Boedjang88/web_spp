@@ -10,7 +10,7 @@
         <div class="relative z-10">
             <div class="flex items-center gap-2 mb-2">
                 <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white/10 text-emerald-300 border border-white/10">
-                    👨‍🏫 Portal Pengajar / Dewan Guru &bull; NIP: {{ $guru->nip ?? '-' }}
+                    <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg> Portal Pengajar / Dewan Guru &bull; NIP: {{ $guru->nip ?? '-' }}
                 </span>
                 <span class="text-xs text-slate-300">{{ $hariIni }}, {{ now()->format('d M Y') }}</span>
             </div>
@@ -21,10 +21,10 @@
         </div>
         <div class="relative z-10 flex flex-wrap items-center gap-2.5">
             <a href="{{ route('web.presensi.index') }}" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-4 py-2.5 rounded-xl text-xs shadow-sm transition inline-flex items-center gap-1.5">
-                <span>📋</span> Presensi Kelas
+                <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg></span> Presensi Kelas
             </a>
             <a href="{{ route('web.nilai.create') }}" class="bg-white/10 hover:bg-white/15 text-white font-semibold px-4 py-2.5 rounded-xl text-xs backdrop-blur transition inline-flex items-center gap-1.5 border border-white/10">
-                <span>📝</span> Input Nilai
+                <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></span> Input Nilai
             </a>
         </div>
     </div>
@@ -55,7 +55,7 @@
         <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200/80 shadow-soft p-6 space-y-4">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div>
-                    <h2 class="font-bold text-slate-900 text-sm">🗓️ Jadwal Mengajar Hari Ini ({{ $hariIni }})</h2>
+                    <h2 class="font-bold text-slate-900 text-sm"><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg> Jadwal Mengajar Hari Ini ({{ $hariIni }})</h2>
                     <p class="text-[11px] text-slate-400">Daftar kelas dan jam mata pelajaran yang Anda ampu hari ini.</p>
                 </div>
                 <a href="{{ route('web.jadwal.index') }}" class="text-xs text-emerald-600 font-semibold hover:underline">Semua Jadwal &rarr;</a>
@@ -66,7 +66,7 @@
                     <div class="p-3.5 rounded-xl border border-slate-100 bg-slate-50/60 hover:bg-emerald-50/30 transition flex items-center justify-between">
                         <div class="flex items-center gap-3">
                             <div class="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200/60 text-emerald-700 font-bold flex items-center justify-center text-sm">
-                                📖
+                                <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                             </div>
                             <div>
                                 <div class="font-bold text-slate-900 text-xs sm:text-sm">{{ $j->mapel->nama_mapel ?? '-' }}</div>
@@ -86,7 +86,7 @@
                     </div>
                 @empty
                     <div class="text-center py-8 text-slate-400 text-xs">
-                        <div class="text-2xl mb-1">🎉</div>
+                        <div class="text-2xl mb-1"><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg></div>
                         Tidak ada agenda jadwal mengajar untuk hari {{ $hariIni }}.
                     </div>
                 @endforelse
@@ -97,7 +97,7 @@
         <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200/80 shadow-soft p-6 space-y-4">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div>
-                    <h2 class="font-bold text-slate-900 text-sm">📝 Penilaian Terkini</h2>
+                    <h2 class="font-bold text-slate-900 text-sm"><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg> Penilaian Terkini</h2>
                     <p class="text-[11px] text-slate-400">Entri nilai evaluasi belajar siswa terakhir.</p>
                 </div>
                 <a href="{{ route('web.nilai.index') }}" class="text-xs text-emerald-600 font-semibold hover:underline">Semua Nilai &rarr;</a>

@@ -24,7 +24,7 @@
             &larr; Kembali ke Dashboard
         </a>
         <button onclick="window.print()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-md transition inline-flex items-center gap-1.5">
-            <span>🖨️</span> Cetak Dokumen SKPI (PDF)
+            <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg></span> Cetak Dokumen SKPI (PDF)
         </button>
     </div>
 
@@ -35,7 +35,7 @@
         <div class="flex items-center justify-between border-b-2 border-slate-900 pb-6">
             <div class="flex items-center gap-4">
                 <div class="w-16 h-16 rounded-2xl bg-slate-900 text-white font-black text-2xl flex items-center justify-center flex-shrink-0">
-                    🏛️
+                    <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/></svg>
                 </div>
                 <div>
                     <h2 class="text-xs font-bold text-slate-500 uppercase tracking-widest">Kementerian Pendidikan Tinggi, Sains, dan Teknologi</h2>
@@ -95,7 +95,7 @@
                 @foreach($skpi['sacs_summary']['kategori_breakdown'] as $kategori => $group)
                 <div class="p-3 bg-slate-50 rounded-xl border border-slate-200/80">
                     <div class="flex justify-between items-center font-bold text-slate-800 text-[11px] mb-2 border-b border-slate-200 pb-1">
-                        <span>🏆 {{ $kategori }}</span>
+                        <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg> {{ $kategori }}</span>
                         <span class="text-indigo-600">{{ $group['total_poin'] }} Poin</span>
                     </div>
                     <ul class="space-y-1 text-slate-600">

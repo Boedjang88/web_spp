@@ -12,7 +12,7 @@
             <p class="text-xs text-slate-500 mt-0.5">Kelola besaran nominal tarif SPP per tahun ajaran</p>
         </div>
         <a href="{{ route('web.spp.create') }}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-sm transition inline-flex items-center gap-1">
-            <span>➕</span> Tambah Tarif Baru
+            <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></span> Tambah Tarif Baru
         </a>
     </div>
 

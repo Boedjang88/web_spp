@@ -15,7 +15,7 @@
     <!-- Top Navigation Bar -->
     <div class="w-full max-w-4xl flex justify-between items-center py-2 px-4 mb-4 text-white">
         <div class="flex items-center gap-2.5">
-            <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center font-black text-white text-base shadow-md">🎓</div>
+            <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center font-black text-white text-base shadow-md"><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg></div>
             <div>
                 <span class="font-extrabold text-base tracking-tight block">SMK Merdeka Belajar</span>
                 <span class="text-[11px] text-blue-300 block">Portal Layanan Mandiri Siswa &amp; Wali Murid (SIAKAD &amp; SPP)</span>
@@ -23,7 +23,7 @@
         </div>
         <div class="flex items-center gap-3 text-xs">
             <a href="{{ url('/api/docs') }}" target="_blank" class="hidden sm:inline-flex items-center gap-1 bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg font-medium transition">
-                ⚡ API Docs
+                <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> API Docs
             </a>
             <a href="{{ route('login') }}" class="bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-1.5 rounded-lg font-semibold transition shadow-sm">
                 Login Pegawai &rarr;
@@ -62,14 +62,14 @@
                     </div>
                     
                     <button type="submit" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-8 rounded-xl transition shadow-md hover:shadow-lg active:scale-95 flex justify-center items-center gap-2 text-sm whitespace-nowrap">
-                        <span>🔍</span> Periksa Data
+                        <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></span> Periksa Data
                     </button>
                 </div>
 
                 @if(session('error'))
                     <div class="mt-4 bg-rose-50 border-l-4 border-rose-500 text-rose-700 p-4 rounded-r-xl text-xs sm:text-sm shadow-sm flex items-center justify-between" role="alert">
                         <div class="flex items-center gap-2">
-                            <span class="text-base">⚠️</span>
+                            <span class="text-base"><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>️</span>
                             <span>{{ session('error') }}</span>
                         </div>
                     </div>
@@ -109,11 +109,11 @@
                         <div class="flex flex-wrap items-center gap-2">
                             <a href="{{ route('web.nilai.rapor', $siswa->id) }}" target="_blank"
                                 class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-sm inline-flex items-center gap-1.5">
-                                <span>📄</span> Cetak E-Rapor
+                                <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></span> Cetak E-Rapor
                             </a>
                             <a href="{{ route('web.siswa.suratTagihan', $siswa->id) }}" target="_blank"
                                 class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-bold transition shadow-sm inline-flex items-center gap-1.5">
-                                <span>📄</span> Surat Tagihan
+                                <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></span> Surat Tagihan
                             </a>
                         </div>
                     </div>
@@ -122,13 +122,13 @@
                     <div class="border-b border-slate-200">
                         <div class="flex space-x-2 text-xs font-bold" id="portalTabs">
                             <button type="button" onclick="switchTab('tab-spp')" id="btn-tab-spp" class="tab-btn px-4 py-2.5 border-b-2 border-blue-600 text-blue-600 transition flex items-center gap-1.5">
-                                <span>💳</span> Keuangan &amp; SPP
+                                <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg></span> Keuangan &amp; SPP
                             </button>
                             <button type="button" onclick="switchTab('tab-nilai')" id="btn-tab-nilai" class="tab-btn px-4 py-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition flex items-center gap-1.5">
-                                <span>📝</span> Nilai &amp; Rapor Akademik ({{ $siswa->nilais->count() }})
+                                <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></span> Nilai &amp; Rapor Akademik ({{ $siswa->nilais->count() }})
                             </button>
                             <button type="button" onclick="switchTab('tab-presensi')" id="btn-tab-presensi" class="tab-btn px-4 py-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition flex items-center gap-1.5">
-                                <span>📋</span> Presensi Kehadiran
+                                <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg></span> Presensi Kehadiran
                             </button>
                         </div>
                     </div>
@@ -165,7 +165,7 @@
                         @if($info['total_bulan'] > 0)
                             <div class="bg-rose-50 rounded-2xl p-5 border border-rose-200">
                                 <h3 class="text-rose-900 font-bold text-xs uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                                    <span>⚠️</span> Daftar Bulan yang Perlu Dibayar:
+                                    <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>️</span> Daftar Bulan yang Perlu Dibayar:
                                 </h3>
                                 <div class="flex flex-wrap gap-2">
                                     @foreach($info['list_bulan'] as $bulan)
@@ -217,7 +217,7 @@
                                                 <td class="py-3 px-4 text-right">
                                                     <a href="{{ route('web.pembayaran.cetak', $p->id) }}" target="_blank"
                                                         class="px-3 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-xs font-bold transition inline-flex items-center gap-1">
-                                                        <span>🖨️</span> Cetak
+                                                        <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg></span> Cetak
                                                     </a>
                                                 </td>
                                             </tr>
@@ -273,7 +273,7 @@
                                                     @if($n->nilai_akhir >= ($n->mapel?->kkm ?? 75))
                                                         <span class="text-emerald-700 font-bold text-[11px]">✓ Tuntas</span>
                                                     @else
-                                                        <span class="text-rose-700 font-bold text-[11px]">⚠ Remedi</span>
+                                                        <span class="text-rose-700 font-bold text-[11px]"><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg> Remedi</span>
                                                     @endif
                                                 </td>
                                             </tr>
@@ -313,7 +313,7 @@
                 </div>
             @else
                 <div class="text-center py-12 text-slate-400 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
-                    <div class="text-4xl mb-2">🔍</div>
+                    <div class="text-4xl mb-2"><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></div>
                     <p class="text-sm font-semibold text-slate-600">Silakan masukkan 10 digit NISN pada kolom di atas</p>
                     <p class="text-xs text-slate-400 mt-1">Data hasil belajar akademik (Nilai, E-Rapor), presensi kehadiran, serta riwayat tagihan SPP akan ditampilkan.</p>
                 </div>

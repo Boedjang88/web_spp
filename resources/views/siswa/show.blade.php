@@ -17,10 +17,10 @@
         </div>
         <div class="flex items-center gap-2">
             <a href="{{ route('web.pembayaran.create', ['id_siswa' => $siswa->id]) }}" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-sm transition inline-flex items-center gap-1.5">
-                <span>➕</span> Catat Pembayaran
+                <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></span> Catat Pembayaran
             </a>
             <a href="{{ route('web.siswa.suratTagihan', $siswa->id) }}" target="_blank" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold shadow-sm transition inline-flex items-center gap-1.5">
-                <span>📄</span> Surat Tagihan (PDF/Print)
+                <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></span> Surat Tagihan (PDF/Print)
             </a>
             <a href="{{ route('web.siswa.edit', $siswa->id) }}" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition">
                 Edit Data
@@ -100,7 +100,7 @@
                         @endphp
                         <a href="https://wa.me/{{ $phoneClean }}?text={{ urlencode($waMsg) }}" target="_blank"
                             class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold shadow-sm inline-flex items-center gap-1.5 flex-shrink-0">
-                            <span>📱</span> Kirim Tagihan WA
+                            <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></span> Kirim Tagihan WA
                         </a>
                     </div>
                 </div>
@@ -108,7 +108,7 @@
                 <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 flex items-center justify-between">
                     <div>
                         <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Status Pembayaran</span>
-                        <div class="text-xl font-bold text-emerald-900 mt-1">LUNAS SAMPAI BULAN INI ✅</div>
+                        <div class="text-xl font-bold text-emerald-900 mt-1">LUNAS SAMPAI BULAN INI <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div>
                         <p class="text-xs text-emerald-700 mt-0.5">Tidak ada tunggakan SPP yang jatuh tempo untuk siswa ini.</p>
                     </div>
                 </div>
@@ -137,7 +137,7 @@
                                     <td class="py-3 font-semibold text-emerald-600">Rp {{ number_format($bayar->jumlah_bayar, 0, ',', '.') }}</td>
                                     <td class="py-3 text-right">
                                         <a href="{{ route('web.pembayaran.cetak', $bayar->id) }}" target="_blank" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium inline-flex items-center gap-1">
-                                            🖨️ Cetak
+                                            <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg> Cetak
                                         </a>
                                     </td>
                                 </tr>
