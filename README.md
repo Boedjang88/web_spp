@@ -1,180 +1,186 @@
-# 🎓 Web SPP Enterprise Flagship Pro - Sistem Pembayaran SPP Sekolah (Laravel 11)
+# Sistem Informasi Akademik & Keuangan Terpadu (SIAKAD Enterprise & SPP)
 
-> **Ujian Akhir Semester (UAS) - Project-Based Assessment**  
-> Proyek ini dibangun sebagai aplikasi **Enterprise Dual-Mode** untuk memenuhi kedua opsi penilaian UAS dengan kualitas standar industri:
-> - **Opsi A: Aplikasi Web Monolith Full-Stack (Blade, Interactive Chart.js, Multi-Month Batch Payment, Portal Mandiri Siswa, Surat Tagihan Resmi Ber-KOP, Audit Trail Log Aktivitas, WhatsApp Integration, Laporan & CSV Export, Auth Session).**
-> - **Opsi B: Backend RESTful API terproteksi Laravel Sanctum (Token Auth, Public Portal API, Interactive Web API Docs `/api/docs`, Automated Postman Collection & Environment).**
+Sistem Informasi Akademik dan Keuangan Terpadu berbasis **PHP 8.2.12** dan **Laravel 11.x**. Sistem ini mengusung arsitektur Dual-Engine UI (Laravel Blade + Tailwind CSS untuk portal utama dan Filament PHP v3.2 untuk admin panel), didukung keamanan standar enterprise 2026, kepatuhan regulasi UU PDP No. 27/2022, integrasi Bank Host-to-Host (H2H) dengan proteksi idempotensi, serta Smart KRS berbasis *pessimistic locking* dan antrean terdistribusi.
 
 ---
 
-## 📑 Daftar Isi
-1. [🌟 Fitur Unggulan (Enterprise Features)](#-fitur-unggulan-enterprise-features)
-2. [🛠️ Panduan Instalasi & Menjalankan di Lokal](#-panduan-instalasi--menjalankan-di-lokal)
-3. [🔑 Akun Default Demo](#-akun-default-demo)
-4. [🖥️ Opsi A: Web Monolith Full-Stack (Blade UI)](#-opsi-a-aplikasi-web-monolith-full-stack-blade-ui)
-5. [⚡ Opsi B: Backend RESTful API (Sanctum & Docs)](#-opsi-b-backend-restful-api-sanctum--docs)
-6. [🌐 Interactive API Docs UI di Browser (`/api/docs`)](#-interactive-api-docs-ui-di-browser-apidocs)
-7. [📮 Panduan Import Postman Collection](#-panduan-import-postman-collection)
-8. [🧪 Automated Testing (49 PHPUnit Tests)](#-automated-testing-49-phpunit-tests)
+## Daftar Isi
+1. [Kredensial Akun Default (Demo)](#kredensial-akun-default-demo)
+2. [Panduan Instalasi & Menjalankan di Lokal](#panduan-instalasi--menjalankan-di-lokal)
+3. [Arsitektur 13 Modul Enterprise](#arsitektur-13-modul-enterprise)
+4. [Fitur Keamanan & Hardening 2026](#fitur-keamanan--hardening-2026)
+5. [Daftar Rute Web Monolith](#daftar-rute-web-monolith)
+6. [Daftar Endpoint RESTful API (Sanctum)](#daftar-endpoint-restful-api-sanctum)
+7. [Dokumentasi Interaktif & Postman](#dokumentasi-interaktif--postman)
+8. [Automated Testing (PHPUnit 10.5)](#automated-testing-phpunit-105)
 
 ---
 
-## 🌟 Fitur Unggulan (Enterprise Features)
+## Kredensial Akun Default (Demo)
 
-1. **👨‍🎓 Portal Mandiri Siswa & Wali Murid (`/` & `/cek-tagihan`)**:
-   - Siswa atau wali murid dapat memasukkan 10 digit NISN untuk mengecek status pembayaran, total tunggakan, dan riwayat pelunasan.
-   - Dilengkapi tombol cetak kwitansi per transaksi dan tombol cetak **Surat Rekapitulasi Tagihan SPP Resmi**.
-2. **📄 Surat Tagihan SPP Resmi Format KOP Sekolah (`/web/siswa/{id}/surat-tagihan`)**:
-   - Dokumen tagihan resmi A4 ber-KOP SMK Merdeka Belajar, nomor surat dinamis, tabel breakdown bulan lunas vs nunggak, petunjuk pembayaran rekening/loket, dan tanda tangan + stempel digital Kepala Tata Usaha.
-3. **🛡️ Audit Trail / Log Aktivitas Sistem (`/web/activity-logs`)**:
-   - Rekam jejak real-time setiap aksi pengguna (Login web/API, logout, penambahan/penghapusan siswa, perubahan tarif SPP, pencatatan transaksi batch, dan cetak kwitansi/surat) lengkap dengan alamat IP dan User-Agent.
-4. **📊 Grafik Analitik Interaktif (Chart.js)**:
-   - Line/Area chart tren penerimaan pembayaran SPP per bulan (Januari - Desember) untuk tahun berjalan.
-   - Doughnut chart distribusi proporsi siswa aktif di setiap kelas.
-5. **💳 Pembayaran Multi-Bulan Sekaligus (Batch Payment)**:
-   - Petugas dapat mencentang beberapa bulan sekaligus (contoh: Juli, Agustus, September) dan memprosesnya dalam 1 kali transaksi.
-   - Perhitungan total estimasi biaya realtime di frontend.
-6. **📱 Integrasi WhatsApp Notification & Reminder (`wa.me`)**:
-   - **Kirim Bukti Pembayaran via WA**: Satu klik tombol langsung membuka WhatsApp dengan template pesan resmi nomor kwitansi, periode, tanggal, dan nominal.
-   - **Kirim Pengingat Tagihan SPP via WA**: Satu klik tombol di detail siswa yang memiliki tunggakan untuk mengirim daftar rincian bulan nunggak dan total rupiah langsung ke nomor wali murid.
-7. **📑 Rekapitulasi Laporan Keuangan & Export CSV**:
-   - Filter transaksi berdasarkan rentang tanggal (`Dari Tanggal` s/d `Sampai Tanggal`), filter per kelas, dan per petugas.
-   - **Export CSV / Excel**: Download instan berkas data transaksi.
-   - **Cetak Laporan Resmi**: Tampilan format kop surat sekolah, tabel rekapitulasi, kalimat terbilang, dan tanda tangan kepala sekolah/bendahara.
-8. **⚡ Interactive API Docs UI di Browser (`/api/docs`)**:
-   - Antarmuka visual bawaan web di mana dosen/penguji dapat langsung mengetes semua endpoint API, auto-login token generator, dan melihat respons JSON secara langsung di browser tanpa perlu menginstal aplikasi pihak ketiga.
-9. **🔒 Keamanan & Validasi Anti-Duplikasi**:
-   - Mencegah siswa membayar bulan dan tahun yang sama dua kali (Double-payment protection).
-   - Validasi data terisolasi menggunakan Laravel Form Requests.
+Aplikasi telah dilengkapi seeder akun untuk seluruh level hak akses (*4-Tier RBAC Hierarchy*).
+
+### 1. Akun Login Petugas, Pengajar, & Siswa (`/login`)
+
+| Role / Tingkat Akses | Email | Password | Deskripsi Hak Akses |
+| :--- | :--- | :--- | :--- |
+| **Super Admin** | `superadmin@sekolah.id` | `password123` | Akses penuh ke seluruh modul, audit trail, user provisioning, dan observability dashboard |
+| **Admin TU / Keuangan** | `admin@sekolah.id` | `password123` | Manajemen akademik, data siswa/guru, tarif SPP, laporan keuangan, dan verifikasi KRS |
+| **Petugas Loket / Kasir** | `petugas@sekolah.id` | `password123` | Entri pembayaran SPP single/batch, cetak kwitansi fisik, dan rekap penerimaan kas |
+| **Dewan Guru / Dosen** | `guru@sekolah.id` | `password123` | Manajemen jadwal mengajar, presensi kelas harian, input penilaian, dan rekap e-rapor |
+| **Siswa / Mahasiswa** | `siswa@sekolah.id` | `password123` | Portal mandiri siswa, registrasi Smart KRS, transkrip nilai, dan riwayat tagihan SPP |
 
 ---
 
-## 🛠️ Panduan Instalasi & Menjalankan di Lokal
+### 2. Akses Portal Mandiri Siswa Tanpa Login (`/` atau `/cek-tagihan`)
 
-### 1. Prasyarat
-- PHP >= 8.2 (atau binary XAMPP di `/opt/lampp/bin/php`)
-- SQLite (atau MySQL)
-- Composer
+Wali murid dan siswa dapat memeriksa status kelulusan akademik, riwayat pembayaran SPP, dan tunggakan secara instan menggunakan NISN terdaftar:
 
-### 2. Langkah Setup di Lokal
+| Nama Siswa | NISN | NIS | Kelas | Keterangan Data |
+| :--- | :--- | :--- | :--- | :--- |
+| **Ahmad Fauzi** | `0051234567` | `2122001` | XII RPL 1 | Memiliki riwayat pembayaran lunas sebagian |
+| **Siti Nurhaliza** | `0057654321` | `2122002` | XII RPL 1 | Siswa aktif |
+| **Budi Santoso** | `0061122334` | `2223001` | XII TKJ 1 | Siswa aktif dengan tagihan berjalan |
+| **Dewi Lestari** | `0069988776` | `2223002` | XII DKV 1 | Siswa aktif |
+
+---
+
+### 3. Kredensial API & Webhook Gateway (H2H Bank Partner)
+
+| Komponen Gateway | Parameter / Header | Nilai / Format |
+| :--- | :--- | :--- |
+| **Endpoint Webhook H2H** | `URL` | `POST /api/h2h/webhook` |
+| **Idempotency Key** | `Header: Idempotency-Key` | UUID v4 (Contoh: `e4b3c9a1-7d2e-4f1a-8c9b-1a2b3c4d5e6f`) |
+| **Bank Mitra (BNI)** | `kode_bank` | `BNI` |
+| **Secret Key HMAC** | `secret_key` | `secret_enterprise_bni_2026` |
+| **Format Signature** | `HMAC-SHA256` | `hash_hmac('sha256', nomor_va . '|' . trx_id . '|' . nominal, secret_key)` |
+
+---
+
+## Panduan Instalasi & Menjalankan di Lokal
+
+### 1. Prasyarat Sistem
+- PHP >= 8.2.12 (dengan ekstensi `pdo_sqlite`, `pdo_mysql`, `openssl`, `mbstring`, `fileinfo`, `gd`)
+- Composer >= 2.6
+- SQLite / MySQL
+
+### 2. Langkah Menjalankan Aplikasi
 ```bash
 # 1. Masuk ke direktori proyek
 cd /home/masgansss/Projects/Dev/web_spp
 
-# 2. Salin environment file (jika belum ada)
+# 2. Konfigurasi berkas environment
 cp .env.example .env
 
-# 3. Generate App Key
+# 3. Generate Encryption Key
 /opt/lampp/bin/php artisan key:generate
 
-# 4. Jalankan Migrasi Database & Seeder
+# 4. Jalankan Migrasi Database & Seeder Lengkap
 /opt/lampp/bin/php artisan migrate:fresh --seed
 
-# 5. Jalankan Local Development Server
+# 5. Jalankan Server Pengembangan
 /opt/lampp/bin/php artisan serve
 ```
 
-Aplikasi aktif di: **`http://127.0.0.1:8000`**
+Aplikasi dapat diakses melalui browser di: **`http://127.0.0.1:8000`**
 
 ---
 
-## 🔑 Akun Default Demo
+## Arsitektur 13 Modul Enterprise
 
-| Role | Email | Password | Hak Akses |
+1. **Modul Core Academic Integration (BAAK)**: Fakultas, Program Studi, Kurikulum OBE, Mata Kuliah, Kelas Perkuliahan, dan Penjadwalan Bebas Bentrok.
+2. **Next-Gen Student Portal**: Smart KRS dengan *pessimistic lock*, grafik analitik performa IPS/IPK, presensi QR geo-fenced, dan gerbang evaluasi dosen (EDOM).
+3. **E-Dosen & Advisory Control Center**: Verifikasi KRS batch, multi-komponen penilaian (Tugas, UTS, UAS), dan Digital BAP audit-ready.
+4. **Keuangan Host-to-Host (H2H)**: Billing VA dinamis, anti-replay webhook gateway, pelepasan kunci KRS instan (< 1 detik), dan rekonsiliasi SFTP bank otomatis.
+5. **Tugas Akhir, Skripsi & Yudisium**: Kuota pembimbing skripsi, logbook digital interaktif, dan rubrik penilaian sidang skripsi.
+6. **SKPI & OBE Matrix Engine**: Surat Keterangan Pendamping Ijazah (SKPI) bilingual dan radar matriks ketercapaian CPL/CPMK.
+7. **Government Feeder & LMS Synchronization**: Pemetaan feeder PDDIKTI dan provisioning kelas daring Moodle/Canvas dengan *Circuit Breaker*.
+8. **Executive Dashboard & Observability**: Real-time KPI widget dan health monitor performa server (`/api/health`).
+9. **Tracer Study & Employer Feedback**: Portal pelacakan karier alumni dan formulir survei kepuasan industri berbasis token.
+10. **Smart Facility & Resource Booking**: Peminjaman ruangan/lab dengan deteksi konflik jadwal otomatis.
+11. **Comprehensive Audit Trail & Forensics**: Pencatatan riwayat perubahan data (sebelum/sesudah) dan identifikasi anomali IP/User-Agent.
+12. **MFA, SSO & Multi-Tenant Security**: Otentikasi dua faktor berbasis TOTP Google Authenticator dan proteksi brute-force.
+13. **Universal Data Processing (UU PDP)**: Enkripsi kolom sensitif database dan consent interceptor persetujuan privasi.
+
+---
+
+## Fitur Keamanan & Hardening 2026
+
+- **Kepatuhan UU PDP No. 27/2022**: Kolom sensitif (`nik`, `nama_ibu_kandung`, `no_hp_wali`, `mfa_secret`) disimpan dalam bentuk terenkripsi pada basis data menggunakan Laravel native encryption cast. Akses web wajib menyetujui lembar digital consent (`/pdp/consent`).
+- **Anti-Replay Idempotency Layer**: Mencegah *double-crediting* dan *race condition* pada webhook perbankan dengan *atomic locking* Redis/Cache dan header `X-Idempotent-Replay: true`.
+- **SFTP Bank Reconciliation Command**: Perintah terjadwal `php artisan reconcile:bank-h2h` yang mengaudit log settlement bank terhadap buku besar SIAKAD.
+- **Circuit Breaker Pattern**: Memutus panggilan integrasi eksternal (PDDIKTI Feeder & LMS) secara otomatis selama 5 menit jika terjadi 5 kegagalan berturut-turut untuk menjaga stabilitas sistem.
+- **High-Concurrency KRS Throttling**: Double atomic locking per mahasiswa dan per kelas kuliah untuk menjamin kuota kursi akurat tanpa risiko kebuntuan database (*deadlock*).
+
+---
+
+## Daftar Rute Web Monolith
+
+| Rute Web | Method | Akses Role | Keterangan Halaman |
 | :--- | :--- | :--- | :--- |
-| **Administrator** | `admin@sekolah.id` | `password123` | Akses penuh CRUD data master, transaksi SPP, laporan keuangan, log aktivitas audit, dan kelola user |
-| **Petugas Loket** | `petugas@sekolah.id` | `password123` | Entri pembayaran SPP, cetak kwitansi, kirim WA, surat tagihan, dan rekap data |
+| `/` | `GET` | Publik | Portal Mandiri Siswa & Cek Tagihan Publik |
+| `/cek-tagihan` | `POST` | Publik | Pencarian data siswa via NISN |
+| `/login` | `GET`, `POST` | Guest | Halaman autentikasi login |
+| `/logout` | `POST` | Auth | Keluar sesi aplikasi |
+| `/dashboard` | `GET` | Auth | Dashboard analitik terpersonalisasi |
+| `/profile` | `GET`, `PUT` | Auth | Profil mandiri dan ubah password |
+| `/pdp/consent` | `GET`, `POST` | Auth | Lembar persetujuan pemrosesan data pribadi |
+| `/siakad/krs` | `GET`, `POST`, `DELETE` | Siswa | Portal pemilihan mata kuliah Smart KRS |
+| `/siakad/analytics/performance` | `GET` | Siswa | Grafik tren performa IPK & IPS |
+| `/web/users` | `RESOURCE` | Superadmin, Admin | Manajemen pengguna & hak akses 4-Tier |
+| `/web/guru` | `RESOURCE` | Superadmin, Admin | Master data guru & pendidik |
+| `/web/mapel` | `RESOURCE` | Superadmin, Admin | Master mata pelajaran & KKM |
+| `/web/kelas` | `RESOURCE` | Superadmin, Admin | Master kelas perkuliahan |
+| `/web/spp` | `RESOURCE` | Superadmin, Admin | Master tarif SPP per tahun ajaran |
+| `/web/siswa` | `RESOURCE` | Superadmin, Admin | Data siswa & status administrasi |
+| `/web/pembayaran` | `RESOURCE` | Superadmin, Admin, Petugas | Entri transaksi pembayaran SPP |
+| `/web/laporan` | `GET` | Superadmin, Admin, Petugas | Laporan rekapitulasi kas masuk & export CSV |
+| `/web/jadwal` | `RESOURCE` | Admin, Guru | Penjadwalan jam mengajar & ruang |
+| `/web/nilai` | `RESOURCE` | Admin, Guru | Penilaian tugas, UTS, UAS, dan rapor |
+| `/web/presensi` | `GET`, `POST` | Admin, Guru | Presensi kehadiran siswa harian |
+| `/web/activity-logs` | `GET` | Superadmin, Admin | Audit Trail Log aktivitas sistem |
 
 ---
 
-## 🖥️ Opsi A: Aplikasi Web Monolith Full-Stack (Blade UI)
+## Daftar Endpoint RESTful API (Sanctum)
 
-| Rute Web | Method | Keterangan Halaman |
-| :--- | :--- | :--- |
-| `/` | `GET` | **Portal Mandiri Siswa & Cek Tagihan Publik** |
-| `/cek-tagihan` | `POST` | Proses pencarian data siswa & riwayat kwitansi via NISN |
-| `/login` | `GET` / `POST` | Halaman & proses autentikasi session login petugas/admin |
-| `/logout` | `POST` | Logout & invalidasi session |
-| `/dashboard` | `GET` | **Dashboard analitik, grafik Chart.js, metrik keuangan & ringkasan** |
-| `/web/activity-logs` | `GET` | **Audit Trail: Log aktivitas sistem real-time & riwayat akses** |
-| `/web/kelas` | `RESOURCE` | Master data kelas (Index, Create, Store, Edit, Update, Delete) |
-| `/web/spp` | `RESOURCE` | Master tarif SPP per tahun ajaran |
-| `/web/siswa` | `RESOURCE` | Data siswa, info tunggakan, filter kelas, & search |
-| `/web/siswa/{id}/surat-tagihan` | `GET` | **Cetak Surat Pemberitahuan & Rincian Tagihan Resmi (KOP Sekolah)** |
-| `/web/pembayaran` | `RESOURCE` | Transaksi pembayaran (Single & Multi-Bulan Batch) |
-| `/web/pembayaran/{id}/cetak` | `GET` | **Cetak Kwitansi Pembayaran Resmi (dengan kalimat terbilang rupiah)** |
-| `/web/laporan` | `GET` | Filter rekapitulasi laporan transaksi pembayaran SPP |
-| `/web/laporan/cetak` | `GET` | Format cetak dokumen rekapitulasi laporan |
-| `/web/laporan/export-csv` | `GET` | Export data transaksi ke format CSV / Excel |
-
----
-
-## ⚡ Opsi B: Backend RESTful API (Sanctum Protected)
-
-Semua endpoint API mengembalikan format JSON standar:
+Semua respons API menggunakan standar format JSON:
 ```json
 {
   "success": true,
-  "message": "Pesan status berhasil",
+  "message": "Pesan status",
   "data": { ... }
 }
 ```
 
-### Daftar Endpoint API Lengkap:
-
-#### 1. Public Endpoints (No Auth)
-- `POST /api/auth/login` - Autentikasi email & password, mengembalikan Bearer Token Sanctum.
-- `POST /api/auth/register` - Registrasi petugas/admin baru.
-- `GET /api/portal/siswa/{nisn}` - **Portal mandiri siswa: Profil, status lunas/nunggak, total rupiah, dan riwayat kwitansi via NISN.**
-
-#### 2. Protected Endpoints (Requires `Authorization: Bearer <token>`)
-- `GET /api/auth/me` - Profil user yang sedang login.
-- `POST /api/auth/logout` - Revoke token Sanctum.
-- `GET /api/dashboard/summary` - Metrik analitik pemasukan hari ini, bulan ini, total siswa, dan grafik bulanan.
-- `GET /api/activity-logs` - **Audit trail log aktivitas sistem dengan filter tipe aksi & pencarian.**
-- `GET /api/laporan/rekap` - Rekapitulasi laporan pemasukan dengan filter tanggal & kelas.
-- `API RESOURCE /api/kelas` - CRUD Master Data Kelas.
-- `API RESOURCE /api/spp` - CRUD Master Data SPP.
-- `API RESOURCE /api/siswa` - CRUD Data Siswa.
-- `GET /api/siswa/{id}/tunggakan` - Perhitungan otomatis daftar bulan nunggak & total tagihan rupiah.
-- `GET /api/siswa/{id}/surat-tagihan` - **Generate payload surat tagihan resmi ber-KOP dan nomor surat.**
-- `API RESOURCE /api/pembayaran` - CRUD Transaksi Pembayaran.
-- `POST /api/pembayaran/batch` - **Transaksi pembayaran multi-bulan sekaligus (Batch Payment).**
-- `GET /api/pembayaran/{id}/kwitansi` - Data kwitansi digital resmi dengan nomor KWT dan teks terbilang.
+- `POST /api/auth/login` — Autentikasi dan penerbitan Bearer Token Sanctum
+- `GET /api/health` — Diagnostik performa server, latensi database, Redis, memory, dan disk
+- `POST /api/h2h/webhook` — Webhook Host-to-Host pembayaran perbankan (*Idempotency Protected*)
+- `GET /api/portal/siswa/{nisn}` — Data profil, tunggakan, dan nilai publik via NISN
+- `GET /api/krs` — Daftar rencana studi dan pengambilan kelas
+- `POST /api/krs` — Registrasi kelas perkuliahan berkecepatan tinggi
+- `DELETE /api/krs/{id}` — Pembatalan kelas perkuliahan
+- `POST /api/presensi/qr-session/{idBap}` — Generate sesi QR presensi terenkripsi geo-fenced
+- `POST /api/presensi/submit-qr` — Validasi kehadiran presensi mahasiswa via koordinat GPS
+- `GET /api/analytics/obe-radar/{idSiswa}` — Radar capaian kompetensi CPL/CPMK
 
 ---
 
-## 🌐 Interactive API Docs UI di Browser (`/api/docs`)
+## Dokumentasi Interaktif & Postman
 
-Buka URL: **`http://127.0.0.1:8000/api/docs`**
-- Penguji/dosen dapat langsung menekan tombol **"Auto-Login & Set Token"**.
-- Token Sanctum akan otomatis tersimpan di memory browser.
-- Klik tombol **"Test"** pada endpoint mana pun untuk melihat live response JSON secara instan tanpa aplikasi eksternal!
-
----
-
-## 📮 Panduan Import Postman Collection
-
-Berkas Postman telah disediakan di direktori `postman/`:
-1. `postman/SPP_Backend_REST_API.postman_collection.json`
-2. `postman/SPP_Local_Environment.postman_environment.json`
-
-### Cara Menggunakan di Postman:
-1. Buka aplikasi Postman.
-2. Klik tombol **Import** di pojok kiri atas.
-3. Drag & drop kedua berkas JSON di atas.
-4. Pilih environment **"Web SPP Local"** di pojok kanan atas.
-5. Jalankan request `1. Authentication > Login (Admin)` &rarr; Token Sanctum otomatis tersimpan ke environment variable `{{bearer_token}}`.
-6. Semua request lain siap dieksekusi secara otomatis!
+1. **Web Interactive API Console**: Akses langsung melalui browser di **`http://127.0.0.1:8000/api/docs`** untuk mencoba seluruh endpoint API dengan fitur *Auto-Login Token Generator*.
+2. **Postman Collection**: Berkas koleksi lengkap tersedia pada folder `postman/`:
+   - `postman/SPP_Backend_REST_API.postman_collection.json`
+   - `postman/SPP_Local_Environment.postman_environment.json`
 
 ---
 
-## 🧪 Automated Testing (49 PHPUnit Tests)
+## Automated Testing (PHPUnit 10.5)
 
-Aplikasi dilengkapi dengan suite pengujian otomatis menyeluruh untuk menguji seluruh fungsionalitas Web Monolith dan RESTful API Sanctum.
+Sistem telah diuji menggunakan PHPUnit 10.5 dengan tingkat keberhasilan 100% pada 109 pengujian fitur:
 
-### Menjalankan Test Suite:
 ```bash
+# Menjalankan seluruh test suite
 /opt/lampp/bin/php ./vendor/bin/phpunit
 ```
 
@@ -185,10 +191,10 @@ PHPUnit 10.5.65 by Sebastian Bergmann and contributors.
 Runtime:       PHP 8.2.12
 Configuration: /home/masgansss/Projects/Dev/web_spp/phpunit.xml
 
-.................................................                 49 / 49 (100%)
+...............................................................  63 / 109 ( 57%)
+..............................................                  109 / 109 (100%)
 
-Time: 00:03.377, Memory: 70.50 MB
+Time: 00:07.652, Memory: 80.50 MB
 
-OK (49 tests, 175 assertions)
+OK (109 tests, 419 assertions)
 ```
-Semua 49 skenario pengujian berhasil 100% tanpa error!
