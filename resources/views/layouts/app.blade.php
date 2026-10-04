@@ -7,7 +7,7 @@
     
     <!-- PWA Manifest & Meta -->
     <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#2563eb">
+    <meta name="theme-color" content="#09090b">
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
@@ -34,29 +34,29 @@
                 extend: {
                     colors: {
                         slate: {
-                            750: '#26334d',
+                            750: '#1f2937',
                             850: '#111827',
-                            900: '#0f172a',
-                            950: '#070b14',
+                            900: '#09090b',
+                            950: '#040405',
                         },
                         brand: {
-                            50: '#eef2ff',
-                            100: '#e0e7ff',
-                            200: '#c7d2fe',
-                            300: '#a5b4fc',
-                            400: '#818cf8',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca',
-                            800: '#3730a3',
-                            900: '#312e81',
+                            50: '#fafafa',
+                            100: '#f4f4f5',
+                            200: '#e4e4e7',
+                            300: '#d4d4d8',
+                            400: '#a1a1aa',
+                            500: '#71717a',
+                            600: '#18181b',
+                            700: '#09090b',
+                            800: '#040405',
+                            900: '#000000',
                         }
                     },
                     boxShadow: {
-                        'soft': '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05)',
-                        'card': '0 4px 16px -2px rgba(15, 23, 42, 0.04), 0 2px 6px -1px rgba(15, 23, 42, 0.02)',
-                        'floating': '0 20px 40px -8px rgba(15, 23, 42, 0.25), 0 6px 16px -4px rgba(15, 23, 42, 0.12)',
-                        'toast': '0 12px 32px -4px rgba(15, 23, 42, 0.16)',
+                        'soft': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                        'card': '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+                        'floating': '0 10px 25px -5px rgba(0, 0, 0, 0.2)',
+                        'toast': '0 4px 12px rgba(0, 0, 0, 0.15)',
                     }
                 }
             }
@@ -140,7 +140,7 @@
         html.dark table tbody tr:hover {
             background-color: #27272a !important;
         }
-        html.dark header.hidden.md\:flex {
+        html.dark header {
             background-color: #09090b !important;
             border-color: #27272a !important;
         }
@@ -160,19 +160,19 @@
         .font-mono { font-family: 'JetBrains Mono', monospace; }
         
         .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 999px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 999px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
 
         @keyframes toastSlideIn {
-            from { transform: translateY(-16px); opacity: 0; }
+            from { transform: translateY(-8px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
         @keyframes toastFadeOut {
             from { transform: translateY(0); opacity: 1; }
-            to { transform: translateY(-16px); opacity: 0; }
+            to { transform: translateY(-8px); opacity: 0; }
         }
-        .animate-toast-in { animation: toastSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .animate-toast-out { animation: toastFadeOut 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-toast-in { animation: toastSlideIn 0.15s ease-out forwards; }
+        .animate-toast-out { animation: toastFadeOut 0.15s ease-out forwards; }
     </style>
     @stack('styles')
 </head>
