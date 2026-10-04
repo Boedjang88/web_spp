@@ -5,25 +5,25 @@
 @section('content')
 <div class="space-y-6">
 
-    <!-- Header & Welcome Banner -->
-    <div class="bg-gradient-to-r from-blue-700 via-indigo-700 to-slate-900 rounded-3xl p-6 md:p-8 text-white shadow-lg relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <!-- Header & Welcome Banner (Calm & Modern) -->
+    <div class="bg-gradient-to-r from-slate-900 via-slate-850 to-indigo-950 rounded-2xl p-6 md:p-8 text-white shadow-soft relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center gap-5 border border-slate-800">
         <div class="relative z-10">
             <div class="flex items-center gap-2 mb-2">
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white/20 text-white backdrop-blur">
-                    Sistem Akademik &amp; Keuangan Sekolah Terpadu
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white/10 text-slate-200 border border-white/10">
+                    Sistem Akademik &amp; Keuangan Terpadu
                 </span>
-                <span class="text-xs text-blue-200">Tahun Ajaran 2025/2026</span>
+                <span class="text-xs text-indigo-300">T.A. 2025/2026</span>
             </div>
-            <h1 class="text-2xl md:text-3xl font-black tracking-tight">Selamat Datang, {{ auth()->user()->name }}!</h1>
-            <p class="text-blue-100 text-xs md:text-sm mt-1 max-w-xl">
+            <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-white">Selamat Datang, {{ auth()->user()->name }}!</h1>
+            <p class="text-slate-300 text-xs md:text-sm mt-1 max-w-xl leading-relaxed">
                 Pantau proses pembelajaran akademik, data pengajar, jadwal kelas, e-rapor, serta arus kas pembayaran SPP secara real-time.
             </p>
         </div>
-        <div class="relative z-10 flex flex-wrap items-center gap-2">
-            <a href="{{ route('web.pembayaran.create') }}" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow-md transition inline-flex items-center gap-1.5">
+        <div class="relative z-10 flex flex-wrap items-center gap-2.5">
+            <a href="{{ route('web.pembayaran.create') }}" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-4 py-2.5 rounded-xl text-xs shadow-sm transition inline-flex items-center gap-1.5">
                 <span>➕</span> Catat SPP
             </a>
-            <a href="{{ route('web.nilai.create') }}" class="bg-white/10 hover:bg-white/20 text-white font-bold px-4 py-2.5 rounded-xl text-xs backdrop-blur transition inline-flex items-center gap-1.5">
+            <a href="{{ route('web.nilai.create') }}" class="bg-white/10 hover:bg-white/15 text-white font-semibold px-4 py-2.5 rounded-xl text-xs backdrop-blur transition inline-flex items-center gap-1.5 border border-white/10">
                 <span>📝</span> Input Nilai
             </a>
         </div>
@@ -32,49 +32,49 @@
     <!-- Core Metrics Stats Cards (4 Columns) -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <!-- Total Siswa -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft flex items-center justify-between">
             <div>
-                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Peserta Didik Aktif</span>
-                <div class="text-2xl font-black text-slate-900">{{ $totalSiswa }} Siswa</div>
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block mb-1">Peserta Didik Aktif</span>
+                <div class="text-2xl font-bold text-slate-900">{{ $totalSiswa }} Siswa</div>
                 <p class="text-[11px] text-slate-500 mt-1">Tersebar di {{ $totalKelas }} Kelas</p>
             </div>
-            <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl flex-shrink-0">
+            <div class="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg flex-shrink-0 border border-blue-100">
                 👨‍🎓
             </div>
         </div>
 
         <!-- Total Guru -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft flex items-center justify-between">
             <div>
-                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Dewan Guru &amp; Pengajar</span>
-                <div class="text-2xl font-black text-slate-900">{{ $totalGuru }} Guru</div>
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block mb-1">Dewan Guru</span>
+                <div class="text-2xl font-bold text-slate-900">{{ $totalGuru }} Guru</div>
                 <p class="text-[11px] text-slate-500 mt-1">{{ $totalMapel }} Mata Pelajaran</p>
             </div>
-            <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl flex-shrink-0">
+            <div class="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg flex-shrink-0 border border-indigo-100">
                 👨‍🏫
             </div>
         </div>
 
         <!-- Total Pemasukan SPP -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft flex items-center justify-between">
             <div>
-                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Total Kas SPP</span>
-                <div class="text-2xl font-black text-emerald-700">Rp {{ number_format($totalPemasukan, 0, ',', '.') }}</div>
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block mb-1">Total Kas SPP</span>
+                <div class="text-2xl font-bold text-slate-900">Rp {{ number_format($totalPemasukan, 0, ',', '.') }}</div>
                 <p class="text-[11px] text-slate-500 mt-1">Bulan Ini: Rp {{ number_format($pemasukanBulanIni, 0, ',', '.') }}</p>
             </div>
-            <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl flex-shrink-0">
+            <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg flex-shrink-0 border border-emerald-100">
                 💰
             </div>
         </div>
 
         <!-- Presensi Hari Ini -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft flex items-center justify-between">
             <div>
-                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Kehadiran Hari Ini</span>
-                <div class="text-2xl font-black text-slate-900">{{ $presensiHariIni['hadir'] }} Hadir</div>
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block mb-1">Kehadiran Hari Ini</span>
+                <div class="text-2xl font-bold text-slate-900">{{ $presensiHariIni['hadir'] }} Hadir</div>
                 <p class="text-[11px] text-slate-500 mt-1">{{ $presensiHariIni['izin'] + $presensiHariIni['sakit'] }} Izin/Sakit &bull; {{ $presensiHariIni['alpa'] }} Alpa</p>
             </div>
-            <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl flex-shrink-0">
+            <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg flex-shrink-0 border border-amber-100">
                 📋
             </div>
         </div>
@@ -84,13 +84,13 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         <!-- Left 2 Cols: Financial Revenue Trends Chart -->
-        <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+        <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-soft">
             <div class="flex items-center justify-between mb-4">
                 <div>
-                    <h2 class="font-bold text-slate-900 text-sm">Tren Penerimaan Iuran SPP (Tahun {{ $currentYear }})</h2>
-                    <p class="text-xs text-slate-500">Statistik transaksi pembayaran SPP sekolah bulanan</p>
+                    <h2 class="font-bold text-slate-900 text-sm">Tren Penerimaan Kas SPP (Tahun {{ $currentYear }})</h2>
+                    <p class="text-xs text-slate-400">Statistik transaksi pembayaran SPP bulanan</p>
                 </div>
-                <span class="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 uppercase tracking-wider">
+                <span class="text-[10px] font-semibold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 uppercase tracking-wider">
                     Kas Bulanan
                 </span>
             </div>
@@ -100,37 +100,37 @@
         </div>
 
         <!-- Right 1 Col: Today's Class Schedule Widget -->
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-soft flex flex-col justify-between">
             <div>
                 <div class="flex items-center justify-between mb-3 border-b border-slate-100 pb-3">
                     <div>
                         <h2 class="font-bold text-slate-900 text-sm">Jadwal Hari {{ $hariIni }}</h2>
                         <p class="text-[11px] text-slate-400">Sesi pelajaran aktif</p>
                     </div>
-                    <a href="{{ route('web.jadwal.index') }}" class="text-xs text-blue-600 hover:underline font-bold">Semua &rarr;</a>
+                    <a href="{{ route('web.jadwal.index') }}" class="text-xs text-indigo-600 hover:underline font-semibold">Semua &rarr;</a>
                 </div>
 
                 <div class="space-y-2.5">
                     @forelse($jadwalHariIni as $j)
-                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/60 flex items-center justify-between text-xs">
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between text-xs">
                             <div>
-                                <span class="font-bold text-slate-900 block">{{ $j->mapel?->nama_mapel }}</span>
-                                <span class="text-[11px] text-slate-500">{{ $j->kelas?->nama_kelas }} &bull; {{ $j->guru?->nama_guru }}</span>
+                                <span class="font-semibold text-slate-800 block">{{ $j->mapel?->nama_mapel }}</span>
+                                <span class="text-[11px] text-slate-400">{{ $j->kelas?->nama_kelas }} &bull; {{ $j->guru?->nama_guru }}</span>
                             </div>
-                            <span class="px-2 py-1 rounded-lg bg-white border border-slate-200 font-mono text-[10px] font-bold text-blue-700">
+                            <span class="px-2 py-1 rounded-lg bg-white border border-slate-200 font-mono text-[10px] font-bold text-indigo-700 shadow-2xs">
                                 {{ substr($j->jam_mulai, 0, 5) }}
                             </span>
                         </div>
                     @empty
                         <div class="py-8 text-center text-slate-400 text-xs">
-                            Tidak ada jadwal pelajaran yang tercatat untuk hari {{ $hariIni }}.
+                            Tidak ada jadwal pelajaran untuk hari {{ $hariIni }}.
                         </div>
                     @endforelse
                 </div>
             </div>
 
             <div class="pt-3 border-t border-slate-100 text-center">
-                <a href="{{ route('web.presensi.index') }}" class="text-xs font-semibold text-blue-600 hover:text-blue-800">
+                <a href="{{ route('web.presensi.index') }}" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition">
                     Buka Formulir Presensi Kehadiran Siswa &rarr;
                 </a>
             </div>
@@ -142,13 +142,13 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         <!-- Left 2 Cols: Recent Transactions -->
-        <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200/80 shadow-soft overflow-hidden">
             <div class="p-5 border-b border-slate-100 flex items-center justify-between">
                 <div>
                     <h2 class="font-bold text-slate-900 text-sm">Transaksi Pembayaran SPP Terbaru</h2>
                     <p class="text-xs text-slate-400">6 transaksi pembayaran terakhir yang berhasil diverifikasi</p>
                 </div>
-                <a href="{{ route('web.pembayaran.index') }}" class="text-xs font-bold text-blue-600 hover:text-blue-800">
+                <a href="{{ route('web.pembayaran.index') }}" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800">
                     Lihat Semua &rarr;
                 </a>
             </div>
@@ -156,7 +156,7 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs">
                     <thead>
-                        <tr class="border-b border-slate-100 bg-slate-50/50 text-slate-500 uppercase tracking-wider">
+                        <tr class="border-b border-slate-100 bg-slate-50/50 text-slate-400 uppercase tracking-wider text-[10px] font-semibold">
                             <th class="py-3 px-4 font-semibold">No. Kwitansi</th>
                             <th class="py-3 px-4 font-semibold">Nama Siswa</th>
                             <th class="py-3 px-4 font-semibold">Periode SPP</th>
@@ -166,15 +166,15 @@
                     </thead>
                     <tbody class="divide-y divide-slate-100">
                         @forelse($transaksiTerbaru as $t)
-                            <tr class="hover:bg-slate-50 transition">
-                                <td class="py-3 px-4 font-mono font-bold text-blue-700">
+                            <tr class="hover:bg-slate-50/60 transition">
+                                <td class="py-3 px-4 font-mono font-bold text-indigo-600">
                                     KWT-{{ str_pad($t->id, 6, '0', STR_PAD_LEFT) }}
                                 </td>
                                 <td class="py-3 px-4">
-                                    <div class="font-bold text-slate-900">{{ $t->siswa?->nama }}</div>
+                                    <div class="font-semibold text-slate-900">{{ $t->siswa?->nama }}</div>
                                     <div class="text-[10px] text-slate-400">{{ $t->siswa?->kelas?->nama_kelas }}</div>
                                 </td>
-                                <td class="py-3 px-4 font-medium text-slate-700">
+                                <td class="py-3 px-4 text-slate-600">
                                     {{ $t->bulan_dibayar }} {{ $t->tahun_dibayar }}
                                 </td>
                                 <td class="py-3 px-4 font-bold text-emerald-700">
@@ -198,10 +198,10 @@
         </div>
 
         <!-- Right 1 Col: Student Distribution Chart -->
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-soft flex flex-col justify-between">
             <div>
                 <h2 class="font-bold text-slate-900 text-sm mb-1">Distribusi Siswa per Kelas</h2>
-                <p class="text-xs text-slate-400 mb-4">Proporsi siswa aktif di setiap rombongan belajar</p>
+                <p class="text-xs text-slate-400 mb-4">Proporsi siswa aktif di setiap kelas</p>
                 <div class="h-48 flex items-center justify-center">
                     <canvas id="classChart"></canvas>
                 </div>
@@ -227,14 +227,14 @@
             datasets: [{
                 label: 'Pemasukan SPP (Rp)',
                 data: @json($chartData),
-                borderColor: '#2563eb',
-                backgroundColor: 'rgba(37, 99, 235, 0.08)',
-                borderWidth: 2.5,
+                borderColor: '#4f46e5',
+                backgroundColor: 'rgba(79, 70, 229, 0.05)',
+                borderWidth: 2,
                 fill: true,
-                tension: 0.35,
-                pointRadius: 4,
-                pointHoverRadius: 6,
-                pointBackgroundColor: '#2563eb'
+                tension: 0.3,
+                pointRadius: 3.5,
+                pointHoverRadius: 5,
+                pointBackgroundColor: '#4f46e5'
             }]
         },
         options: {
@@ -246,6 +246,7 @@
             scales: {
                 y: {
                     beginAtZero: true,
+                    grid: { color: '#f1f5f9' },
                     ticks: {
                         callback: function(value) {
                             if (value >= 1000000) return 'Rp ' + (value/1000000) + ' Jt';
@@ -256,6 +257,7 @@
                     }
                 },
                 x: {
+                    grid: { display: false },
                     ticks: { font: { size: 10 } }
                 }
             }
@@ -271,7 +273,7 @@
             datasets: [{
                 data: @json($kelasData),
                 backgroundColor: [
-                    '#3b82f6', '#6366f1', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#14b8a6', '#06b6d4'
+                    '#6366f1', '#3b82f6', '#0ea5e9', '#10b981', '#f59e0b', '#8b5cf6'
                 ],
                 borderWidth: 2,
                 borderColor: '#ffffff'
