@@ -22,6 +22,10 @@ class Siswa extends Model
         'no_telp',
         'no_hp_wali',
         'id_spp',
+        'status_kelulusan',
+        'tgl_kelulusan',
+        'nomor_ijazah',
+        'total_skpi_points',
         'consent_pdp_at',
         'consent_pdp_ip',
     ];
@@ -31,6 +35,8 @@ class Siswa extends Model
         'nama_ibu_kandung' => 'encrypted',
         'no_hp_wali' => 'encrypted',
         'consent_pdp_at' => 'datetime',
+        'tgl_kelulusan' => 'datetime',
+        'total_skpi_points' => 'integer',
     ];
 
     // INI WAJIB ADA BIAR DROPDOWN MUNCUL
@@ -135,5 +141,25 @@ class Siswa extends Model
     public function presensis(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Presensi::class, 'id_siswa');
+    }
+
+    public function krs(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Krs::class, 'id_siswa');
+    }
+
+    public function submissions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Submission::class, 'id_siswa');
+    }
+
+    public function earlyWarningLogs(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(EarlyWarningLog::class, 'id_siswa');
+    }
+
+    public function skpiAktivitas(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(SkpiAktivitas::class, 'id_siswa');
     }
 }

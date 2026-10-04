@@ -26,6 +26,8 @@ class KrsDetail extends Model
         'nilai_praktikum',
         'nilai_akhir_angka',
         'nilai_akhir_huruf',
+        'incomplete_expires_at',
+        'is_incomplete_expired',
         'bobot_mutu',
         'is_lulus',
         'is_published',
@@ -40,6 +42,8 @@ class KrsDetail extends Model
         'nilai_praktikum' => 'decimal:2',
         'nilai_akhir_angka' => 'decimal:2',
         'bobot_mutu' => 'decimal:2',
+        'incomplete_expires_at' => 'datetime',
+        'is_incomplete_expired' => 'boolean',
         'is_lulus' => 'boolean',
         'is_published' => 'boolean',
     ];

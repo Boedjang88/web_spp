@@ -103,4 +103,13 @@ Route::middleware(['auth', 'pdp.consent'])->group(function () {
         $bap = \App\Models\BapPerkuliahan::with(['kelasKuliah.mataKuliah', 'dosen', 'ruangan'])->findOrFail($id);
         return view('siakad.bap.print', compact('bap'));
     })->name('siakad.bap.print');
+
+    // --- Hardened Signed Document Routes (Anti-IDOR & Expiry Protected) ---
+    Route::middleware('signed.download')->group(function () {
+        Route::get('secure-docs/pembayaran/{id}', [\App\Http\Controllers\Web\SecureDocumentDownloadController::class, 'downloadReceipt'])->name('pembayaran.cetak.signed');
+        Route::get('secure-docs/kartu-ujian/{id_krs}', [\App\Http\Controllers\Web\SecureDocumentDownloadController::class, 'downloadExamPass'])->name('krs.kartu-ujian.signed');
+        Route::get('secure-docs/rapor/{id_siswa}/{id_tahun_akademik}', [\App\Http\Controllers\Web\SecureDocumentDownloadController::class, 'downloadRapor'])->name('khs.cetak.signed');
+        Route::get('secure-docs/skpi/{id_siswa}', [\App\Http\Controllers\Web\SecureDocumentDownloadController::class, 'downloadSkpi'])->name('skpi.cetak.signed');
+        Route::get('secure-docs/lms-material/{id}', [\App\Http\Controllers\Web\SecureDocumentDownloadController::class, 'downloadLmsMaterial'])->name('lms.material.download.signed');
+    });
 });

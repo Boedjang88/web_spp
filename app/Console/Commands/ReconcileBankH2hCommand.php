@@ -96,6 +96,22 @@ class ReconcileBankH2hCommand extends Command
             'status' => $status,
         ]);
 
+        // 4. Persist individual records into financial_discrepancies table for real-time audit & alerts
+        foreach ($discrepancies as $disc) {
+            \App\Models\FinancialDiscrepancy::create([
+                'id_reconciliation_log' => $log->id,
+                'bank_code' => $bankCode,
+                'nomor_transaksi_bank' => $disc['bank_trx_id'] ?? null,
+                'nomor_va' => $disc['nomor_va'] ?? null,
+                'amount_bank' => $disc['amount_bank'] ?? 0,
+                'amount_siakad' => $disc['amount_siakad'] ?? 0,
+                'discrepancy_amount' => abs(($disc['amount_bank'] ?? 0) - ($disc['amount_siakad'] ?? 0)),
+                'anomaly_type' => $disc['type'] ?? 'AMOUNT_MISMATCH',
+                'status' => 'OPEN',
+                'notes' => $disc['description'] ?? null,
+            ]);
+        }
+
         $this->table(
             ['Metrik Rekonsiliasi', 'Nilai'],
             [
@@ -111,7 +127,7 @@ class ReconcileBankH2hCommand extends Command
         );
 
         if ($discrepancyCount > 0) {
-            $this->warn("Ditemukan {$discrepancyCount} selisih transaksi! Telah dicatat ke reconciliation_logs ID: {$log->id}.");
+            $this->warn("Ditemukan {$discrepancyCount} selisih transaksi! Telah dicatat ke reconciliation_logs ID: {$log->id} & financial_discrepancies.");
         } else {
             $this->info('Rekonsiliasi Sempurna (100% Match)! Tidak ditemukan selisih data.');
         }
