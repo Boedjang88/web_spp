@@ -39,8 +39,12 @@ Route::middleware('guest')->group(function () {
 });
 
 // --- Authenticated Web Routes (RBAC Protected) ---
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'pdp.consent'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    // UU PDP Consent Routes
+    Route::get('/pdp/consent', [\App\Http\Controllers\Web\PdpConsentController::class, 'show'])->name('pdp.consent.show');
+    Route::post('/pdp/consent', [\App\Http\Controllers\Web\PdpConsentController::class, 'store'])->name('pdp.consent.store');
 
     // Dashboard (Personalized per-role)
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

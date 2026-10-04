@@ -13,11 +13,19 @@ class Guru extends Model
 
     protected $fillable = [
         'nip',
+        'nik',
         'nama_guru',
         'jenis_kelamin',
         'no_telp',
         'email',
         'alamat',
+        'consent_pdp_at',
+        'consent_pdp_ip',
+    ];
+
+    protected $casts = [
+        'nik' => 'encrypted',
+        'consent_pdp_at' => 'datetime',
     ];
 
     public function user(): HasOne

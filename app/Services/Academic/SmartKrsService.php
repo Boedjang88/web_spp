@@ -13,6 +13,7 @@ use App\Models\Siswa;
 use App\Models\TahunAkademik;
 use App\Services\Audit\AuditTrailService;
 use Exception;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class SmartKrsService
@@ -179,6 +180,37 @@ class SmartKrsService
 
             return $krsDetail;
         });
+    }
+
+    /**
+     * Rate-limited & Deadlock-Preventing KRS Enrollment wrapper
+     * Uses atomic locks on student and class resource to serialize concurrent spikes
+     *
+     * @throws Exception
+     */
+    public function attemptEnrollmentWithThrottle(
+        int $idSiswa,
+        int $idKelasKuliah,
+        int $idTahunAkademik,
+        int $lockTimeoutSeconds = 5
+    ): KrsDetail {
+        $studentLockKey = "lock_krs_student_{$idSiswa}";
+        $classLockKey = "lock_krs_class_{$idKelasKuliah}";
+
+        $studentLock = Cache::lock($studentLockKey, $lockTimeoutSeconds);
+        $classLock = Cache::lock($classLockKey, $lockTimeoutSeconds);
+
+        if (!$studentLock->get()) {
+            throw new Exception("Permintaan KRS Anda sedang diproses. Mohon tunggu beberapa detik sebelum mencoba lagi.");
+        }
+
+        try {
+            return $classLock->block($lockTimeoutSeconds, function () use ($idSiswa, $idKelasKuliah, $idTahunAkademik) {
+                return $this->enrollClassWithPessimisticLock($idSiswa, $idKelasKuliah, $idTahunAkademik);
+            });
+        } finally {
+            $studentLock->release();
+        }
     }
 
     /**

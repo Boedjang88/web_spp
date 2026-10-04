@@ -22,11 +22,18 @@ class User extends Authenticatable implements FilamentUser
         'id_guru',
         'id_siswa',
         'is_active',
+        'mfa_secret',
+        'mfa_enabled',
+        'sso_provider',
+        'sso_provider_id',
+        'consent_pdp_at',
+        'consent_pdp_ip',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
+        'mfa_secret',
     ];
 
     protected function casts(): array
@@ -35,6 +42,8 @@ class User extends Authenticatable implements FilamentUser
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_active' => 'boolean',
+            'mfa_enabled' => 'boolean',
+            'consent_pdp_at' => 'datetime',
         ];
     }
 

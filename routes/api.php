@@ -29,8 +29,17 @@ Route::prefix('auth')->group(function () {
 });
 Route::get('/portal/siswa/{nisn}', [PortalController::class, 'cekSiswa'])->name('api.portal.siswa');
 
-// Real-time Bank Host-to-Host (H2H) Webhook
-Route::post('/h2h/webhook', [\App\Http\Controllers\Api\H2hWebhookController::class, 'callback'])->name('api.h2h.webhook');
+// Observability & Health Monitoring Diagnostic Endpoint
+Route::get('/health', function (\App\Services\Monitoring\SystemHealthService $healthService) {
+    $report = $healthService->getSystemHealthReport();
+    $statusCode = $report['status'] === 'HEALTHY' ? 200 : 503;
+    return response()->json($report, $statusCode);
+})->name('api.health');
+
+// Real-time Bank Host-to-Host (H2H) Webhook (Protected by Idempotency Layer)
+Route::post('/h2h/webhook', [\App\Http\Controllers\Api\H2hWebhookController::class, 'callback'])
+    ->middleware('idempotent')
+    ->name('api.h2h.webhook');
 
 // --- Protected Routes (Requires Bearer Token) ---
 Route::middleware('auth:sanctum')->group(function () {

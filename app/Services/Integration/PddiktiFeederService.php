@@ -45,7 +45,7 @@ class PddiktiFeederService
     }
 
     /**
-     * Dispatch sync request to PDDIKTI WebService / Feeder API Mock
+     * Dispatch sync request to PDDIKTI WebService / Feeder API Mock protected by Circuit Breaker
      */
     public function syncRecord(string $tipeEntitas, string $idLokal, array $payload): PddiktiSyncLog
     {
@@ -56,27 +56,32 @@ class PddiktiFeederService
             'payload_terkirim' => $payload,
         ]);
 
-        try {
-            // Simulated WebService Call (WS Feeder Sandbox)
-            $feederId = 'PDDIKTI-WS-' . strtoupper(substr(md5(json_encode($payload)), 0, 16));
-            
-            $log->update([
-                'id_feeder_pddikti' => $feederId,
-                'status_sync' => 'SUCCESS',
-                'response_feeder' => [
-                    'error_code' => 0,
-                    'error_desc' => null,
-                    'result' => ['id_pddikti' => $feederId],
-                ],
-                'synced_at' => now(),
-            ]);
-        } catch (Exception $e) {
-            $log->update([
-                'status_sync' => 'FAILED',
-                'pesan_error' => $e->getMessage(),
-            ]);
-        }
+        return CircuitBreaker::call(
+            'pddikti_feeder',
+            function () use ($log, $payload) {
+                // Simulated WebService Call (WS Feeder Sandbox)
+                $feederId = 'PDDIKTI-WS-' . strtoupper(substr(md5(json_encode($payload)), 0, 16));
 
-        return $log;
+                $log->update([
+                    'id_feeder_pddikti' => $feederId,
+                    'status_sync' => 'SUCCESS',
+                    'response_feeder' => [
+                        'error_code' => 0,
+                        'error_desc' => null,
+                        'result' => ['id_pddikti' => $feederId],
+                    ],
+                    'synced_at' => now(),
+                ]);
+
+                return $log;
+            },
+            function (\Throwable $e) use ($log) {
+                $log->update([
+                    'status_sync' => 'FAILED',
+                    'pesan_error' => $e->getMessage(),
+                ]);
+                return $log;
+            }
+        );
     }
 }

@@ -10,8 +10,28 @@ class Siswa extends Model
 {
     use HasFactory;
 
-    protected $table = 'siswas'; // Sesuaikan nama tabel di Postgres lu
-    protected $fillable = ['nisn', 'nis', 'nama', 'id_kelas', 'alamat', 'no_telp', 'id_spp'];
+    protected $table = 'siswas';
+    protected $fillable = [
+        'nisn',
+        'nis',
+        'nik',
+        'nama',
+        'id_kelas',
+        'alamat',
+        'nama_ibu_kandung',
+        'no_telp',
+        'no_hp_wali',
+        'id_spp',
+        'consent_pdp_at',
+        'consent_pdp_ip',
+    ];
+
+    protected $casts = [
+        'nik' => 'encrypted',
+        'nama_ibu_kandung' => 'encrypted',
+        'no_hp_wali' => 'encrypted',
+        'consent_pdp_at' => 'datetime',
+    ];
 
     // INI WAJIB ADA BIAR DROPDOWN MUNCUL
     public function kelas(): BelongsTo
