@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\PortalController;
 use App\Http\Controllers\Api\PresensiController;
 use App\Http\Controllers\Api\SiswaController;
 use App\Http\Controllers\Api\SppController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,7 +26,6 @@ use Illuminate\Support\Facades\Route;
 // --- Public Routes (No Auth Required) ---
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('api.auth.login');
-    Route::post('/register', [AuthController::class, 'register'])->name('api.auth.register');
 });
 Route::get('/portal/siswa/{nisn}', [PortalController::class, 'cekSiswa'])->name('api.portal.siswa');
 
@@ -36,46 +36,48 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('auth')->group(function () {
         Route::get('/me', [AuthController::class, 'me'])->name('api.auth.me');
         Route::post('/logout', [AuthController::class, 'logout'])->name('api.auth.logout');
+        
+        // Admin-Only Provisioning: Register new user
+        Route::post('/register', [AuthController::class, 'register'])->middleware('role:superadmin,admin')->name('api.auth.register');
     });
 
     // Dashboard & Metrics
     Route::get('/dashboard/summary', [DashboardController::class, 'summary'])->name('api.dashboard.summary');
 
-    // Laporan Keuangan Rekap
-    Route::get('/laporan/rekap', [LaporanController::class, 'rekap'])->name('api.laporan.rekap');
+    // --- User Management (Super Admin & Admin TU Only) ---
+    Route::middleware('role:superadmin,admin')->group(function () {
+        Route::apiResource('users', UserController::class);
+    });
 
-    // Audit Trail: Log Aktivitas
-    Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('api.activity-logs.index');
+    // --- Master Data & Keuangan SPP (Superadmin, Admin, Petugas) ---
+    Route::middleware('role:superadmin,admin,petugas')->group(function () {
+        // Financial Reports & Audit Log
+        Route::get('/laporan/rekap', [LaporanController::class, 'rekap'])->name('api.laporan.rekap');
+        Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('api.activity-logs.index');
 
-    // --- Academic Modules (SIAKAD) ---
-    // 1. Data Guru / Tenaga Pendidik
-    Route::apiResource('guru', GuruController::class);
+        // Master Data
+        Route::apiResource('guru', GuruController::class);
+        Route::apiResource('mapel', MapelController::class);
+        Route::apiResource('kelas', KelasController::class);
+        Route::apiResource('spp', SppController::class);
+        Route::apiResource('siswa', SiswaController::class);
 
-    // 2. Mata Pelajaran
-    Route::apiResource('mapel', MapelController::class);
+        // Pembayaran SPP (Store, Batch, Update, Delete)
+        Route::post('/pembayaran/batch', [PembayaranController::class, 'batchStore'])->name('api.pembayaran.batch');
+        Route::apiResource('pembayaran', PembayaranController::class);
+    });
 
-    // 3. Jadwal Pelajaran
-    Route::apiResource('jadwal', JadwalController::class);
+    // --- Academic Features (Admin & Dewan Guru) ---
+    Route::middleware('role:superadmin,admin,guru')->group(function () {
+        Route::apiResource('jadwal', JadwalController::class);
+        Route::apiResource('nilai', NilaiController::class);
+        Route::get('/presensi', [PresensiController::class, 'index'])->name('api.presensi.index');
+        Route::post('/presensi/batch', [PresensiController::class, 'storeBatch'])->name('api.presensi.batch');
+    });
 
-    // 4. Nilai & E-Rapor Siswa
+    // --- Read-Only / Individual Data Access (All authenticated roles) ---
     Route::get('/nilai/rapor/{id}', [NilaiController::class, 'rapor'])->name('api.nilai.rapor');
-    Route::apiResource('nilai', NilaiController::class);
-
-    // 5. Presensi Kehadiran Siswa
-    Route::get('/presensi', [PresensiController::class, 'index'])->name('api.presensi.index');
-    Route::post('/presensi/batch', [PresensiController::class, 'storeBatch'])->name('api.presensi.batch');
-
-    // --- Master Data Sekolah ---
-    Route::apiResource('kelas', KelasController::class);
-    Route::apiResource('spp', SppController::class);
-
-    // Data Siswa, Tagihan, & Surat Tagihan Resmi
     Route::get('/siswa/{id}/tunggakan', [SiswaController::class, 'tunggakan'])->name('api.siswa.tunggakan');
     Route::get('/siswa/{id}/surat-tagihan', [SiswaController::class, 'suratTagihan'])->name('api.siswa.surat-tagihan');
-    Route::apiResource('siswa', SiswaController::class);
-
-    // Transaksi Pembayaran, Batch, & Kwitansi
-    Route::post('/pembayaran/batch', [PembayaranController::class, 'batchStore'])->name('api.pembayaran.batch');
     Route::get('/pembayaran/{id}/kwitansi', [PembayaranController::class, 'kwitansi'])->name('api.pembayaran.kwitansi');
-    Route::apiResource('pembayaran', PembayaranController::class);
 });

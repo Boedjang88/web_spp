@@ -100,6 +100,33 @@
                 </div>
             </div>
 
+            <!-- 1.5. User Management (Superadmin & Admin Only) -->
+            <div class="bg-slate-800 rounded-2xl border border-purple-500/30 p-5 space-y-3">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-bold text-sm text-purple-400 uppercase tracking-wider">1.5. User Management (RBAC Admin-Only)</h3>
+                    <span class="text-[10px] uppercase font-bold bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded">Admin Only</span>
+                </div>
+                <div class="space-y-2 text-xs">
+                    <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700 flex items-center justify-between">
+                        <div>
+                            <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 font-bold font-mono mr-2">GET</span>
+                            <code class="text-slate-200">/api/users</code>
+                            <p class="text-[11px] text-slate-400 mt-1">Daftar semua pengguna &amp; tingkatan role (Filter: superadmin/admin/guru/siswa)</p>
+                        </div>
+                        <button onclick="testApi('GET', '/api/users', null, true)" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg font-semibold transition">Test</button>
+                    </div>
+
+                    <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700 flex items-center justify-between">
+                        <div>
+                            <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold font-mono mr-2">POST</span>
+                            <code class="text-slate-200">/api/users</code>
+                            <p class="text-[11px] text-slate-400 mt-1">Admin membuat akun baru Guru atau Siswa</p>
+                        </div>
+                        <button onclick="testApi('POST', '/api/users', {'name':'Guru Matematika Baru','email':'guru.matematika@sekolah.id','password':'password123','role':'guru','is_active':true}, true)" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg font-semibold transition">Test</button>
+                    </div>
+                </div>
+            </div>
+
             <!-- 2. Dashboard Analytics & Audit Log -->
             <div class="bg-slate-800 rounded-2xl border border-slate-700 p-5 space-y-3">
                 <h3 class="font-bold text-sm text-blue-400 uppercase tracking-wider">2. Analytics & Audit Trail</h3>

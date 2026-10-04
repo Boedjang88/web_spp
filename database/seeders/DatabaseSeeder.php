@@ -22,13 +22,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Users (Admin, Petugas, Guru)
+        // 1. Users (4-Tier RBAC)
+        $superadmin = User::firstOrCreate(
+            ['email' => 'superadmin@sekolah.id'],
+            [
+                'name' => 'Super Administrator',
+                'password' => Hash::make('password123'),
+                'role' => 'superadmin',
+                'is_active' => true,
+            ]
+        );
+
         $admin = User::firstOrCreate(
             ['email' => 'admin@sekolah.id'],
             [
-                'name' => 'Administrator SIAKAD & SPP',
+                'name' => 'Administrator Tata Usaha',
                 'password' => Hash::make('password123'),
                 'role' => 'admin',
+                'is_active' => true,
             ]
         );
 
@@ -38,15 +49,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Petugas Loket 1',
                 'password' => Hash::make('password123'),
                 'role' => 'petugas',
-            ]
-        );
-
-        $guruUser = User::firstOrCreate(
-            ['email' => 'guru@sekolah.id'],
-            [
-                'name' => 'Budi Santoso, S.Kom',
-                'password' => Hash::make('password123'),
-                'role' => 'guru',
+                'is_active' => true,
             ]
         );
 
@@ -288,6 +291,29 @@ class DatabaseSeeder extends Seeder
                 'tgl_bayar' => '2025-08-12',
                 'id_spp' => $spp2025->id,
                 'jumlah_bayar' => 300000,
+            ]
+        );
+
+        // 11. User Akun Terkait (Guru & Siswa)
+        User::firstOrCreate(
+            ['email' => 'guru@sekolah.id'],
+            [
+                'name' => 'Budi Santoso, S.Kom., M.T.',
+                'password' => Hash::make('password123'),
+                'role' => 'guru',
+                'id_guru' => $guru1->id,
+                'is_active' => true,
+            ]
+        );
+
+        User::firstOrCreate(
+            ['email' => 'siswa@sekolah.id'],
+            [
+                'name' => 'Muhammad Fauzan',
+                'password' => Hash::make('password123'),
+                'role' => 'siswa',
+                'id_siswa' => $siswa1->id,
+                'is_active' => true,
             ]
         );
     }

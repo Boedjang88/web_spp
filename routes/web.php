@@ -14,6 +14,7 @@ use App\Http\Controllers\Web\PembayaranController;
 use App\Http\Controllers\Web\PresensiController;
 use App\Http\Controllers\Web\SiswaController;
 use App\Http\Controllers\Web\SppController;
+use App\Http\Controllers\Web\UserController;
 use App\Http\Controllers\Api\ApiDocsController;
 use Illuminate\Support\Facades\Route;
 
@@ -38,44 +39,34 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Dashboard
+    // Dashboard (Personalized per-role)
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // --- Academic Modules (SIAKAD) ---
-    // 1. Guru & Tenaga Pendidik
-    Route::resource('web/guru', GuruController::class)->names('web.guru');
+    // --- Super Admin & Admin TU Only: User Management ---
+    Route::middleware('role:superadmin,admin')->group(function () {
+        Route::resource('web/users', UserController::class)->names('web.users');
+        Route::get('web/activity-logs', [ActivityLogController::class, 'index'])->name('web.activity-logs.index');
+        Route::resource('web/guru', GuruController::class)->names('web.guru');
+        Route::resource('web/mapel', MapelController::class)->names('web.mapel');
+        Route::resource('web/kelas', KelasController::class)->names('web.kelas');
+        Route::resource('web/spp', SppController::class)->names('web.spp');
+        Route::resource('web/siswa', SiswaController::class)->names('web.siswa');
+        Route::resource('web/pembayaran', PembayaranController::class)->names('web.pembayaran');
+        Route::get('web/laporan', [LaporanController::class, 'index'])->name('web.laporan.index');
+        Route::get('web/laporan/cetak', [LaporanController::class, 'cetak'])->name('web.laporan.cetak');
+        Route::get('web/laporan/export-csv', [LaporanController::class, 'exportCsv'])->name('web.laporan.exportCsv');
+    });
 
-    // 2. Mata Pelajaran
-    Route::resource('web/mapel', MapelController::class)->names('web.mapel');
+    // --- Academic Features (Admin & Dewan Guru) ---
+    Route::middleware('role:superadmin,admin,guru')->group(function () {
+        Route::resource('web/jadwal', JadwalController::class)->names('web.jadwal');
+        Route::resource('web/nilai', NilaiController::class)->names('web.nilai');
+        Route::get('web/presensi', [PresensiController::class, 'index'])->name('web.presensi.index');
+        Route::post('web/presensi/batch', [PresensiController::class, 'storeBatch'])->name('web.presensi.batch');
+    });
 
-    // 3. Jadwal Pelajaran
-    Route::resource('web/jadwal', JadwalController::class)->names('web.jadwal');
-
-    // 4. Nilai & E-Rapor Siswa
+    // --- Student / General Accessible Print Endpoints ---
     Route::get('web/nilai/rapor/{id}', [NilaiController::class, 'cetakRapor'])->name('web.nilai.rapor');
-    Route::resource('web/nilai', NilaiController::class)->names('web.nilai');
-
-    // 5. Presensi Kehadiran Siswa
-    Route::get('web/presensi', [PresensiController::class, 'index'])->name('web.presensi.index');
-    Route::post('web/presensi/batch', [PresensiController::class, 'storeBatch'])->name('web.presensi.batch');
-
-    // --- Master Data Sekolah ---
-    Route::resource('web/kelas', KelasController::class)->names('web.kelas');
-    Route::resource('web/spp', SppController::class)->names('web.spp');
-
-    // Data Siswa & Tagihan
     Route::get('web/siswa/{id}/surat-tagihan', [SiswaController::class, 'suratTagihan'])->name('web.siswa.suratTagihan');
-    Route::resource('web/siswa', SiswaController::class)->names('web.siswa');
-
-    // --- Transaksi Keuangan & SPP ---
     Route::get('web/pembayaran/{id}/cetak', [PembayaranController::class, 'cetakKwitansi'])->name('web.pembayaran.cetak');
-    Route::resource('web/pembayaran', PembayaranController::class)->names('web.pembayaran');
-
-    // Laporan Keuangan SPP & Export
-    Route::get('web/laporan', [LaporanController::class, 'index'])->name('web.laporan.index');
-    Route::get('web/laporan/cetak', [LaporanController::class, 'cetak'])->name('web.laporan.cetak');
-    Route::get('web/laporan/export-csv', [LaporanController::class, 'exportCsv'])->name('web.laporan.exportCsv');
-
-    // Audit Trail: Log Aktivitas Sistem
-    Route::get('web/activity-logs', [ActivityLogController::class, 'index'])->name('web.activity-logs.index');
 });

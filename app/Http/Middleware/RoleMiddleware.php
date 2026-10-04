@@ -25,8 +25,25 @@ class RoleMiddleware
             return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
         }
 
-        // Admin has access to all roles
-        if ($user->role === 'admin') {
+        // Check if account is active
+        if (isset($user->is_active) && !$user->is_active) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Akun Anda telah dinonaktifkan oleh administrator.',
+                ], 403);
+            }
+            auth()->logout();
+            return redirect()->route('login')->with('error', 'Akun Anda telah dinonaktifkan oleh administrator.');
+        }
+
+        // Superadmin has access to everything
+        if ($user->role === 'superadmin') {
+            return $next($request);
+        }
+
+        // Admin has access if role asked includes 'admin' or 'petugas'
+        if ($user->role === 'admin' && (empty($roles) || in_array('admin', $roles) || in_array('petugas', $roles))) {
             return $next($request);
         }
 
@@ -38,9 +55,10 @@ class RoleMiddleware
             return response()->json([
                 'success' => false,
                 'message' => 'Akses Ditolak (403 Forbidden). Role akun Anda (' . $user->role . ') tidak memiliki izin untuk mengakses resource ini.',
+                'required_roles' => $roles,
             ], 403);
         }
 
-        return redirect()->route('dashboard')->with('error', 'Akses Ditolak: Anda tidak memiliki izin untuk membuka halaman tersebut.');
+        abort(403, 'Akses Ditolak. Anda tidak memiliki izin untuk mengakses halaman ini.');
     }
 }

@@ -39,9 +39,15 @@ class AuthController extends Controller
         $remember = $request->boolean('remember');
 
         if (Auth::attempt($credentials, $remember)) {
+            $user = Auth::user();
+            if (isset($user->is_active) && !$user->is_active) {
+                Auth::logout();
+                return back()->withErrors(['email' => 'Akun Anda telah dinonaktifkan oleh administrator.'])->onlyInput('email');
+            }
+
             $request->session()->regenerate();
-            \App\Models\ActivityLog::record('LOGIN', 'User ' . Auth::user()->name . ' (' . Auth::user()->role . ') berhasil login via Web.');
-            return redirect()->intended(route('dashboard'))->with('success', 'Selamat datang kembali, ' . Auth::user()->name . '!');
+            \App\Models\ActivityLog::record('LOGIN', 'User ' . $user->name . ' (' . $user->role . ') berhasil login via Web.');
+            return redirect()->intended(route('dashboard'))->with('success', 'Selamat datang kembali, ' . $user->name . '!');
         }
 
         return back()->withErrors([

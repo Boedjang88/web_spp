@@ -26,6 +26,10 @@ class AuthController extends BaseApiController
             ], 401);
         }
 
+        if (isset($user->is_active) && !$user->is_active) {
+            return $this->sendError('Akun Anda telah dinonaktifkan oleh administrator.', [], 403);
+        }
+
         // Generate Sanctum Token
         $token = $user->createToken('auth_token')->plainTextToken;
 

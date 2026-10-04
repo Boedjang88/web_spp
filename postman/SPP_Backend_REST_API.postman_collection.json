@@ -138,11 +138,8 @@
           }
         },
         {
-          "name": "Register User Baru",
+          "name": "Register User Baru (Admin-Only)",
           "request": {
-            "auth": {
-              "type": "noauth"
-            },
             "method": "POST",
             "header": [
               {
@@ -163,7 +160,7 @@
               "host": ["{{base_url}}"],
               "path": ["auth", "register"]
             },
-            "description": "Registrasi akun pengguna baru."
+            "description": "Registrasi akun pengguna baru (Hanya dapat dilakukan oleh Superadmin/Admin)."
           }
         },
         {
@@ -200,6 +197,59 @@
               "path": ["auth", "logout"]
             },
             "description": "Mencabut (revoke) token autentikasi Sanctum saat ini."
+          }
+        }
+      ]
+    },
+    {
+      "name": "1.5. User Management (RBAC Admin-Only)",
+      "item": [
+        {
+          "name": "Daftar Pengguna Sistem (List & Filter Role)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users?role=guru",
+              "host": ["{{base_url}}"],
+              "path": ["users"],
+              "query": [
+                {
+                  "key": "role",
+                  "value": "guru"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Tambah Pengguna Baru (Provisioning)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dewan Guru Matematika\",\n  \"email\": \"guru.matematika@sekolah.id\",\n  \"password\": \"password123\",\n  \"role\": \"guru\",\n  \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": ["{{base_url}}"],
+              "path": ["users"]
+            }
           }
         }
       ]

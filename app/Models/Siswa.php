@@ -97,6 +97,11 @@ class Siswa extends Model
    ];
     }
 
+    public function user(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(User::class, 'id_siswa');
+    }
+
     public function pembayarans(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Pembayaran::class, 'id_siswa');

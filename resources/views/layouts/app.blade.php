@@ -40,7 +40,7 @@
     <div class="md:hidden bg-slate-900 text-white p-4 flex justify-between items-center sticky top-0 z-40 shadow-md">
         <div class="flex items-center space-x-2">
             <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-sm">🎓</div>
-            <span class="font-extrabold text-sm tracking-tight">SIAKAD & SPP</span>
+            <span class="font-extrabold text-sm tracking-tight">SIAKAD &amp; SPP PRO</span>
         </div>
         <button onclick="document.getElementById('mobileSidebar').classList.toggle('hidden')" class="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
@@ -57,20 +57,27 @@
                 </div>
                 <button onclick="document.getElementById('mobileSidebar').classList.add('hidden')" class="text-slate-400 hover:text-white">&times;</button>
             </div>
-            <!-- Mobile Nav Items (Mirror of Desktop) -->
+            <!-- Mobile Nav Items -->
             <nav class="space-y-1 text-xs">
                 <a href="{{ route('dashboard') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">📊 Dashboard</a>
-                <a href="{{ route('web.guru.index') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">👨‍🏫 Data Guru</a>
-                <a href="{{ route('web.mapel.index') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">📚 Mata Pelajaran</a>
-                <a href="{{ route('web.jadwal.index') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">📅 Jadwal Pelajaran</a>
-                <a href="{{ route('web.nilai.index') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">📝 Nilai &amp; E-Rapor</a>
-                <a href="{{ route('web.presensi.index') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">📋 Presensi Siswa</a>
-                <a href="{{ route('web.pembayaran.index') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">💳 Transaksi SPP</a>
-                <a href="{{ route('web.siswa.index') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">👥 Data Siswa</a>
-                <a href="{{ route('web.kelas.index') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">🏫 Data Kelas</a>
-                <a href="{{ route('web.spp.index') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">💰 Tarif SPP</a>
-                <a href="{{ route('web.laporan.index') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">📑 Laporan</a>
-                <a href="{{ route('web.activity-logs.index') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">🛡️ Log Audit</a>
+                @if(auth()->check() && (auth()->user()->role === 'superadmin' || auth()->user()->role === 'admin' || auth()->user()->role === 'petugas'))
+                    <a href="{{ route('web.users.index') }}" class="block px-3 py-2 rounded-lg font-medium text-purple-400 hover:bg-purple-900/30">👥 Manajemen Pengguna</a>
+                    <a href="{{ route('web.guru.index') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">👨‍🏫 Data Guru</a>
+                    <a href="{{ route('web.mapel.index') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">📚 Mata Pelajaran</a>
+                    <a href="{{ route('web.jadwal.index') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">📅 Jadwal Pelajaran</a>
+                    <a href="{{ route('web.nilai.index') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">📝 Nilai &amp; E-Rapor</a>
+                    <a href="{{ route('web.presensi.index') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">📋 Presensi Siswa</a>
+                    <a href="{{ route('web.pembayaran.index') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">💳 Transaksi SPP</a>
+                    <a href="{{ route('web.siswa.index') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">👥 Data Siswa</a>
+                    <a href="{{ route('web.kelas.index') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">🏫 Data Kelas</a>
+                    <a href="{{ route('web.spp.index') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">💰 Tarif SPP</a>
+                    <a href="{{ route('web.laporan.index') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">📑 Laporan Keuangan</a>
+                    <a href="{{ route('web.activity-logs.index') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">🛡️ Log Audit</a>
+                @elseif(auth()->check() && auth()->user()->role === 'guru')
+                    <a href="{{ route('web.jadwal.index') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">📅 Jadwal Mengajar</a>
+                    <a href="{{ route('web.nilai.index') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">📝 Input Nilai Siswa</a>
+                    <a href="{{ route('web.presensi.index') }}" class="block px-3 py-2 rounded-lg font-medium hover:bg-slate-800 text-slate-300">📋 Presensi Kehadiran</a>
+                @endif
                 <a href="{{ url('/api/docs') }}" target="_blank" class="block px-3 py-2 rounded-lg font-medium text-purple-400 hover:bg-purple-900/30">⚡ API Docs</a>
             </nav>
         </div>
@@ -90,7 +97,7 @@
             </div>
         </div>
 
-        <!-- Sidebar Nav Links (Categorized) -->
+        <!-- Sidebar Nav Links (Categorized by Role) -->
         <div class="flex-1 px-3 py-4 space-y-5 overflow-y-auto custom-scrollbar text-xs">
             
             <!-- Menu Utama -->
@@ -108,74 +115,123 @@
                 </div>
             </div>
 
-            <!-- Modul Akademik -->
-            <div>
-                <span class="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-1.5">Sistem Akademik (SIAKAD)</span>
-                <div class="space-y-0.5">
-                    <a href="{{ route('web.guru.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.guru.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
-                        <span>👨‍🏫</span>
-                        <span>Guru &amp; Pendidik</span>
-                    </a>
-                    <a href="{{ route('web.mapel.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.mapel.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
-                        <span>📚</span>
-                        <span>Mata Pelajaran</span>
-                    </a>
-                    <a href="{{ route('web.jadwal.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.jadwal.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
-                        <span>📅</span>
-                        <span>Jadwal Pelajaran</span>
-                    </a>
-                    <a href="{{ route('web.nilai.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.nilai.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
-                        <span>📝</span>
-                        <span>Nilai &amp; E-Rapor</span>
-                    </a>
-                    <a href="{{ route('web.presensi.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.presensi.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
-                        <span>📋</span>
-                        <span>Presensi Kehadiran</span>
-                    </a>
+            @if(auth()->check() && (auth()->user()->role === 'superadmin' || auth()->user()->role === 'admin' || auth()->user()->role === 'petugas'))
+                <!-- Modul Manajemen Pengguna (Admin & Superadmin Only) -->
+                <div>
+                    <span class="px-3 text-[10px] font-bold uppercase tracking-wider text-purple-400 block mb-1.5">Manajemen Pengguna</span>
+                    <div class="space-y-0.5">
+                        <a href="{{ route('web.users.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.users.*') ? 'bg-purple-600 text-white font-bold shadow-md shadow-purple-600/30' : 'text-purple-300 hover:text-white hover:bg-purple-950/40' }}">
+                            <span>👥</span>
+                            <span>Daftar Pengguna &amp; Role</span>
+                        </a>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Modul Keuangan & SPP -->
-            <div>
-                <span class="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-1.5">Keuangan &amp; SPP</span>
-                <div class="space-y-0.5">
-                    <a href="{{ route('web.pembayaran.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.pembayaran.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
-                        <span>💳</span>
-                        <span>Transaksi SPP</span>
-                    </a>
-                    <a href="{{ route('web.siswa.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.siswa.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
-                        <span>👥</span>
-                        <span>Data Siswa</span>
-                    </a>
-                    <a href="{{ route('web.kelas.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.kelas.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
-                        <span>🏫</span>
-                        <span>Data Kelas</span>
-                    </a>
-                    <a href="{{ route('web.spp.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.spp.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
-                        <span>💰</span>
-                        <span>Tarif SPP</span>
-                    </a>
-                    <a href="{{ route('web.laporan.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.laporan.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
-                        <span>📑</span>
-                        <span>Laporan Keuangan</span>
-                    </a>
+                <!-- Modul Akademik -->
+                <div>
+                    <span class="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-1.5">Sistem Akademik (SIAKAD)</span>
+                    <div class="space-y-0.5">
+                        <a href="{{ route('web.guru.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.guru.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
+                            <span>👨‍🏫</span>
+                            <span>Guru &amp; Pendidik</span>
+                        </a>
+                        <a href="{{ route('web.mapel.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.mapel.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
+                            <span>📚</span>
+                            <span>Mata Pelajaran</span>
+                        </a>
+                        <a href="{{ route('web.jadwal.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.jadwal.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
+                            <span>📅</span>
+                            <span>Jadwal Pelajaran</span>
+                        </a>
+                        <a href="{{ route('web.nilai.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.nilai.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
+                            <span>📝</span>
+                            <span>Nilai &amp; E-Rapor</span>
+                        </a>
+                        <a href="{{ route('web.presensi.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.presensi.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
+                            <span>📋</span>
+                            <span>Presensi Kehadiran</span>
+                        </a>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Modul Sistem & Keamanan -->
-            <div>
-                <span class="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-1.5">Sistem &amp; Keamanan</span>
-                <div class="space-y-0.5">
-                    <a href="{{ route('web.activity-logs.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.activity-logs.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
-                        <span>🛡️</span>
-                        <span>Log Audit Sistem</span>
-                    </a>
-                    <a href="{{ url('/api/docs') }}" target="_blank" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-semibold text-purple-400 hover:bg-purple-950/40 hover:text-purple-300 transition">
-                        <span>⚡</span>
-                        <span>Interactive API Docs</span>
-                    </a>
+                <!-- Modul Keuangan & SPP -->
+                <div>
+                    <span class="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-1.5">Keuangan &amp; SPP</span>
+                    <div class="space-y-0.5">
+                        <a href="{{ route('web.pembayaran.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.pembayaran.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
+                            <span>💳</span>
+                            <span>Transaksi SPP</span>
+                        </a>
+                        <a href="{{ route('web.siswa.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.siswa.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
+                            <span>👥</span>
+                            <span>Data Siswa</span>
+                        </a>
+                        <a href="{{ route('web.kelas.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.kelas.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
+                            <span>🏫</span>
+                            <span>Data Kelas</span>
+                        </a>
+                        <a href="{{ route('web.spp.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.spp.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
+                            <span>💰</span>
+                            <span>Tarif SPP</span>
+                        </a>
+                        <a href="{{ route('web.laporan.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.laporan.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
+                            <span>📑</span>
+                            <span>Laporan Keuangan</span>
+                        </a>
+                    </div>
                 </div>
-            </div>
+
+                <!-- Modul Sistem & Keamanan -->
+                <div>
+                    <span class="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-1.5">Sistem &amp; Keamanan</span>
+                    <div class="space-y-0.5">
+                        <a href="{{ route('web.activity-logs.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.activity-logs.*') ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
+                            <span>🛡️</span>
+                            <span>Log Audit Sistem</span>
+                        </a>
+                        <a href="{{ url('/api/docs') }}" target="_blank" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-semibold text-purple-400 hover:bg-purple-950/40 hover:text-purple-300 transition">
+                            <span>⚡</span>
+                            <span>Interactive API Docs</span>
+                        </a>
+                    </div>
+                </div>
+            @elseif(auth()->check() && auth()->user()->role === 'guru')
+                <!-- Modul Guru -->
+                <div>
+                    <span class="px-3 text-[10px] font-bold uppercase tracking-wider text-emerald-400 block mb-1.5">Tugas Pendidik</span>
+                    <div class="space-y-0.5">
+                        <a href="{{ route('web.jadwal.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.jadwal.*') ? 'bg-emerald-600 text-white font-bold shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
+                            <span>📅</span>
+                            <span>Jadwal Mengajar</span>
+                        </a>
+                        <a href="{{ route('web.nilai.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.nilai.*') ? 'bg-emerald-600 text-white font-bold shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
+                            <span>📝</span>
+                            <span>Input Nilai Siswa</span>
+                        </a>
+                        <a href="{{ route('web.presensi.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.presensi.*') ? 'bg-emerald-600 text-white font-bold shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
+                            <span>📋</span>
+                            <span>Presensi Kehadiran</span>
+                        </a>
+                    </div>
+                </div>
+            @elseif(auth()->check() && auth()->user()->role === 'siswa')
+                <!-- Modul Siswa -->
+                <div>
+                    <span class="px-3 text-[10px] font-bold uppercase tracking-wider text-blue-400 block mb-1.5">Akademik Saya</span>
+                    <div class="space-y-0.5">
+                        @if(auth()->user()->id_siswa)
+                            <a href="{{ route('web.nilai.rapor', auth()->user()->id_siswa) }}" target="_blank" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition">
+                                <span>📄</span>
+                                <span>E-Rapor Digital Saya</span>
+                            </a>
+                            <a href="{{ route('web.siswa.suratTagihan', auth()->user()->id_siswa) }}" target="_blank" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition">
+                                <span>💳</span>
+                                <span>Tagihan &amp; Kwitansi SPP</span>
+                            </a>
+                        @endif
+                    </div>
+                </div>
+            @endif
 
         </div>
 
@@ -248,7 +304,7 @@
 
             @if($errors->any())
                 <div class="mb-5 bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl shadow-sm text-xs text-amber-800">
-                    <div class="font-bold mb-1">Terdapat kesalahan input formulir:</div>
+                    <div class="font-bold mb-1">Perhatian: Terjadi beberapa kesalahan validasi</div>
                     <ul class="list-disc list-inside space-y-0.5">
                         @foreach($errors->all() as $err)
                             <li>{{ $err }}</li>
@@ -257,13 +313,19 @@
                 </div>
             @endif
 
+            <!-- Page Content Injection -->
             @yield('content')
+
         </main>
 
         <!-- Footer -->
-        <footer class="bg-white border-t border-slate-200 py-4 px-6 text-center text-xs text-slate-400 mt-auto">
-            &copy; {{ date('Y') }} <strong>SIAKAD &amp; SPP Pro</strong> &bull; Sistem Informasi Akademik Sekolah Terpadu berbasis Laravel.
+        <footer class="bg-white border-t border-slate-200 py-4 px-6 text-center text-xs text-slate-400">
+            <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+                <span>&copy; {{ date('Y') }} Sistem Informasi Akademik &amp; Keuangan Sekolah (SIAKAD &amp; SPP)</span>
+                <span class="font-mono text-[11px] text-slate-400">Laravel 11 &bull; 4-Level RBAC Enterprise</span>
+            </div>
         </footer>
+
     </div>
 
     @stack('scripts')
