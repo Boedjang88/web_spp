@@ -164,15 +164,31 @@
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
 
         @keyframes toastSlideIn {
-            from { transform: translateY(-8px); opacity: 0; }
+            from { transform: translateY(-10px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
         @keyframes toastFadeOut {
             from { transform: translateY(0); opacity: 1; }
-            to { transform: translateY(-8px); opacity: 0; }
+            to { transform: translateY(-10px); opacity: 0; }
         }
-        .animate-toast-in { animation: toastSlideIn 0.15s ease-out forwards; }
-        .animate-toast-out { animation: toastFadeOut 0.15s ease-out forwards; }
+        @keyframes modalEnter {
+            from { transform: scale(0.96) translateY(6px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        @keyframes modalBackdrop {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes cardFadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-toast-in { animation: toastSlideIn 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-toast-out { animation: toastFadeOut 0.15s ease-in forwards; }
+        .animate-modal-enter { animation: modalEnter 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-modal-backdrop { animation: modalBackdrop 0.15s ease-out forwards; }
+        .animate-card-in { animation: cardFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     </style>
     @stack('styles')
 </head>
@@ -623,8 +639,8 @@
     </nav>
 
     <!-- Global Modal Alert Dialog -->
-    <div id="alertModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/80 backdrop-blur-sm p-4 transition-opacity">
-        <div class="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 rounded-xl max-w-md w-full p-5 shadow-2xl space-y-4">
+    <div id="alertModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/80 backdrop-blur-sm p-4 transition-opacity duration-150 animate-modal-backdrop">
+        <div class="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 rounded-xl max-w-md w-full p-5 shadow-2xl space-y-4 animate-modal-enter">
             <div class="flex items-start justify-between gap-3">
                 <div class="flex items-center gap-2.5">
                     <div id="modalIconContainer" class="w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center font-mono font-bold text-xs shrink-0">
@@ -635,13 +651,13 @@
                         <span id="modalTypeBadge" class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">ALERT</span>
                     </div>
                 </div>
-                <button type="button" onclick="closeAlertModal()" class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 text-sm font-mono">&times;</button>
+                <button type="button" onclick="closeAlertModal()" class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 text-sm font-mono transition">&times;</button>
             </div>
             <div id="modalBody" class="text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed font-sans border-y border-zinc-100 dark:border-zinc-800 py-3 max-h-60 overflow-y-auto">
                 Pesan notifikasi sistem.
             </div>
             <div class="flex justify-end">
-                <button type="button" onclick="closeAlertModal()" class="px-4 py-2 bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 rounded-lg text-xs font-semibold font-mono transition">
+                <button type="button" onclick="closeAlertModal()" class="px-4 py-2 bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 active:scale-[0.97] rounded-lg text-xs font-semibold font-mono transition-all duration-150">
                     Tutup &bull; OK
                 </button>
             </div>
