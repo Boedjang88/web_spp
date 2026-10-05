@@ -1,6 +1,6 @@
 # Sistem Informasi Akademik & Keuangan Terpadu (SIAKAD Enterprise & SPP)
 
-Sistem Informasi Akademik dan Keuangan Terpadu berbasis **PHP 8.2.12** dan **Laravel 11.x**. Sistem ini mengusung arsitektur Dual-Engine UI (Laravel Blade + Tailwind CSS untuk portal utama dan Filament PHP v3.2 untuk admin panel), didukung keamanan standar enterprise 2026, kepatuhan regulasi UU PDP No. 27/2022, integrasi Bank Host-to-Host (H2H) dengan proteksi idempotensi, serta Smart KRS berbasis *pessimistic locking* dan antrean terdistribusi.
+Sistem Informasi Akademik dan Keuangan Terpadu berbasis **PHP 8.2.12** dan **Laravel 11.x**. Sistem ini mengusung arsitektur Dual-Engine UI (Laravel Blade + Tailwind CSS untuk portal utama dan Filament PHP v3.2 untuk admin panel), didukung desain Zinc Monochrome Enterprise (Zero AI-slop, mikro-interaksi responsif, transisi halaman smooth via View Transitions API), keamanan standar enterprise 2026, kepatuhan regulasi UU PDP No. 27/2022, integrasi Bank Host-to-Host (H2H) dengan proteksi idempotensi, serta Smart KRS berbasis *pessimistic locking* dan antrean terdistribusi.
 
 ---
 
@@ -8,11 +8,12 @@ Sistem Informasi Akademik dan Keuangan Terpadu berbasis **PHP 8.2.12** dan **Lar
 1. [Kredensial Akun Default (Demo)](#kredensial-akun-default-demo)
 2. [Panduan Instalasi & Menjalankan di Lokal](#panduan-instalasi--menjalankan-di-lokal)
 3. [Arsitektur 13 Modul Enterprise](#arsitektur-13-modul-enterprise)
-4. [Fitur Keamanan & Hardening 2026](#fitur-keamanan--hardening-2026)
-5. [Daftar Rute Web Monolith](#daftar-rute-web-monolith)
-6. [Daftar Endpoint RESTful API (Sanctum)](#daftar-endpoint-restful-api-sanctum)
-7. [Dokumentasi Interaktif & Postman](#dokumentasi-interaktif--postman)
-8. [Automated Testing (PHPUnit 10.5)](#automated-testing-phpunit-105)
+4. [Pembaruan UI/UX & Optimasi Mobile](#pembaruan-uiux--optimasi-mobile)
+5. [Fitur Keamanan & Hardening 2026](#fitur-keamanan--hardening-2026)
+6. [Daftar Rute Web Monolith](#daftar-rute-web-monolith)
+7. [Daftar Endpoint RESTful API (Sanctum)](#daftar-endpoint-restful-api-sanctum)
+8. [Dokumentasi Interaktif & Postman](#dokumentasi-interaktif--postman)
+9. [Automated Testing (PHPUnit 10.5)](#automated-testing-phpunit-105)
 
 ---
 
@@ -24,7 +25,7 @@ Aplikasi telah dilengkapi seeder akun untuk seluruh level hak akses (*4-Tier RBA
 
 | Role / Tingkat Akses | Email (Universitas / Sekolah) | Password | Deskripsi Hak Akses |
 | :--- | :--- | :--- | :--- |
-| **Super Admin** | `superadmin@univ.ac.id` / `superadmin@sekolah.id` | `password123` | Akses penuh ke seluruh modul, audit trail forensik, user provisioning, dan observability dashboard |
+| **Super Admin** | `superadmin@univ.ac.id` / `superadmin@sekolah.id` | `password123` | Akses penuh ke seluruh modul, audit trail forensik, user provisioning, dan API Console |
 | **BAAK / Admin Akademik** | `baak@univ.ac.id` / `admin@sekolah.id` | `password123` | Manajemen kurikulum, fakultas, prodi, kelas kuliah, tarif UKT/SPP, jadwal, dan verifikasi kelulusan |
 | **Petugas Loket / Kasir** | `petugas@sekolah.id` | `password123` | Entri pembayaran UKT/SPP manual, cetak kwitansi fisik, dan rekap penerimaan kas |
 | **Dosen / Pengajar** | `dosen@univ.ac.id` / `guru@sekolah.id` | `password123` | Manajemen perkuliahan, BAP digital, presensi QR dinamis, penugasan LMS, dan input nilai OBE |
@@ -47,7 +48,7 @@ Setelah login sebagai Mahasiswa (`mahasiswa@univ.ac.id` atau `siswa@sekolah.id`)
 
 ---
 
-### 2. Akses Portal Mandiri Siswa Tanpa Login (`/` atau `/cek-tagihan`)
+### 3. Akses Portal Mandiri Siswa Tanpa Login (`/` atau `/cek-tagihan`)
 
 Wali murid dan siswa dapat memeriksa status kelulusan akademik, riwayat pembayaran SPP, dan tunggakan secara instan menggunakan NISN terdaftar:
 
@@ -60,7 +61,7 @@ Wali murid dan siswa dapat memeriksa status kelulusan akademik, riwayat pembayar
 
 ---
 
-### 3. Kredensial API & Webhook Gateway (H2H Bank Partner)
+### 4. Kredensial API & Webhook Gateway (H2H Bank Partner)
 
 | Komponen Gateway | Parameter / Header | Nilai / Format |
 | :--- | :--- | :--- |
@@ -82,19 +83,19 @@ Wali murid dan siswa dapat memeriksa status kelulusan akademik, riwayat pembayar
 ### 2. Langkah Menjalankan Aplikasi
 ```bash
 # 1. Masuk ke direktori proyek
-cd /home/masgansss/Projects/Dev/web_spp
+cd web_spp
 
 # 2. Konfigurasi berkas environment
 cp .env.example .env
 
 # 3. Generate Encryption Key
-/opt/lampp/bin/php artisan key:generate
+php artisan key:generate
 
 # 4. Jalankan Migrasi Database & Seeder Lengkap
-/opt/lampp/bin/php artisan migrate:fresh --seed
+php artisan migrate:fresh --seed
 
 # 5. Jalankan Server Pengembangan
-/opt/lampp/bin/php artisan serve
+php artisan serve
 ```
 
 Aplikasi dapat diakses melalui browser di: **`http://127.0.0.1:8000`**
@@ -116,6 +117,17 @@ Aplikasi dapat diakses melalui browser di: **`http://127.0.0.1:8000`**
 11. **Comprehensive Audit Trail & Forensics**: Pencatatan riwayat perubahan data (sebelum/sesudah) dan identifikasi anomali IP/User-Agent.
 12. **MFA, SSO & Multi-Tenant Security**: Otentikasi dua faktor berbasis TOTP Google Authenticator dan proteksi brute-force.
 13. **Universal Data Processing (UU PDP)**: Enkripsi kolom sensitif database dan consent interceptor persetujuan privasi.
+
+---
+
+## Pembaruan UI/UX & Optimasi Mobile
+
+Sistem menggunakan standar antarmuka **Zinc Monochrome Enterprise Style**:
+- **Mikro-Interaksi & Feedback**: Toast notification interaktif (`#toastContainer`), modal alert konfirmasi (`#alertModal`), serta indikator tombol loading untuk mencegah double-posting form.
+- **Transisi Halaman Mulus**: Integrasi CSS View Transitions API (`@view-transition { navigation: auto; }`) dilengkapi dengan top loading progress bar (`#topProgressBar`).
+- **Drawer Menu Mobile Smooth**: Navigasi *mobile drawer* dengan animasi *slide-in* horizontal (`-translate-x-full` ke `translate-x-0`), penutupan otomatis via ESC / overlay tap, dan penguncian scroll saat menu terbuka.
+- **Pengaturan Touch & Layout Mobile**: `viewport-fit=cover`, ukuran area sentuh `min-height: 42px`, dan dukungan *touch-scrolling* horizontal pada tabel data.
+- **Proteksi Akses API Console**: Halaman API Console (`/api/docs`) dilindungi dan hanya dapat diakses oleh akun role Admin / Superadmin / Petugas BAAK.
 
 ---
 
@@ -183,7 +195,7 @@ Semua respons API menggunakan standar format JSON:
 
 ## Dokumentasi Interaktif & Postman
 
-1. **Web Interactive API Console**: Akses langsung melalui browser di **`http://127.0.0.1:8000/api/docs`** untuk mencoba seluruh endpoint API dengan fitur *Auto-Login Token Generator*.
+1. **Web Interactive API Console**: Akses khusus Admin/Superadmin melalui browser di **`http://127.0.0.1:8000/api/docs`** untuk mencoba seluruh endpoint API dengan fitur *Auto-Login Token Generator*.
 2. **Postman Collection**: Berkas koleksi lengkap tersedia pada folder `postman/`:
    - `postman/SPP_Backend_REST_API.postman_collection.json`
    - `postman/SPP_Local_Environment.postman_environment.json`
@@ -196,7 +208,7 @@ Sistem telah diuji menggunakan PHPUnit 10.5 dengan tingkat keberhasilan 100% pad
 
 ```bash
 # Menjalankan seluruh test suite
-/opt/lampp/bin/php ./vendor/bin/phpunit
+vendor/bin/phpunit
 ```
 
 ### Hasil Pengujian:
@@ -210,7 +222,7 @@ Configuration: /home/masgansss/Projects/Dev/web_spp/phpunit.xml
 ............................................................... 126 / 134 ( 94%)
 ........                                                        134 / 134 (100%)
 
-Time: 00:14.796, Memory: 86.50 MB
+Time: 00:10.233, Memory: 88.50 MB
 
 OK (134 tests, 556 assertions)
 ```
