@@ -608,7 +608,6 @@
         <!-- Desktop Header Bar -->
         <header class="hidden md:flex bg-white/90 dark:bg-slate-900/90 border-b border-slate-200/80 dark:border-slate-800 px-8 py-3.5 justify-between items-center sticky top-0 z-20 shadow-soft backdrop-blur-md">
             <div class="flex items-center space-x-3 text-xs">
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-brand-50 dark:bg-brand-950 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800">Production</span>
                 <span class="font-semibold text-slate-500 dark:text-slate-400">SIAKAD Enterprise &bull; {{ now()->translatedFormat('l, d F Y') }}</span>
             </div>
 
@@ -620,14 +619,12 @@
                     <span>Tema: <strong class="theme-label-text">Terang</strong></span>
                 </button>
 
-                <a href="{{ route('cek.index') }}" target="_blank" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200/80 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold transition inline-flex items-center gap-1.5 border border-slate-200/60 dark:border-slate-700">
-                    <svg class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                    <span>Cek Publik</span>
-                </a>
+                @if(auth()->check() && in_array(auth()->user()->role, ['superadmin', 'admin', 'petugas', 'baak']))
                 <a href="{{ url('/api/docs') }}" target="_blank" class="px-3 py-1.5 rounded-xl bg-brand-50 dark:bg-brand-900/40 hover:bg-brand-100/80 dark:hover:bg-brand-900/60 text-brand-700 dark:text-brand-300 text-xs font-semibold transition inline-flex items-center gap-1.5 border border-brand-200/60 dark:border-brand-800/60">
                     <svg class="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     <span>API Console</span>
                 </a>
+                @endif
             </div>
         </header>
 

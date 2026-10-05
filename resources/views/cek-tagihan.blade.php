@@ -106,9 +106,11 @@
             </div>
         </div>
         <div class="flex items-center gap-2.5 text-xs font-mono">
+            @if(auth()->check() && in_array(auth()->user()->role, ['superadmin', 'admin', 'petugas', 'baak']))
             <a href="{{ url('/api/docs') }}" target="_blank" class="hidden sm:inline-flex items-center gap-1 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 px-3 py-1.5 rounded-lg text-zinc-300 transition">
                 API Docs
             </a>
+            @endif
             <a href="{{ route('login') }}" class="bg-zinc-100 hover:bg-zinc-200 text-zinc-900 font-semibold px-3.5 py-1.5 rounded-lg transition">
                 Login Portal &rarr;
             </a>
@@ -393,10 +395,12 @@
         
         <!-- Footer Info -->
         <div class="bg-zinc-950 p-4 text-center text-zinc-500 text-xs border-t border-zinc-800 flex flex-col sm:flex-row justify-between items-center gap-2 font-mono">
-            <span>&copy; {{ date('Y') }} SIAKAD Enterprise &bull; Layanan Akademik Universita</span>
+            <span>&copy; {{ date('Y') }} SIAKAD Enterprise &bull; Layanan Akademik Perguruan Tinggi</span>
             <div class="flex items-center gap-3">
+                @if(auth()->check() && in_array(auth()->user()->role, ['superadmin', 'admin', 'petugas', 'baak']))
                 <a href="{{ url('/api/docs') }}" target="_blank" class="hover:text-zinc-300 transition">API Documentation</a>
                 <span>&bull;</span>
+                @endif
                 <a href="{{ route('login') }}" class="hover:text-zinc-100 font-semibold transition">Portal Auth</a>
             </div>
         </div>
