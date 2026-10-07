@@ -55,7 +55,7 @@ class ActivityLogWebTest extends TestCase
         $user = User::factory()->create();
 
         $this->actingAs($user)->post('/web/kelas', [
-            'nama_kelas' => 'XII RPL 1',
+            'nama_kelas' => 'IF-3A',
             'kompetensi_keahlian' => 'Rekayasa Perangkat Lunak',
         ]);
 

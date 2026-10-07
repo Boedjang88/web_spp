@@ -37,6 +37,11 @@ class Krs extends Model
         return $this->belongsTo(Siswa::class, 'id_siswa');
     }
 
+    public function siswa(): BelongsTo
+    {
+        return $this->belongsTo(Siswa::class, 'id_siswa');
+    }
+
     public function tahunAkademik(): BelongsTo
     {
         return $this->belongsTo(TahunAkademik::class, 'id_tahun_akademik');

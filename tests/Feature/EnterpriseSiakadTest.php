@@ -102,7 +102,7 @@ class EnterpriseSiakadTest extends TestCase
             'total_terisi' => 0,
         ]);
 
-        $dummyKelas = Kelas::create(['nama_kelas' => 'XII RPL', 'kompetensi_keahlian' => 'RPL']);
+        $dummyKelas = Kelas::create(['nama_kelas' => 'IF-3A', 'kompetensi_keahlian' => 'RPL']);
         $dummySpp = Spp::create(['tahun' => 2026, 'nominal' => 500000]);
 
         $this->siswa1 = Siswa::create([

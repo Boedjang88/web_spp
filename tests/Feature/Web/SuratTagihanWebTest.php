@@ -21,7 +21,7 @@ class SuratTagihanWebTest extends TestCase
 
     public function test_authenticated_user_can_view_official_surat_tagihan(): void
     {
-        $kelas = Kelas::create(['nama_kelas' => 'XII RPL 1', 'kompetensi_keahlian' => 'RPL']);
+        $kelas = Kelas::create(['nama_kelas' => 'IF-3A', 'kompetensi_keahlian' => 'RPL']);
         $spp = Spp::create(['tahun' => 2025, 'nominal' => 250000]);
         $user = User::factory()->create();
 

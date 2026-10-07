@@ -51,10 +51,10 @@ class DatabaseSeeder extends Seeder
         $spp2025 = Spp::firstOrCreate(['tahun' => 2025], ['nominal' => 300000]);
         $spp2026 = Spp::firstOrCreate(['tahun' => 2026], ['nominal' => 350000]);
 
-        $rpl1 = Kelas::firstOrCreate(['nama_kelas' => 'XII RPL 1'], ['kompetensi_keahlian' => 'Rekayasa Perangkat Lunak']);
-        $rpl2 = Kelas::firstOrCreate(['nama_kelas' => 'XII RPL 2'], ['kompetensi_keahlian' => 'Rekayasa Perangkat Lunak']);
-        $tkj1 = Kelas::firstOrCreate(['nama_kelas' => 'XII TKJ 1'], ['kompetensi_keahlian' => 'Teknik Komputer dan Jaringan']);
-        $dkv1 = Kelas::firstOrCreate(['nama_kelas' => 'XII DKV 1'], ['kompetensi_keahlian' => 'Desain Komunikasi Visual']);
+        $rpl1 = Kelas::firstOrCreate(['nama_kelas' => 'IF-3A'], ['kompetensi_keahlian' => 'Teknik Informatika']);
+        $rpl2 = Kelas::firstOrCreate(['nama_kelas' => 'IF-3B'], ['kompetensi_keahlian' => 'Teknik Informatika']);
+        $tkj1 = Kelas::firstOrCreate(['nama_kelas' => 'SI-2A'], ['kompetensi_keahlian' => 'Sistem Informasi']);
+        $dkv1 = Kelas::firstOrCreate(['nama_kelas' => 'BD-1A'], ['kompetensi_keahlian' => 'Bisnis Digital']);
 
         $guru1 = Guru::firstOrCreate(
             ['nip' => '198501152010011002'],
@@ -303,12 +303,13 @@ class DatabaseSeeder extends Seeder
                 ]
             );
 
+            $allKelasIds = [$rpl1->id, $rpl2->id, $tkj1->id, $dkv1->id];
             $sis = Siswa::firstOrCreate(
                 ['nisn' => $s['nisn']],
                 [
                     'nis' => $s['nim'],
                     'nama' => $s['nama'],
-                    'id_kelas' => $rpl1->id,
+                    'id_kelas' => $allKelasIds[$idx % count($allKelasIds)],
                     'alamat' => 'Jl. Merdeka No. ' . rand(1, 100) . ', Bandung',
                     'no_telp' => $s['phone'],
                     'id_spp' => $spp2025->id,

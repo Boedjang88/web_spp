@@ -27,8 +27,8 @@ class KelasApiTest extends TestCase
 
     public function test_can_list_all_kelas(): void
     {
-        Kelas::create(['nama_kelas' => 'XII RPL 1', 'kompetensi_keahlian' => 'RPL']);
-        Kelas::create(['nama_kelas' => 'XII TKJ 1', 'kompetensi_keahlian' => 'TKJ']);
+        Kelas::create(['nama_kelas' => 'IF-3A', 'kompetensi_keahlian' => 'RPL']);
+        Kelas::create(['nama_kelas' => 'SI-2A', 'kompetensi_keahlian' => 'TKJ']);
 
         $response = $this->actingAs($this->user, 'sanctum')->getJson('/api/kelas');
 
@@ -40,43 +40,43 @@ class KelasApiTest extends TestCase
     public function test_can_create_kelas(): void
     {
         $payload = [
-            'nama_kelas' => 'XII DKV 1',
+            'nama_kelas' => 'BD-1A',
             'kompetensi_keahlian' => 'Desain Komunikasi Visual',
         ];
 
         $response = $this->actingAs($this->user, 'sanctum')->postJson('/api/kelas', $payload);
 
         $response->assertStatus(201)
-            ->assertJsonPath('data.nama_kelas', 'XII DKV 1');
+            ->assertJsonPath('data.nama_kelas', 'BD-1A');
 
-        $this->assertDatabaseHas('kelas', ['nama_kelas' => 'XII DKV 1']);
+        $this->assertDatabaseHas('kelas', ['nama_kelas' => 'BD-1A']);
     }
 
     public function test_can_show_kelas_detail(): void
     {
-        $kelas = Kelas::create(['nama_kelas' => 'XII RPL 1', 'kompetensi_keahlian' => 'RPL']);
+        $kelas = Kelas::create(['nama_kelas' => 'IF-3A', 'kompetensi_keahlian' => 'RPL']);
 
         $response = $this->actingAs($this->user, 'sanctum')->getJson("/api/kelas/{$kelas->id}");
 
         $response->assertStatus(200)
-            ->assertJsonPath('data.nama_kelas', 'XII RPL 1');
+            ->assertJsonPath('data.nama_kelas', 'IF-3A');
     }
 
     public function test_can_update_kelas(): void
     {
-        $kelas = Kelas::create(['nama_kelas' => 'XII RPL 1', 'kompetensi_keahlian' => 'RPL']);
+        $kelas = Kelas::create(['nama_kelas' => 'IF-3A', 'kompetensi_keahlian' => 'RPL']);
 
         $response = $this->actingAs($this->user, 'sanctum')->putJson("/api/kelas/{$kelas->id}", [
-            'nama_kelas' => 'XII RPL 1 Unggulan',
+            'nama_kelas' => 'IF-3A Unggulan',
         ]);
 
         $response->assertStatus(200)
-            ->assertJsonPath('data.nama_kelas', 'XII RPL 1 Unggulan');
+            ->assertJsonPath('data.nama_kelas', 'IF-3A Unggulan');
     }
 
     public function test_can_delete_kelas(): void
     {
-        $kelas = Kelas::create(['nama_kelas' => 'XII RPL 1', 'kompetensi_keahlian' => 'RPL']);
+        $kelas = Kelas::create(['nama_kelas' => 'IF-3A', 'kompetensi_keahlian' => 'RPL']);
 
         $response = $this->actingAs($this->user, 'sanctum')->deleteJson("/api/kelas/{$kelas->id}");
 

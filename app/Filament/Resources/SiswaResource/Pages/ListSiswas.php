@@ -33,7 +33,7 @@ class ListSiswas extends ListRecords
 
         // 3. Looping: Bikin Tab buat setiap kelas
         foreach ($kelases as $kelas) {
-            // Nama Tab pake nama kelas (misal: XII RPL 1)
+            // Nama Tab pake nama kelas (misal: IF-3A)
             // Slugnya pake ID kelas biar unik
             $tabs[$kelas->id] = Tab::make($kelas->nama_kelas)
                 ->modifyQueryUsing(function (Builder $query) use ($kelas) {

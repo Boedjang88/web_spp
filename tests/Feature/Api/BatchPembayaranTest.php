@@ -21,7 +21,7 @@ class BatchPembayaranTest extends TestCase
     {
         parent::setUp();
         $this->user = User::factory()->create(['role' => 'petugas']);
-        $kelas = Kelas::create(['nama_kelas' => 'XII RPL 1', 'kompetensi_keahlian' => 'RPL']);
+        $kelas = Kelas::create(['nama_kelas' => 'IF-3A', 'kompetensi_keahlian' => 'RPL']);
         $this->spp = Spp::create(['tahun' => 2025, 'nominal' => 300000]);
         $this->siswa = Siswa::create([
             'nisn' => '0051234567',

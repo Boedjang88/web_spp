@@ -29,7 +29,7 @@ class KelasResource extends Resource
             ->schema([
                 TextInput::make('nama_kelas')
                     ->label('Nama Kelas')
-                    ->placeholder('Contoh: XII RPL 1')
+                    ->placeholder('Contoh: IF-3A')
                     ->required()
                     ->maxLength(10),
                 

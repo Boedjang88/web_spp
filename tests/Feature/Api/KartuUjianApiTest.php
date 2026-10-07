@@ -25,7 +25,7 @@ class KartuUjianApiTest extends TestCase
     {
         parent::setUp();
 
-        $kelas = Kelas::create(['nama_kelas' => 'XII TKJ 1', 'kompetensi_keahlian' => 'TKJ']);
+        $kelas = Kelas::create(['nama_kelas' => 'SI-2A', 'kompetensi_keahlian' => 'TKJ']);
         $this->spp = Spp::create(['tahun' => 2025, 'nominal' => 350000]);
 
         $this->siswa1 = Siswa::create([

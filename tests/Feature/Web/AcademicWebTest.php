@@ -30,7 +30,7 @@ class AcademicWebTest extends TestCase
         parent::setUp();
 
         $this->admin = User::factory()->create(['role' => 'admin']);
-        $this->kelas = Kelas::create(['nama_kelas' => 'XII RPL 1', 'kompetensi_keahlian' => 'RPL']);
+        $this->kelas = Kelas::create(['nama_kelas' => 'IF-3A', 'kompetensi_keahlian' => 'RPL']);
         $this->spp = Spp::create(['tahun' => 2025, 'nominal' => 300000]);
         
         $this->siswa = Siswa::create([
@@ -118,7 +118,7 @@ class AcademicWebTest extends TestCase
         $viewResponse = $this->actingAs($this->admin)->get('/web/jadwal');
         $viewResponse->assertStatus(200)
             ->assertSee('Pemrograman Web')
-            ->assertSee('XII RPL 1');
+            ->assertSee('IF-3A');
     }
 
     public function test_admin_can_input_nilai_and_calculate_grade(): void

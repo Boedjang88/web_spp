@@ -20,7 +20,7 @@
                 <label for="nama_kelas" class="block text-xs font-semibold text-slate-700 mb-1">Nama Kelas</label>
                 <input type="text" id="nama_kelas" name="nama_kelas" value="{{ old('nama_kelas') }}" required
                     class="w-full px-3.5 py-2 text-xs border @error('nama_kelas') border-rose-400 @else border-slate-200 @enderror rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Contoh: XII RPL 1">
+                    placeholder="Contoh: IF-3A (Teknik Informatika)">
                 @error('nama_kelas')
                     <p class="text-[11px] text-rose-500 mt-1">{{ $message }}</p>
                 @enderror

@@ -25,8 +25,13 @@ class SendWhatsAppNotificationJob implements ShouldQueue
 
     public function handle(): void
     {
-        $apiUrl = config('services.whatsapp.url', 'https://api.whatsapp-gateway.campus.ac.id/send');
-        $apiKey = config('services.whatsapp.key', 'WA_SECRET_API_KEY_123');
+        $apiUrl = (string) config('services.whatsapp.url', 'https://api.whatsapp-gateway.campus.ac.id/send');
+        $apiKey = (string) config('services.whatsapp.key', '');
+
+        if (empty($apiKey)) {
+            Log::warning("WhatsApp Notification skipped [{$this->notificationType}]: WHATSAPP_API_KEY is not configured.");
+            return;
+        }
 
         try {
             $response = Http::timeout(10)->withHeaders([

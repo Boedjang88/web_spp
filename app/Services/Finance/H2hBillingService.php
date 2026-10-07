@@ -226,4 +226,27 @@ class H2hBillingService
             return $transaksi;
         });
     }
+
+    /**
+     * Generate Dynamic QRIS Code for Instant Payment
+     */
+    public function generateDynamicQris(int $idSiswa, int $idTahunAkademik, float $nominal): array
+    {
+        $siswa = Siswa::findOrFail($idSiswa);
+        $cleanNim = preg_replace('/[^0-9]/', '', (string) ($siswa->nisn ?: $siswa->nis ?: $siswa->id));
+        $qrisRefNo = 'QRIS-' . date('YmdHis') . '-' . $idSiswa;
+        
+        $qrisPayload = "00020101021226680016ID.GO.QRIS.WWW01189360091100030012340215" . str_pad($cleanNim, 15, '0', STR_PAD_LEFT)
+                     . "520458125303360540" . strlen((string)(int)$nominal) . (int)$nominal
+                     . "5802ID5925UNIVERSITAS SIAKAD SPP6007BANDUNG61054011562070703A016304" . strtoupper(bin2hex(random_bytes(2)));
+
+        return [
+            'qris_ref_no' => $qrisRefNo,
+            'qris_payload' => $qrisPayload,
+            'id_siswa' => $idSiswa,
+            'id_tahun_akademik' => $idTahunAkademik,
+            'nominal' => $nominal,
+            'expired_at' => now()->addMinutes(30)->toIso8601String(),
+        ];
+    }
 }

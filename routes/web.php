@@ -16,6 +16,13 @@ use App\Http\Controllers\Web\ProfileController;
 use App\Http\Controllers\Web\SiswaController;
 use App\Http\Controllers\Web\SppController;
 use App\Http\Controllers\Web\UserController;
+use App\Http\Controllers\Web\DosenKrsApprovalController;
+use App\Http\Controllers\Web\DosenBapController;
+use App\Http\Controllers\Web\StudentEdomController;
+use App\Http\Controllers\Web\StudentEsuratController;
+use App\Http\Controllers\Web\FacilityBookingController;
+use App\Http\Controllers\Web\EarlyWarningSystemController;
+use App\Http\Controllers\Web\ExecutiveDashboardController;
 use App\Http\Controllers\Api\ApiDocsController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,10 +39,12 @@ Route::get('/api/docs', [ApiDocsController::class, 'index'])->name('api.docs');
 Route::get('/survey/employer/{token}', [\App\Http\Controllers\Web\EmployerFeedbackPortalController::class, 'show'])->name('employer.feedback.show');
 Route::put('/survey/employer/{token}', [\App\Http\Controllers\Web\EmployerFeedbackPortalController::class, 'update'])->name('employer.feedback.update');
 
-// --- Guest Authentication Routes ---
+// --- Guest Authentication & PMB Routes ---
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+    Route::get('/pmb/register', [\App\Http\Controllers\Web\PmbController::class, 'showRegistrationForm'])->name('pmb.register');
+    Route::post('/pmb/register', [\App\Http\Controllers\Web\PmbController::class, 'register'])->name('pmb.register.post');
 });
 
 // --- Authenticated Web Routes (RBAC Protected) ---
@@ -92,6 +101,30 @@ Route::middleware(['auth', 'pdp.consent'])->group(function () {
     Route::get('isi-data', [\App\Http\Controllers\Web\StudentBiodataController::class, 'edit'])->name('biodata.isi');
     Route::put('siakad/biodata/update', [\App\Http\Controllers\Web\StudentBiodataController::class, 'update'])->name('siakad.biodata.update');
     Route::put('biodata/update', [\App\Http\Controllers\Web\StudentBiodataController::class, 'update'])->name('biodata.update');
+
+    // --- Dosen PA & Academic Verification Routes ---
+    Route::get('siakad/dosen/krs-approval', [DosenKrsApprovalController::class, 'index'])->name('siakad.dosen.krs.index');
+    Route::post('siakad/dosen/krs/{id}/approve', [DosenKrsApprovalController::class, 'approve'])->name('siakad.dosen.krs.approve');
+    Route::post('siakad/dosen/krs/{id}/reject', [DosenKrsApprovalController::class, 'reject'])->name('siakad.dosen.krs.reject');
+
+    Route::get('siakad/dosen/bap', [DosenBapController::class, 'index'])->name('siakad.dosen.bap.index');
+    Route::post('siakad/dosen/bap', [DosenBapController::class, 'store'])->name('siakad.dosen.bap.store');
+
+    // --- Student Self-Service Portals (EDOM, e-Surat, Facility Booking) ---
+    Route::get('siakad/edom', [StudentEdomController::class, 'index'])->name('siakad.edom.index');
+    Route::post('siakad/edom', [StudentEdomController::class, 'store'])->name('siakad.edom.store');
+
+    Route::get('siakad/esurat', [StudentEsuratController::class, 'index'])->name('siakad.esurat.index');
+    Route::post('siakad/esurat', [StudentEsuratController::class, 'store'])->name('siakad.esurat.store');
+
+    Route::get('siakad/fasilitas', [FacilityBookingController::class, 'index'])->name('siakad.fasilitas.index');
+    Route::post('siakad/fasilitas', [FacilityBookingController::class, 'store'])->name('siakad.fasilitas.store');
+
+    // --- BAAK Risk Control & Executive Analytics ---
+    Route::get('siakad/baak/ews', [EarlyWarningSystemController::class, 'index'])->name('siakad.baak.ews.index');
+    Route::post('siakad/baak/ews/scan', [EarlyWarningSystemController::class, 'runScan'])->name('siakad.baak.ews.scan');
+
+    Route::get('siakad/eksekutif/dashboard', [ExecutiveDashboardController::class, 'index'])->name('siakad.eksekutif.dashboard');
 
     // --- Super Admin & Admin TU Only: User Management ---
     Route::middleware('role:superadmin,admin')->group(function () {

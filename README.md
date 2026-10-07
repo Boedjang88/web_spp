@@ -54,10 +54,10 @@ Wali murid dan siswa dapat memeriksa status kelulusan akademik, riwayat pembayar
 
 | Nama Siswa | NISN | NIS | Kelas | Keterangan Data |
 | :--- | :--- | :--- | :--- | :--- |
-| **Ahmad Fauzi** | `0051234567` | `2122001` | XII RPL 1 | Memiliki riwayat pembayaran lunas sebagian |
-| **Siti Nurhaliza** | `0057654321` | `2122002` | XII RPL 1 | Siswa aktif |
-| **Budi Santoso** | `0061122334` | `2223001` | XII TKJ 1 | Siswa aktif dengan tagihan berjalan |
-| **Dewi Lestari** | `0069988776` | `2223002` | XII DKV 1 | Siswa aktif |
+| **Ahmad Fauzi** | `0051234567` | `2122001` | IF-3A | Memiliki riwayat pembayaran lunas sebagian |
+| **Siti Nurhaliza** | `0057654321` | `2122002` | IF-3A | Mahasiswa aktif |
+| **Budi Santoso** | `0061122334` | `2223001` | SI-2A | Mahasiswa aktif dengan tagihan berjalan |
+| **Dewi Lestari** | `0069988776` | `2223002` | BD-1A | Mahasiswa aktif |
 
 ---
 

@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('kelas', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_kelas', 10); // Contoh: XII RPL 1
+            $table->string('nama_kelas', 10); // Contoh: IF-3A
             $table->string('kompetensi_keahlian', 50); // Contoh: Rekayasa Perangkat Lunak
             $table->timestamps();
         });

@@ -7,7 +7,7 @@
     
     <!-- PWA Manifest & Meta -->
     <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#09090b">
+    <meta name="theme-color" content="#0b132b">
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
@@ -33,30 +33,25 @@
             theme: {
                 extend: {
                     colors: {
-                        slate: {
-                            750: '#1f2937',
-                            850: '#111827',
-                            900: '#09090b',
-                            950: '#040405',
-                        },
                         brand: {
-                            50: '#fafafa',
-                            100: '#f4f4f5',
-                            200: '#e4e4e7',
-                            300: '#d4d4d8',
-                            400: '#a1a1aa',
-                            500: '#71717a',
-                            600: '#18181b',
-                            700: '#09090b',
-                            800: '#040405',
-                            900: '#000000',
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                            950: '#172554',
                         }
                     },
                     boxShadow: {
-                        'soft': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-                        'card': '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
-                        'floating': '0 10px 25px -5px rgba(0, 0, 0, 0.2)',
-                        'toast': '0 4px 12px rgba(0, 0, 0, 0.15)',
+                        'soft': '0 1px 3px 0 rgba(15, 23, 42, 0.05)',
+                        'card': '0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.05)',
+                        'floating': '0 10px 25px -5px rgba(15, 23, 42, 0.2)',
+                        'toast': '0 4px 14px rgba(15, 23, 42, 0.15)',
                     }
                 }
             }
@@ -70,49 +65,51 @@
             -moz-osx-font-smoothing: grayscale;
         }
         html.dark body {
-            background-color: #09090b !important;
-            color: #fafafa !important;
+            background-color: #0b132b !important;
+            color: #f8fafc !important;
         }
         html:not(.dark) body {
-            background-color: #fafafa;
-            color: #09090b;
+            background-color: #f8fafc;
+            color: #0f172a;
         }
 
-        /* Ultra-Clean Monochrome Enterprise Dark Mode Overrides */
+        /* Elegant Deep Navy Blue Enterprise Dark Mode Overrides */
         html.dark .bg-white {
-            background-color: #18181b !important;
-            color: #fafafa !important;
+            background-color: #1c2541 !important;
+            color: #f8fafc !important;
         }
         html.dark .bg-slate-50,
         html.dark .bg-slate-50\/50,
         html.dark .bg-slate-50\/60,
         html.dark .bg-slate-100 {
-            background-color: #27272a !important;
-            color: #e4e4e7 !important;
+            background-color: #0f172a !important;
+            color: #cbd5e1 !important;
         }
         html.dark .bg-slate-900,
-        html.dark .bg-slate-950 {
-            background-color: #09090b !important;
-            border-color: #27272a !important;
+        html.dark .bg-slate-950,
+        html.dark .bg-zinc-900,
+        html.dark .bg-zinc-950 {
+            background-color: #0b132b !important;
+            border-color: #1e293b !important;
         }
         html.dark .text-slate-900,
         html.dark .text-slate-800,
         html.dark .text-slate-700 {
-            color: #fafafa !important;
+            color: #f8fafc !important;
         }
         html.dark .text-slate-600,
         html.dark .text-slate-500 {
-            color: #a1a1aa !important;
+            color: #94a3b8 !important;
         }
         html.dark .text-slate-400 {
-            color: #d4d4d8 !important;
+            color: #cbd5e1 !important;
         }
         html.dark .border-slate-200,
         html.dark .border-slate-200\/80,
         html.dark .border-slate-200\/60,
         html.dark .border-slate-100,
         html.dark .border-slate-800 {
-            border-color: #27272a !important;
+            border-color: #334155 !important;
         }
         html.dark input[type="text"],
         html.dark input[type="email"],
@@ -121,36 +118,36 @@
         html.dark input[type="date"],
         html.dark select,
         html.dark textarea {
-            background-color: #18181b !important;
-            color: #fafafa !important;
-            border-color: #27272a !important;
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+            border-color: #334155 !important;
         }
         html.dark input::placeholder,
         html.dark textarea::placeholder {
-            color: #71717a !important;
+            color: #64748b !important;
         }
         html.dark table thead tr {
-            background-color: #18181b !important;
-            color: #a1a1aa !important;
-            border-color: #27272a !important;
+            background-color: #1e293b !important;
+            color: #94a3b8 !important;
+            border-color: #334155 !important;
         }
         html.dark table tbody tr {
-            border-color: #27272a !important;
+            border-color: #334155 !important;
         }
         html.dark table tbody tr:hover {
-            background-color: #27272a !important;
+            background-color: #1e293b !important;
         }
         html.dark header {
-            background-color: #09090b !important;
-            border-color: #27272a !important;
+            background-color: #0b132b !important;
+            border-color: #1e293b !important;
         }
         html.dark footer {
-            background-color: #09090b !important;
-            border-color: #27272a !important;
-            color: #71717a !important;
+            background-color: #0b132b !important;
+            border-color: #1e293b !important;
+            color: #64748b !important;
         }
         html.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]) {
-            border-color: #27272a !important;
+            border-color: #334155 !important;
         }
         html.dark .shadow-soft,
         html.dark .shadow-card {
@@ -371,6 +368,14 @@
                             <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
                             <span>Presensi Kelas</span>
                         </a>
+                        <a href="{{ route('siakad.dosen.krs.index') }}" onclick="toggleMobileMenu(true)" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-900">
+                            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <span>Persetujuan KRS PA</span>
+                        </a>
+                        <a href="{{ route('siakad.dosen.bap.index') }}" onclick="toggleMobileMenu(true)" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-900">
+                            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            <span>Digital BAP Perkuliahan</span>
+                        </a>
                     @elseif(auth()->check() && (auth()->user()->role === 'siswa' || auth()->user()->role === 'mahasiswa'))
                         <div class="pt-3 pb-1 px-3 text-[10px] font-bold uppercase tracking-wider text-brand-300">Portal Mahasiswa</div>
                         <a href="{{ route('siakad.krs.index') }}" onclick="toggleMobileMenu(true)" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-900">
@@ -396,6 +401,18 @@
                         <a href="{{ route('siakad.analytics.performance') }}" onclick="toggleMobileMenu(true)" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-900">
                             <svg class="w-4 h-4 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
                             <span>Grafik Performa</span>
+                        </a>
+                        <a href="{{ route('siakad.edom.index') }}" onclick="toggleMobileMenu(true)" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-900">
+                            <svg class="w-4 h-4 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+                            <span>Evaluasi Dosen (EDOM)</span>
+                        </a>
+                        <a href="{{ route('siakad.esurat.index') }}" onclick="toggleMobileMenu(true)" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-900">
+                            <svg class="w-4 h-4 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            <span>e-Surat Akademik</span>
+                        </a>
+                        <a href="{{ route('siakad.fasilitas.index') }}" onclick="toggleMobileMenu(true)" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-900">
+                            <svg class="w-4 h-4 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                            <span>Pinjam Fasilitas Kampus</span>
                         </a>
                     @endif
                 </nav>
@@ -488,6 +505,14 @@
                             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
                             <span>Presensi Mahasiswa</span>
                         </a>
+                        <a href="{{ route('siakad.baak.ews.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.baak.ews.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                            <svg class="w-4 h-4 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                            <span>EWS Risiko Drop-Out</span>
+                        </a>
+                        <a href="{{ route('siakad.eksekutif.dashboard') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.eksekutif.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                            <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                            <span>Executive AI Panel</span>
+                        </a>
                     </div>
                 </div>
 
@@ -539,7 +564,15 @@
                         </a>
                         <a href="{{ route('web.presensi.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.presensi.*') ? 'bg-emerald-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
                             <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
-                            <span>Presensi Kelas &amp; BAP</span>
+                            <span>Presensi Kelas</span>
+                        </a>
+                        <a href="{{ route('siakad.dosen.krs.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.dosen.krs.*') ? 'bg-emerald-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <span>Persetujuan KRS PA</span>
+                        </a>
+                        <a href="{{ route('siakad.dosen.bap.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.dosen.bap.*') ? 'bg-emerald-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            <span>Digital BAP Perkuliahan</span>
                         </a>
                     </div>
                 </div>
@@ -571,6 +604,18 @@
                         <a href="{{ route('siakad.analytics.performance') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.analytics.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
                             <svg class="w-4 h-4 {{ request()->routeIs('siakad.analytics.*') ? 'text-white' : 'text-brand-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
                             <span>Grafik Performa</span>
+                        </a>
+                        <a href="{{ route('siakad.edom.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.edom.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                            <svg class="w-4 h-4 {{ request()->routeIs('siakad.edom.*') ? 'text-white' : 'text-brand-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+                            <span>Evaluasi Dosen (EDOM)</span>
+                        </a>
+                        <a href="{{ route('siakad.esurat.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.esurat.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                            <svg class="w-4 h-4 {{ request()->routeIs('siakad.esurat.*') ? 'text-white' : 'text-brand-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            <span>e-Surat Akademik</span>
+                        </a>
+                        <a href="{{ route('siakad.fasilitas.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.fasilitas.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                            <svg class="w-4 h-4 {{ request()->routeIs('siakad.fasilitas.*') ? 'text-white' : 'text-brand-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                            <span>Pinjam Fasilitas Kampus</span>
                         </a>
                     </div>
                 </div>
@@ -921,6 +966,7 @@
                 localStorage.setItem('theme', 'dark');
             }
             updateThemeIcons();
+            window.dispatchEvent(new CustomEvent('themeChanged', { detail: { isDark: !isDark } }));
         }
 
         function updateThemeIcons() {

@@ -35,4 +35,17 @@ return [
         ],
     ],
 
+    'pddikti' => [
+        'url' => env('PDDIKTI_FEEDER_URL', 'http://127.0.0.1:8082/ws/live2.php'),
+        'username' => env('PDDIKTI_FEEDER_USERNAME'),
+        'password' => env('PDDIKTI_FEEDER_PASSWORD'),
+        'verify_ssl' => env('PDDIKTI_FEEDER_VERIFY_SSL', true),
+        'sandbox' => env('PDDIKTI_FEEDER_SANDBOX', false),
+    ],
+
+    'whatsapp' => [
+        'url' => env('WHATSAPP_API_URL', 'https://api.whatsapp-gateway.campus.ac.id/send'),
+        'key' => env('WHATSAPP_API_KEY'),
+    ],
+
 ];

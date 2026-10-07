@@ -38,4 +38,14 @@ class ProgramStudi extends Model
     {
         return $this->hasMany(Cpl::class, 'id_prodi');
     }
+
+    public function mahasiswas(): HasMany
+    {
+        return $this->hasMany(Mahasiswa::class, 'id_prodi');
+    }
+
+    public function dosens(): HasMany
+    {
+        return $this->hasMany(Dosen::class, 'id_prodi');
+    }
 }

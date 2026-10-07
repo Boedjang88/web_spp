@@ -22,7 +22,7 @@ class WebCrudTest extends TestCase
     {
         parent::setUp();
         $this->user = User::factory()->create(['role' => 'admin']);
-        $this->kelas = Kelas::create(['nama_kelas' => 'XII RPL 1', 'kompetensi_keahlian' => 'RPL']);
+        $this->kelas = Kelas::create(['nama_kelas' => 'IF-3A', 'kompetensi_keahlian' => 'RPL']);
         $this->spp = Spp::create(['tahun' => 2025, 'nominal' => 300000]);
     }
 
@@ -45,12 +45,12 @@ class WebCrudTest extends TestCase
     public function test_can_create_kelas_via_web(): void
     {
         $response = $this->actingAs($this->user)->post('/web/kelas', [
-            'nama_kelas' => 'XII TKJ 2',
+            'nama_kelas' => 'SI-2B',
             'kompetensi_keahlian' => 'TKJ',
         ]);
 
         $response->assertRedirect(route('web.kelas.index'));
-        $this->assertDatabaseHas('kelas', ['nama_kelas' => 'XII TKJ 2']);
+        $this->assertDatabaseHas('kelas', ['nama_kelas' => 'SI-2B']);
     }
 
     public function test_can_create_siswa_via_web(): void
