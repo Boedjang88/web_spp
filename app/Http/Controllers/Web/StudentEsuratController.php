@@ -14,9 +14,11 @@ class StudentEsuratController extends Controller
     public function index(): View
     {
         $user = auth()->user();
-        $siswa = $user->siswa;
+        $siswa = $user?->siswa ?? $user?->mahasiswa ?? \App\Models\Siswa::first();
 
-        $suratList = SuratAkademik::where('id_siswa', $siswa?->id ?? 1)
+        $suratList = SuratAkademik::when($siswa, function ($q) use ($siswa) {
+                return $q->where('id_siswa', $siswa->id);
+            })
             ->latest()
             ->get();
 
@@ -32,19 +34,21 @@ class StudentEsuratController extends Controller
         ]);
 
         $user = auth()->user();
-        $siswa = $user->siswa;
+        $siswa = $user?->siswa ?? $user?->mahasiswa ?? \App\Models\Siswa::first();
+        $siswaId = $siswa?->id ?? 1;
+
         $nextId = SuratAkademik::count() + 1;
         $nomorSurat = 'SKMA/2026/03/' . sprintf('%04d', $nextId);
-        $qrToken = hash('sha256', ($siswa?->id ?? 1) . 'SURAT-' . $nextId . '-TOKEN');
+        $qrToken = hash('sha256', $siswaId . 'SURAT-' . $nextId . '-TOKEN');
 
         SuratAkademik::create([
-            'id_siswa' => $siswa?->id ?? 1,
+            'id_siswa' => $siswaId,
             'jenis_surat' => $validated['jenis_surat'],
             'nomor_surat' => $nomorSurat,
             'perihal' => $validated['perihal'],
             'keperluan' => $validated['keperluan'],
             'qr_verification_token' => $qrToken,
-            'file_pdf_path' => 'documents/surat_aktif/skma_' . ($siswa?->id ?? 1) . '.pdf',
+            'file_pdf_path' => 'documents/surat_aktif/skma_' . $siswaId . '.pdf',
             'status' => 'DISETUJUI',
             'tgl_terbit' => now(),
         ]);
