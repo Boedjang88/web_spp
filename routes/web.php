@@ -23,6 +23,13 @@ use App\Http\Controllers\Web\StudentEsuratController;
 use App\Http\Controllers\Web\FacilityBookingController;
 use App\Http\Controllers\Web\EarlyWarningSystemController;
 use App\Http\Controllers\Web\ExecutiveDashboardController;
+use App\Http\Controllers\Web\EsuratApprovalController;
+use App\Http\Controllers\Web\KknController;
+use App\Http\Controllers\Web\WisudaController;
+use App\Http\Controllers\Web\DbptaProposalController;
+use App\Http\Controllers\Web\DbptaBimbinganController;
+use App\Http\Controllers\Web\DbptaSidangController;
+use App\Http\Controllers\Web\DbptaPemberkasanController;
 use App\Http\Controllers\Api\ApiDocsController;
 use Illuminate\Support\Facades\Route;
 
@@ -122,11 +129,35 @@ Route::middleware(['auth', 'pdp.consent'])->group(function () {
     Route::get('siakad/fasilitas', [FacilityBookingController::class, 'index'])->name('siakad.fasilitas.index');
     Route::post('siakad/fasilitas', [FacilityBookingController::class, 'store'])->name('siakad.fasilitas.store');
 
-    // --- BAAK Risk Control & Executive Analytics ---
+    // --- BAAK Risk Control & Executive Analytics & e-Surat Approval ---
     Route::get('siakad/baak/ews', [EarlyWarningSystemController::class, 'index'])->name('siakad.baak.ews.index');
     Route::post('siakad/baak/ews/scan', [EarlyWarningSystemController::class, 'runScan'])->name('siakad.baak.ews.scan');
 
+    Route::get('siakad/baak/esurat', [EsuratApprovalController::class, 'index'])->name('siakad.baak.esurat.index');
+    Route::post('siakad/baak/esurat/{id}/approve', [EsuratApprovalController::class, 'approve'])->name('siakad.baak.esurat.approve');
+    Route::post('siakad/baak/esurat/{id}/reject', [EsuratApprovalController::class, 'reject'])->name('siakad.baak.esurat.reject');
+
     Route::get('siakad/eksekutif/dashboard', [ExecutiveDashboardController::class, 'index'])->name('siakad.eksekutif.dashboard');
+
+    // --- KKN (Kuliah Kerja Nyata) & Wisudawan ---
+    Route::get('siakad/kkn', [KknController::class, 'index'])->name('siakad.kkn.index');
+    Route::post('siakad/kkn/register', [KknController::class, 'register'])->name('siakad.kkn.register');
+
+    Route::get('siakad/wisuda', [WisudaController::class, 'index'])->name('siakad.wisuda.index');
+    Route::post('siakad/wisuda/register', [WisudaController::class, 'register'])->name('siakad.wisuda.register');
+
+    // --- DBPTA (Proposal, Bimbingan, Sidang Yudisium, Pemberkasan) ---
+    Route::get('siakad/dbpta/proposal', [DbptaProposalController::class, 'index'])->name('siakad.dbpta.proposal.index');
+    Route::post('siakad/dbpta/proposal', [DbptaProposalController::class, 'store'])->name('siakad.dbpta.proposal.store');
+
+    Route::get('siakad/dbpta/bimbingan', [DbptaBimbinganController::class, 'index'])->name('siakad.dbpta.bimbingan.index');
+    Route::post('siakad/dbpta/bimbingan', [DbptaBimbinganController::class, 'store'])->name('siakad.dbpta.bimbingan.store');
+
+    Route::get('siakad/dbpta/sidang-yudisium', [DbptaSidangController::class, 'index'])->name('siakad.dbpta.sidang.index');
+    Route::post('siakad/dbpta/sidang-yudisium', [DbptaSidangController::class, 'store'])->name('siakad.dbpta.sidang.store');
+
+    Route::get('siakad/dbpta/pemberkasan', [DbptaPemberkasanController::class, 'index'])->name('siakad.dbpta.pemberkasan.index');
+    Route::post('siakad/dbpta/pemberkasan', [DbptaPemberkasanController::class, 'store'])->name('siakad.dbpta.pemberkasan.store');
 
     // --- Super Admin & Admin TU Only: User Management ---
     Route::middleware('role:superadmin,admin')->group(function () {

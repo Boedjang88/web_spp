@@ -25,6 +25,10 @@ class TugasAkhir extends Model
         'file_naskah_akhir_path',
         'status_skripsi',
         'tgl_lulus_sidang',
+        'judul',
+        'abstrak',
+        'status_persetujuan',
+        'file_revisi_path',
     ];
 
     protected $casts = [
@@ -45,6 +49,46 @@ class TugasAkhir extends Model
     public function logbooks(): HasMany
     {
         return $this->hasMany(LogbookBimbingan::class, 'id_tugas_akhir');
+    }
+
+    public function getJudulAttribute()
+    {
+        return $this->judul_skripsi;
+    }
+
+    public function setJudulAttribute($value)
+    {
+        $this->attributes['judul_skripsi'] = $value;
+    }
+
+    public function getAbstrakAttribute()
+    {
+        return $this->abstrak_id;
+    }
+
+    public function setAbstrakAttribute($value)
+    {
+        $this->attributes['abstrak_id'] = $value;
+    }
+
+    public function getStatusPersetujuanAttribute()
+    {
+        return $this->status_skripsi ?? 'Pengajuan Proposal';
+    }
+
+    public function setStatusPersetujuanAttribute($value)
+    {
+        $this->attributes['status_skripsi'] = $value;
+    }
+
+    public function getFileRevisiPathAttribute()
+    {
+        return $this->file_naskah_akhir_path;
+    }
+
+    public function setFileRevisiPathAttribute($value)
+    {
+        $this->attributes['file_naskah_akhir_path'] = $value;
     }
 
     public function sidangs(): HasMany

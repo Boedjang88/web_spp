@@ -24,7 +24,39 @@ class KknRegistrasi extends Model
         'file_laporan_path',
         'nilai_angka',
         'nilai_huruf',
+        'lokasi_kkn',
+        'kelompok',
     ];
+
+    public function getLokasiKknAttribute()
+    {
+        return $this->desa_lokasi;
+    }
+
+    public function setLokasiKknAttribute($value)
+    {
+        $this->attributes['desa_lokasi'] = $value;
+    }
+
+    public function getKelompokAttribute()
+    {
+        return $this->nama_kelompok;
+    }
+
+    public function setKelompokAttribute($value)
+    {
+        $this->attributes['nama_kelompok'] = $value;
+    }
+
+    public function getDplNameAttribute()
+    {
+        return $this->attributes['dpl_name'] ?? 'Dr. Ahmad Fauzi, M.T.';
+    }
+
+    public function setDplNameAttribute($value)
+    {
+        $this->attributes['dpl_name'] = $value;
+    }
 
     public function mahasiswa(): BelongsTo
     {

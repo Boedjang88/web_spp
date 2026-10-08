@@ -55,12 +55,12 @@ class StudentEsuratController extends Controller
             'keperluan' => $validated['keperluan'],
             'qr_verification_token' => $qrToken,
             'file_pdf_path' => 'documents/surat_aktif/skma_' . $siswaId . '.pdf',
-            'status' => 'DISETUJUI',
+            'status' => 'DRAFT',
             'tgl_terbit' => now(),
         ]);
 
-        ActivityLog::record('ESURAT_REQUEST', "Mahasiswa mengajukan e-Surat: {$validated['jenis_surat']}");
+        ActivityLog::record('ESURAT_REQUEST', "Mahasiswa mengajukan e-Surat ({$validated['jenis_surat']}) - Menunggu Persetujuan Admin/BAAK.");
 
-        return redirect()->route('siakad.esurat.index')->with('success', "Permohonan e-Surat Akademik berhasil diterbitkan! Nomor Surat: {$nomorSurat}");
+        return redirect()->route('siakad.esurat.index')->with('success', "Permohonan e-Surat berhasil diajukan! Nomor Surat: {$nomorSurat} (Status: Menunggu Persetujuan Admin/BAAK)");
     }
 }

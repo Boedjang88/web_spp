@@ -439,13 +439,29 @@
         <!-- Brand Header -->
         <div class="p-5 border-b border-slate-850 flex items-center space-x-3 bg-slate-950">
             <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center font-bold text-white shadow-md ring-1 ring-white/20 flex-shrink-0">
-                <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
+                <svg class="w-5 h-5 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
             </div>
             <div class="truncate">
-                <span class="font-extrabold text-sm text-white tracking-tight block truncate">SIAKAD Enterprise</span>
+                <span class="font-extrabold text-sm text-white tracking-tight block truncate">SIAP 5.6 Cloud</span>
                 <span class="text-[10px] text-brand-300 font-semibold uppercase tracking-wider block">Universitas &bull; Portal</span>
             </div>
         </div>
+
+        @auth
+        <!-- User Profile Card (SIAP 5.6 Cloud) -->
+        <div class="p-4 bg-slate-900/90 border-b border-slate-850 space-y-1">
+            <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-full bg-brand-600/30 border border-brand-400/40 text-brand-300 font-bold flex items-center justify-center text-xs flex-shrink-0">
+                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                </div>
+                <div class="truncate">
+                    <span class="font-bold text-xs text-white block truncate">{{ auth()->user()->name }}</span>
+                    <span class="text-[10px] text-brand-300 font-mono block">{{ auth()->user()->siswa?->nisn ?? auth()->user()->siswa?->nis ?? '109240940090' }}</span>
+                    <span class="px-2 py-0.5 rounded-full text-[9px] font-bold font-mono bg-brand-500/20 text-brand-200 border border-brand-500/30 uppercase inline-block mt-0.5">{{ auth()->user()->role ?? 'Mahasiswa' }}</span>
+                </div>
+            </div>
+        </div>
+        @endauth
 
         <!-- Sidebar Nav Links -->
         <div class="flex-1 px-3 py-4 space-y-4 overflow-y-auto custom-scrollbar text-xs">
@@ -577,45 +593,75 @@
                     </div>
                 </div>
             @elseif(auth()->check() && (auth()->user()->role === 'siswa' || auth()->user()->role === 'mahasiswa'))
-                <!-- Modul Mahasiswa -->
+                <!-- SIAP 5.6 Cloud: Kategori Mahasiswa -->
                 <div>
-                    <span class="px-3 text-[10px] font-bold uppercase tracking-wider text-brand-300 block mb-1">Layanan Akademik</span>
+                    <span class="px-3 text-[10px] font-bold uppercase tracking-wider text-brand-300 block mb-1">Mahasiswa</span>
                     <div class="space-y-0.5">
-                        <a href="{{ route('siakad.krs.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.krs.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
-                            <svg class="w-4 h-4 {{ request()->routeIs('siakad.krs.*') ? 'text-white' : 'text-brand-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                            <span>Smart KRS</span>
-                        </a>
-                        <a href="{{ route('siakad.presensi.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.presensi.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
-                            <svg class="w-4 h-4 {{ request()->routeIs('siakad.presensi.*') ? 'text-white' : 'text-brand-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                            <span>Presensi Perkuliahan</span>
-                        </a>
-                        <a href="{{ route('siakad.tugas.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.tugas.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
-                            <svg class="w-4 h-4 {{ request()->routeIs('siakad.tugas.*') ? 'text-white' : 'text-brand-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-                            <span>Tugas &amp; LMS</span>
+                        <a href="{{ route('siakad.biodata.edit') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.biodata.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                            <svg class="w-4 h-4 {{ request()->routeIs('siakad.biodata.*') ? 'text-white' : 'text-brand-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                            <span>Bio Data</span>
                         </a>
                         <a href="{{ route('siakad.ukt.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.ukt.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
                             <svg class="w-4 h-4 {{ request()->routeIs('siakad.ukt.*') ? 'text-white' : 'text-brand-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-                            <span>Pembayaran UKT</span>
+                            <span>Konfirmasi Pembayaran</span>
                         </a>
-                        <a href="{{ route('siakad.biodata.edit') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.biodata.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
-                            <svg class="w-4 h-4 {{ request()->routeIs('siakad.biodata.*') ? 'text-white' : 'text-brand-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                            <span>Lengkapi Biodata &amp; PDP</span>
+                        <a href="{{ route('siakad.krs.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.krs.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                            <svg class="w-4 h-4 {{ request()->routeIs('siakad.krs.*') ? 'text-white' : 'text-brand-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                            <span>Kartu Rencana Studi (KRS)</span>
                         </a>
-                        <a href="{{ route('siakad.analytics.performance') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.analytics.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
-                            <svg class="w-4 h-4 {{ request()->routeIs('siakad.analytics.*') ? 'text-white' : 'text-brand-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-                            <span>Grafik Performa</span>
+                        <a href="{{ route('siakad.presensi.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.presensi.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                            <svg class="w-4 h-4 {{ request()->routeIs('siakad.presensi.*') ? 'text-white' : 'text-brand-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            <span>Presensi Mahasiswa</span>
                         </a>
-                        <a href="{{ route('siakad.edom.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.edom.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
-                            <svg class="w-4 h-4 {{ request()->routeIs('siakad.edom.*') ? 'text-white' : 'text-brand-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
-                            <span>Evaluasi Dosen (EDOM)</span>
+                        <a href="{{ route('web.nilai.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('web.nilai.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                            <svg class="w-4 h-4 {{ request()->routeIs('web.nilai.*') ? 'text-white' : 'text-brand-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                            <span>Nilai Semester</span>
+                        </a>
+                        <a href="{{ route('siakad.kkn.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.kkn.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                            <svg class="w-4 h-4 {{ request()->routeIs('siakad.kkn.*') ? 'text-white' : 'text-brand-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            <span>KKN</span>
+                        </a>
+                        <a href="{{ route('siakad.wisuda.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.wisuda.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                            <svg class="w-4 h-4 {{ request()->routeIs('siakad.wisuda.*') ? 'text-white' : 'text-brand-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
+                            <span>Wisudawan</span>
                         </a>
                         <a href="{{ route('siakad.esurat.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.esurat.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
                             <svg class="w-4 h-4 {{ request()->routeIs('siakad.esurat.*') ? 'text-white' : 'text-brand-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                             <span>e-Surat Akademik</span>
                         </a>
-                        <a href="{{ route('siakad.fasilitas.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.fasilitas.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
-                            <svg class="w-4 h-4 {{ request()->routeIs('siakad.fasilitas.*') ? 'text-white' : 'text-brand-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                            <span>Pinjam Fasilitas Kampus</span>
+                    </div>
+                </div>
+
+                <!-- SIAP 5.6 Cloud: Kategori DBPTA -->
+                <div>
+                    <span class="px-3 text-[10px] font-bold uppercase tracking-wider text-brand-300 block mb-1">DBPTA</span>
+                    <div class="space-y-0.5">
+                        <a href="{{ route('siakad.dbpta.proposal.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.dbpta.proposal.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                            <svg class="w-4 h-4 {{ request()->routeIs('siakad.dbpta.proposal.*') ? 'text-white' : 'text-indigo-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            <span>Proposal</span>
+                        </a>
+                        <a href="{{ route('siakad.dbpta.bimbingan.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.dbpta.bimbingan.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                            <svg class="w-4 h-4 {{ request()->routeIs('siakad.dbpta.bimbingan.*') ? 'text-white' : 'text-indigo-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                            <span>Bimbingan</span>
+                        </a>
+                        <a href="{{ route('siakad.dbpta.sidang.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.dbpta.sidang.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                            <svg class="w-4 h-4 {{ request()->routeIs('siakad.dbpta.sidang.*') ? 'text-white' : 'text-indigo-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <span>Sidang Yudisium</span>
+                        </a>
+                        <a href="{{ route('siakad.dbpta.pemberkasan.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('siakad.dbpta.pemberkasan.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                            <svg class="w-4 h-4 {{ request()->routeIs('siakad.dbpta.pemberkasan.*') ? 'text-white' : 'text-indigo-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                            <span>Pemberkasan</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- SIAP 5.6 Cloud: Kategori System -->
+                <div>
+                    <span class="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">System</span>
+                    <div class="space-y-0.5">
+                        <a href="{{ route('profile.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl font-medium transition {{ request()->routeIs('profile.*') ? 'bg-brand-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 00-2 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                            <span>Ubah Password Akun</span>
                         </a>
                     </div>
                 </div>
