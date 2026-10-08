@@ -52,6 +52,8 @@ Route::put('/survey/employer/{token}', [\App\Http\Controllers\Web\EmployerFeedba
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+    Route::get('/auth/google', [\App\Http\Controllers\Web\GoogleSsoController::class, 'redirect'])->name('auth.google');
+    Route::get('/auth/google/callback', [\App\Http\Controllers\Web\GoogleSsoController::class, 'callback'])->name('auth.google.callback');
     Route::get('/pmb/register', [\App\Http\Controllers\Web\PmbController::class, 'showRegistrationForm'])->name('pmb.register');
     Route::post('/pmb/register', [\App\Http\Controllers\Web\PmbController::class, 'register'])->name('pmb.register.post');
 });
