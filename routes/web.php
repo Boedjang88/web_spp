@@ -32,8 +32,10 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// --- Public Routes: Portal Siswa Mandiri, Employer Feedback & Interactive API Docs ---
-Route::get('/', [CekTagihanController::class, 'index'])->name('cek.index');
+// --- Public Routes: Redirect to Login & Interactive API Docs ---
+Route::get('/', function () {
+    return redirect()->route('login');
+})->name('cek.index');
 Route::post('/cek-tagihan', [CekTagihanController::class, 'search'])->name('cek.search');
 Route::get('/api/docs', [ApiDocsController::class, 'index'])->name('api.docs');
 Route::get('/survey/employer/{token}', [\App\Http\Controllers\Web\EmployerFeedbackPortalController::class, 'show'])->name('employer.feedback.show');
