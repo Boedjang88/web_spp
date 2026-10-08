@@ -70,8 +70,8 @@
                         <tr class="hover:bg-slate-50 dark:hover:bg-blue-900/20 transition">
                             <td class="py-3.5 px-4 text-center text-slate-400 font-mono border-r border-slate-100 dark:border-slate-800">{{ $idx + 1 }}</td>
                             <td class="py-3.5 px-4 border-r border-slate-100 dark:border-slate-800">
-                                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold font-mono uppercase {{ $item->severity_level === 'CRITICAL' ? 'bg-red-50 dark:bg-red-950/60 text-red-600 border border-red-200 dark:border-red-800' : ($item->severity_level === 'HIGH' ? 'bg-amber-50 dark:bg-amber-950/60 text-amber-600 border border-amber-200 dark:border-amber-800' : 'bg-blue-50 dark:bg-blue-950/60 text-blue-600 border border-blue-200 dark:border-blue-800') }}">
-                                    {{ $item->severity_level }}
+                                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold font-mono uppercase {{ $item->severity === 'CRITICAL' ? 'bg-red-50 dark:bg-red-950/60 text-red-600 border border-red-200 dark:border-red-800' : ($item->severity === 'HIGH' ? 'bg-amber-50 dark:bg-amber-950/60 text-amber-600 border border-amber-200 dark:border-amber-800' : 'bg-blue-50 dark:bg-blue-950/60 text-blue-600 border border-blue-200 dark:border-blue-800') }}">
+                                    {{ $item->severity }}
                                 </span>
                             </td>
                             <td class="py-3.5 px-4 border-r border-slate-100 dark:border-slate-800">
@@ -82,10 +82,10 @@
                                 <span class="font-bold text-slate-800 dark:text-slate-200 block">{{ $item->siswa?->kelas?->nama_kelas }}</span>
                             </td>
                             <td class="py-3.5 px-4 font-mono font-semibold text-slate-700 dark:text-slate-300 border-r border-slate-100 dark:border-slate-800">
-                                {{ $item->warning_code }}
+                                {{ $item->trigger_type }}
                             </td>
                             <td class="py-3.5 px-4 text-slate-600 dark:text-slate-400">
-                                {{ $item->description }}
+                                {{ $item->trigger_reason }}
                             </td>
                         </tr>
                     @empty

@@ -30,6 +30,11 @@ class EarlyWarningLog extends Model
         'resolved_at' => 'datetime',
     ];
 
+    public function siswa(): BelongsTo
+    {
+        return $this->belongsTo(Siswa::class, 'id_siswa');
+    }
+
     public function mahasiswa(): BelongsTo
     {
         return $this->belongsTo(Siswa::class, 'id_siswa');

@@ -15,14 +15,14 @@ class EarlyWarningSystemController extends Controller
     {
         $severityFilter = $request->get('severity');
 
-        $warnings = EarlyWarningLog::with(['siswa.kelas', 'siswa.mahasiswa.prodi'])
-            ->when($severityFilter, fn($q) => $q->where('severity_level', $severityFilter))
-            ->latest('detected_at')
+        $warnings = EarlyWarningLog::with(['siswa.kelas', 'dosenPa'])
+            ->when($severityFilter, fn($q) => $q->where('severity', $severityFilter))
+            ->latest()
             ->paginate(15);
 
-        $totalCritical = EarlyWarningLog::where('severity_level', 'CRITICAL')->count();
-        $totalHigh = EarlyWarningLog::where('severity_level', 'HIGH')->count();
-        $totalMedium = EarlyWarningLog::where('severity_level', 'MEDIUM')->count();
+        $totalCritical = EarlyWarningLog::where('severity', 'CRITICAL')->count();
+        $totalHigh = EarlyWarningLog::where('severity', 'HIGH')->count();
+        $totalMedium = EarlyWarningLog::where('severity', 'MEDIUM')->count();
 
         return view('siakad.baak.ews-index', compact('warnings', 'totalCritical', 'totalHigh', 'totalMedium', 'severityFilter'));
     }
