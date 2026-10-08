@@ -30,6 +30,8 @@ return new class extends Migration
             $table->string('nama_mapel', 100);
             $table->string('kelompok', 50)->default('Umum'); // Umum, Kejuruan, Muatan Lokal
             $table->integer('kkm')->default(75);
+            $table->integer('semester')->default(1);
+            $table->integer('semester_rekomendasi')->default(1);
             $table->timestamps();
         });
 

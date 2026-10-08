@@ -15,6 +15,8 @@ class Mapel extends Model
         'nama_mapel',
         'kelompok',
         'kkm',
+        'semester',
+        'semester_rekomendasi',
     ];
 
     public function jadwals(): HasMany

@@ -16,7 +16,21 @@ class JadwalController extends Controller
 {
     public function index(Request $request): View
     {
+        $user = auth()->user();
         $query = JadwalPelajaran::with(['kelas', 'mapel', 'guru']);
+
+        // Scope schedule by user role if student or lecturer
+        if ($user && $user->isMahasiswa()) {
+            $siswa = $user->siswa ?? $user->mahasiswa ?? \App\Models\Siswa::first();
+            if ($siswa && $siswa->id_kelas) {
+                $query->where('id_kelas', $siswa->id_kelas);
+            }
+        } elseif ($user && $user->isDosen()) {
+            $guru = $user->guru ?? $user->dosen ?? \App\Models\Guru::first();
+            if ($guru) {
+                $query->where('id_guru', $guru->id);
+            }
+        }
 
         if ($request->filled('id_kelas')) {
             $query->where('id_kelas', $request->id_kelas);
@@ -26,14 +40,43 @@ class JadwalController extends Controller
             $query->where('hari', $request->hari);
         }
 
-        $jadwals = $query->orderByRaw("CASE hari WHEN 'Senin' THEN 1 WHEN 'Selasa' THEN 2 WHEN 'Rabu' THEN 3 WHEN 'Kamis' THEN 4 WHEN 'Jumat' THEN 5 WHEN 'Sabtu' THEN 6 ELSE 7 END")
+        if ($request->filled('semester')) {
+            $sem = $request->semester;
+            $query->whereHas('mapel', function ($q) use ($sem) {
+                $q->where(function ($sub) use ($sem) {
+                    if (strtolower($sem) === 'ganjil') {
+                        $sub->whereIn('semester', [1, 3, 5, 7]);
+                    } elseif (strtolower($sem) === 'genap') {
+                        $sub->whereIn('semester', [2, 4, 6, 8]);
+                    } else {
+                        $sub->where('semester', $sem)
+                            ->orWhere(function ($s2) use ($sem) {
+                                $s2->whereNull('semester')->where('semester_rekomendasi', $sem);
+                            });
+                    }
+                });
+            });
+        }
+
+        $allJadwals = (clone $query)->orderByRaw("CASE hari WHEN 'Senin' THEN 1 WHEN 'Selasa' THEN 2 WHEN 'Rabu' THEN 3 WHEN 'Kamis' THEN 4 WHEN 'Jumat' THEN 5 WHEN 'Sabtu' THEN 6 ELSE 7 END")
             ->orderBy('jam_mulai')
-            ->paginate(12)
+            ->get();
+
+        $jadwals = (clone $query)->orderByRaw("CASE hari WHEN 'Senin' THEN 1 WHEN 'Selasa' THEN 2 WHEN 'Rabu' THEN 3 WHEN 'Kamis' THEN 4 WHEN 'Jumat' THEN 5 WHEN 'Sabtu' THEN 6 ELSE 7 END")
+            ->orderBy('jam_mulai')
+            ->paginate(15)
             ->withQueryString();
 
-        $kelasList = Kelas::orderBy('nama_kelas')->get();
+        $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        $jadwalMingguan = [];
+        foreach ($days as $day) {
+            $jadwalMingguan[$day] = $allJadwals->where('hari', $day)->values();
+        }
 
-        return view('jadwal.index', compact('jadwals', 'kelasList'));
+        $kelasList = Kelas::orderBy('nama_kelas')->get();
+        $tahunAkademikAktif = \App\Models\TahunAkademik::where('is_active', true)->first() ?? \App\Models\TahunAkademik::latest()->first();
+
+        return view('jadwal.index', compact('jadwals', 'jadwalMingguan', 'kelasList', 'tahunAkademikAktif', 'user'));
     }
 
     public function create(): View
