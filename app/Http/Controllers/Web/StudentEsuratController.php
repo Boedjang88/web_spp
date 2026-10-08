@@ -37,9 +37,15 @@ class StudentEsuratController extends Controller
         $siswa = $user?->siswa ?? $user?->mahasiswa ?? \App\Models\Siswa::first();
         $siswaId = $siswa?->id ?? 1;
 
-        $nextId = SuratAkademik::count() + 1;
-        $nomorSurat = 'SKMA/2026/03/' . sprintf('%04d', $nextId);
-        $qrToken = hash('sha256', $siswaId . 'SURAT-' . $nextId . '-TOKEN');
+        $nextId = (int) (SuratAkademik::max('id') ?? 0) + 1;
+        $nomorSurat = 'SKMA/' . date('Y/m/') . sprintf('%04d', $nextId);
+
+        while (SuratAkademik::where('nomor_surat', $nomorSurat)->exists()) {
+            $nextId++;
+            $nomorSurat = 'SKMA/' . date('Y/m/') . sprintf('%04d', $nextId);
+        }
+
+        $qrToken = hash('sha256', $siswaId . 'SURAT-' . $nextId . '-' . microtime(true) . '-TOKEN');
 
         SuratAkademik::create([
             'id_siswa' => $siswaId,
