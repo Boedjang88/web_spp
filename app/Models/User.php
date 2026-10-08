@@ -28,6 +28,7 @@ class User extends Authenticatable implements FilamentUser
         'mfa_enabled',
         'sso_provider',
         'sso_provider_id',
+        'avatar_path',
         'consent_pdp_at',
         'consent_pdp_ip',
     ];
@@ -112,5 +113,13 @@ class User extends Authenticatable implements FilamentUser
     public function canAccessPanel(Panel $panel): bool
     {
         return in_array($this->role, ['superadmin', 'super_admin', 'baak', 'admin', 'petugas']);
+    }
+
+    public function getAvatarUrlAttribute(): ?string
+    {
+        if ($this->avatar_path && file_exists(public_path($this->avatar_path))) {
+            return asset($this->avatar_path);
+        }
+        return null;
     }
 }

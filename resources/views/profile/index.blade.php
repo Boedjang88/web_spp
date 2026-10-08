@@ -8,9 +8,13 @@
     <!-- Header Banner -->
     <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-soft flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-600 font-black text-xl flex items-center justify-center flex-shrink-0">
-                {{ strtoupper(substr($user->name, 0, 2)) }}
-            </div>
+            @if($user->avatar_url)
+                <img src="{{ $user->avatar_url }}" class="w-14 h-14 rounded-2xl object-cover border border-indigo-100 flex-shrink-0 shadow-sm">
+            @else
+                <div class="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-600 font-black text-xl flex items-center justify-center flex-shrink-0">
+                    {{ strtoupper(substr($user->name, 0, 2)) }}
+                </div>
+            @endif
             <div>
                 <div class="flex items-center gap-2 mb-0.5">
                     <h1 class="text-xl font-bold text-slate-900">{{ $user->name }}</h1>
@@ -35,13 +39,31 @@
         <!-- Form 1: Biodata Akun -->
         <div class="bg-white rounded-2xl border border-slate-200/80 shadow-soft p-6 space-y-5">
             <div class="border-b border-slate-100 pb-3">
-                <h2 class="font-bold text-slate-900 text-sm"><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg> Informasi Profil</h2>
-                <p class="text-[11px] text-slate-400">Perbarui nama tampilan dan alamat email login Anda.</p>
+                <h2 class="font-bold text-slate-900 text-sm"><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg> Informasi Profil &amp; Foto</h2>
+                <p class="text-[11px] text-slate-400">Perbarui foto profil, nama tampilan, dan alamat email login Anda.</p>
             </div>
 
-            <form action="{{ route('profile.update') }}" method="POST" class="space-y-4">
+            <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                 @csrf
                 @method('PUT')
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Foto Profil (Avatar)</label>
+                    <div class="flex items-center gap-3">
+                        @if($user->avatar_url)
+                            <img src="{{ $user->avatar_url }}" class="w-12 h-12 rounded-xl object-cover border border-slate-200 shadow-sm flex-shrink-0">
+                        @else
+                            <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-sm flex-shrink-0">
+                                {{ strtoupper(substr($user->name, 0, 2)) }}
+                            </div>
+                        @endif
+                        <input type="file" name="avatar" accept="image/*"
+                            class="block w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
+                    </div>
+                    @error('avatar')
+                        <p class="text-rose-500 text-[11px] mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Lengkap</label>

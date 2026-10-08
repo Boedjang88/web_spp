@@ -26,16 +26,31 @@ class ProfileController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:100',
             'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($user->id)],
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ], [
             'name.required' => 'Nama lengkap wajib diisi.',
             'email.required' => 'Alamat email wajib diisi.',
             'email.email' => 'Format email tidak valid.',
             'email.unique' => 'Alamat email ini sudah digunakan oleh pengguna lain.',
+            'avatar.image' => 'File foto profil harus berupa gambar.',
+            'avatar.mimes' => 'Format foto profil harus JPG, PNG, atau WEBP.',
+            'avatar.max' => 'Ukuran foto profil maksimal 2MB.',
         ]);
+
+        if ($request->hasFile('avatar')) {
+            $file = $request->file('avatar');
+            $filename = 'user_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $destinationPath = public_path('uploads/avatars');
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+            $file->move($destinationPath, $filename);
+            $validated['avatar_path'] = 'uploads/avatars/' . $filename;
+        }
 
         $user->update($validated);
 
-        ActivityLog::record('UPDATE_PROFILE', "User {$user->name} memperbarui data profil akun pribadinya.");
+        ActivityLog::record('UPDATE_PROFILE', "User {$user->name} memperbarui data profil & foto akun pribadinya.");
 
         return redirect()->route('profile.index')->with('success', 'Profil akun Anda berhasil diperbarui.');
     }

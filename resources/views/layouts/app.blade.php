@@ -279,8 +279,12 @@
                 <svg class="theme-icon-moon w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
             </button>
             @auth
-            <a href="{{ route('profile.index') }}" class="w-8 h-8 rounded-xl bg-slate-900 text-brand-300 border border-slate-800 flex items-center justify-center font-bold text-xs" title="Profil">
-                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+            <a href="{{ route('profile.index') }}" class="w-8 h-8 rounded-xl bg-slate-900 text-brand-300 border border-slate-800 flex items-center justify-center font-bold text-xs overflow-hidden" title="Profil">
+                @if(auth()->user()->avatar_url)
+                    <img src="{{ auth()->user()->avatar_url }}" class="w-full h-full object-cover">
+                @else
+                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                @endif
             </a>
             @endauth
             <button type="button" onclick="toggleMobileMenu()" class="p-2 rounded-xl bg-slate-900 text-slate-300 hover:text-white border border-slate-800 active:scale-95 transition" aria-label="Buka Menu">
@@ -451,13 +455,17 @@
         <!-- User Profile Card (SIAP 5.6 Cloud) -->
         <div class="p-4 bg-slate-900/90 border-b border-slate-850 space-y-1">
             <div class="flex items-center space-x-3">
-                <div class="w-9 h-9 rounded-full bg-brand-600/30 border border-brand-400/40 text-brand-300 font-bold flex items-center justify-center text-xs flex-shrink-0">
-                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                <div class="w-9 h-9 rounded-full bg-brand-600/30 border border-brand-400/40 text-brand-300 font-bold flex items-center justify-center text-xs flex-shrink-0 overflow-hidden">
+                    @if(auth()->user()->avatar_url)
+                        <img src="{{ auth()->user()->avatar_url }}" class="w-full h-full object-cover">
+                    @else
+                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                    @endif
                 </div>
                 <div class="truncate">
                     <span class="font-bold text-xs text-white block truncate">{{ auth()->user()->name }}</span>
-                    <span class="text-[10px] text-brand-300 font-mono block">{{ auth()->user()->siswa?->nisn ?? auth()->user()->siswa?->nis ?? '109240940090' }}</span>
-                    <span class="px-2 py-0.5 rounded-full text-[9px] font-bold font-mono bg-brand-500/20 text-brand-200 border border-brand-500/30 uppercase inline-block mt-0.5">{{ auth()->user()->role ?? 'Mahasiswa' }}</span>
+                    <span class="text-[10px] text-brand-300 font-mono block">{{ auth()->user()->siswa?->nisn ?? auth()->user()->siswa?->nis ?? auth()->user()->guru?->nip ?? auth()->user()->dosen?->nidn ?? '109240940090' }}</span>
+                    <span class="px-2 py-0.5 rounded-full text-[9px] font-bold font-mono bg-brand-500/20 text-brand-200 border border-brand-500/30 uppercase inline-block mt-0.5">{{ ucfirst(auth()->user()->role ?? 'Mahasiswa') }}</span>
                 </div>
             </div>
         </div>
@@ -674,8 +682,12 @@
         <div class="p-3 border-t border-slate-850 bg-slate-950">
             <div class="flex items-center justify-between p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition">
                 <a href="{{ route('profile.index') }}" class="flex items-center space-x-2.5 overflow-hidden flex-1 group">
-                    <div class="w-7 h-7 rounded-lg bg-brand-500/20 text-brand-300 font-bold flex items-center justify-center text-xs flex-shrink-0 group-hover:bg-brand-500/30 transition">
-                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                    <div class="w-7 h-7 rounded-lg bg-brand-500/20 text-brand-300 font-bold flex items-center justify-center text-xs flex-shrink-0 group-hover:bg-brand-500/30 transition overflow-hidden">
+                        @if(auth()->user()->avatar_url)
+                            <img src="{{ auth()->user()->avatar_url }}" class="w-full h-full object-cover">
+                        @else
+                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                        @endif
                     </div>
                     <div class="truncate">
                         <span class="font-bold text-xs text-white block truncate group-hover:text-brand-300 transition">{{ auth()->user()->name }}</span>
