@@ -32,7 +32,7 @@
         </div>
     @endif
 
-    <form action="{{ route('siakad.biodata.update') }}" method="POST" class="space-y-6">
+    <form action="{{ route('siakad.biodata.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
         @method('PUT')
 
@@ -40,7 +40,29 @@
         <div class="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-soft text-slate-900 space-y-4">
             <div class="flex items-center gap-2 pb-3 border-b border-slate-100 text-slate-900 font-bold text-sm">
                 <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                <span>1. Data Pribadi Mahasiswa</span>
+                <span>1. Data Pribadi Mahasiswa &amp; Foto Profil</span>
+            </div>
+
+            <!-- Upload Foto Profil (Avatar) -->
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 mb-2">
+                <label class="block text-xs font-semibold text-slate-700 mb-2">Foto Profil (Avatar)</label>
+                <div class="flex items-center gap-4">
+                    @if(auth()->user()->avatar_url)
+                        <img src="{{ auth()->user()->avatar_url }}" class="w-14 h-14 rounded-2xl object-cover border border-slate-200 shadow-sm flex-shrink-0">
+                    @else
+                        <div class="w-14 h-14 rounded-2xl bg-brand-100 text-brand-700 font-bold flex items-center justify-center text-base flex-shrink-0">
+                            {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                        </div>
+                    @endif
+                    <div class="flex-1">
+                        <input type="file" name="avatar" accept="image/*"
+                            class="block w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 cursor-pointer">
+                        <span class="text-[10px] text-slate-400 mt-1 block">Format: JPG, PNG, WEBP (Maksimal 2MB). Foto ini akan tampil pada User Profile Card &amp; Kartu Mahasiswa.</span>
+                    </div>
+                </div>
+                @error('avatar')
+                    <p class="text-rose-500 text-[11px] mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">

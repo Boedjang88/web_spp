@@ -32,6 +32,9 @@ class StudentBiodataController extends Controller
         $mahasiswa = $this->getStudentMahasiswa($user);
 
         $validated = $request->validate([
+            // Foto Profil (Avatar)
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+
             // Data Pribadi
             'nama' => 'required|string|max:150',
             'tempat_lahir' => 'nullable|string|max:100',
@@ -65,6 +68,20 @@ class StudentBiodataController extends Controller
             'nomor_ijazah_sekolah' => 'nullable|string|max:100',
         ]);
 
+        if ($request->hasFile('avatar')) {
+            $file = $request->file('avatar');
+            $filename = 'user_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $destinationPath = public_path('uploads/avatars');
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+            $file->move($destinationPath, $filename);
+            $user->avatar_path = 'uploads/avatars/' . $filename;
+        }
+
+        $user->name = $validated['nama'];
+        $user->save();
+
         $mahasiswa->update($validated);
 
         // Update PDP consent timestamp if not set
@@ -87,6 +104,6 @@ class StudentBiodataController extends Controller
             }
         }
 
-        return back()->with('success', 'Data diri dan biodata mahasiswa berhasil diperbarui dan tersimpan aman.');
+        return back()->with('success', 'Biodata dan foto profil mahasiswa berhasil diperbarui!');
     }
 }
