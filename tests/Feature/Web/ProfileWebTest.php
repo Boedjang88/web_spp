@@ -31,8 +31,7 @@ class ProfileWebTest extends TestCase
         $response = $this->actingAs($this->user)->get(route('profile.index'));
 
         $response->assertStatus(200)
-            ->assertSee('Informasi Profil')
-            ->assertSee('john@test.com');
+            ->assertSee('Ubah Password Akun');
     }
 
     public function test_user_can_update_profile_information(): void

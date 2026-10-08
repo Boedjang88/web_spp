@@ -17,7 +17,13 @@ class NilaiController extends Controller
 {
     public function index(Request $request): View
     {
+        $user = auth()->user();
         $query = Nilai::with(['siswa.kelas', 'mapel', 'guru']);
+
+        if ($user && $user->isMahasiswa()) {
+            $siswa = $user->siswa ?? $user->mahasiswa ?? Siswa::first();
+            $query->where('id_siswa', $siswa?->id ?? 1);
+        }
 
         if ($request->filled('id_kelas')) {
             $query->whereHas('siswa', function ($q) use ($request) {

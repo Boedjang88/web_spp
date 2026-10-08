@@ -176,10 +176,13 @@ Route::middleware(['auth', 'pdp.consent'])->group(function () {
         Route::get('web/laporan/export-csv', [LaporanController::class, 'exportCsv'])->name('web.laporan.exportCsv');
     });
 
+    // --- Nilai Semester Portal (Accessible by Students & Staff) ---
+    Route::get('web/nilai', [NilaiController::class, 'index'])->name('web.nilai.index');
+
     // --- Academic Features (Admin & Dewan Guru) ---
     Route::middleware('role:superadmin,admin,guru')->group(function () {
         Route::resource('web/jadwal', JadwalController::class)->names('web.jadwal');
-        Route::resource('web/nilai', NilaiController::class)->names('web.nilai');
+        Route::resource('web/nilai', NilaiController::class)->except(['index'])->names('web.nilai');
         Route::get('web/presensi', [PresensiController::class, 'index'])->name('web.presensi.index');
         Route::post('web/presensi/batch', [PresensiController::class, 'storeBatch'])->name('web.presensi.batch');
     });
