@@ -41,15 +41,15 @@
                         <span class="text-[10px] text-slate-400">SPP & Master</span>
                     </label>
                     <label class="cursor-pointer border rounded-xl p-3 flex flex-col items-center text-center gap-1.5 transition hover:border-emerald-500 has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-50/50">
-                        <input type="radio" name="role" value="guru" class="sr-only" {{ old('role', $user->role) === 'guru' ? 'checked' : '' }} onchange="handleRoleChange('guru')">
+                        <input type="radio" name="role" value="dosen" class="sr-only" {{ in_array(old('role', $user->role), ['dosen', 'guru', 'lecturer']) ? 'checked' : '' }} onchange="handleRoleChange('dosen')">
                         <span class="text-lg"><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></span>
-                        <span class="text-xs font-bold text-slate-800">Dewan Guru</span>
+                        <span class="text-xs font-bold text-slate-800">Dosen</span>
                         <span class="text-[10px] text-slate-400">Nilai & Presensi</span>
                     </label>
                     <label class="cursor-pointer border rounded-xl p-3 flex flex-col items-center text-center gap-1.5 transition hover:border-amber-500 has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50/50">
-                        <input type="radio" name="role" value="siswa" class="sr-only" {{ old('role', $user->role) === 'siswa' ? 'checked' : '' }} onchange="handleRoleChange('siswa')">
+                        <input type="radio" name="role" value="mahasiswa" class="sr-only" {{ in_array(old('role', $user->role), ['mahasiswa', 'siswa', 'student']) ? 'checked' : '' }} onchange="handleRoleChange('mahasiswa')">
                         <span class="text-lg"><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg></span>
-                        <span class="text-xs font-bold text-slate-800">Siswa</span>
+                        <span class="text-xs font-bold text-slate-800">Mahasiswa</span>
                         <span class="text-[10px] text-slate-400">Portal Mandiri</span>
                     </label>
                 </div>
@@ -59,29 +59,29 @@
             </div>
 
             <!-- Dynamic Master Data Link -->
-            <div id="guruSection" class="{{ old('role', $user->role) === 'guru' ? '' : 'hidden' }} bg-emerald-50/60 p-4 rounded-xl border border-emerald-200">
+            <div id="guruSection" class="{{ in_array(old('role', $user->role), ['dosen', 'guru', 'lecturer']) ? '' : 'hidden' }} bg-emerald-50/60 p-4 rounded-xl border border-emerald-200">
                 <label class="block text-xs font-bold uppercase tracking-wider text-emerald-800 mb-1">
-                    Hubungkan ke Data Guru
+                    Hubungkan ke Data Dosen
                 </label>
                 <select name="id_guru" class="w-full bg-white border border-emerald-300 rounded-xl px-4 py-2.5 text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                    <option value="">-- Pilih Guru / Pendidik --</option>
+                    <option value="">-- Pilih Dosen --</option>
                     @foreach($gurus as $g)
                         <option value="{{ $g->id }}" {{ old('id_guru', $user->id_guru) == $g->id ? 'selected' : '' }}>
-                            {{ $g->nama_guru }} (NIP: {{ $g->nip }})
+                            {{ $g->nama_guru }} (NIP/NIDN: {{ $g->nip }})
                         </option>
                     @endforeach
                 </select>
             </div>
 
-            <div id="siswaSection" class="{{ old('role', $user->role) === 'siswa' ? '' : 'hidden' }} bg-amber-50/60 p-4 rounded-xl border border-amber-200">
+            <div id="siswaSection" class="{{ in_array(old('role', $user->role), ['mahasiswa', 'siswa', 'student']) ? '' : 'hidden' }} bg-amber-50/60 p-4 rounded-xl border border-amber-200">
                 <label class="block text-xs font-bold uppercase tracking-wider text-amber-800 mb-1">
-                    Hubungkan ke Data Siswa
+                    Hubungkan ke Data Mahasiswa
                 </label>
                 <select name="id_siswa" class="w-full bg-white border border-amber-300 rounded-xl px-4 py-2.5 text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500">
-                    <option value="">-- Pilih Peserta Didik --</option>
+                    <option value="">-- Pilih Mahasiswa --</option>
                     @foreach($siswas as $s)
                         <option value="{{ $s->id }}" {{ old('id_siswa', $user->id_siswa) == $s->id ? 'selected' : '' }}>
-                            {{ $s->nama }} (NISN: {{ $s->nisn }} - {{ $s->kelas->nama_kelas ?? 'Kelas -' }})
+                            {{ $s->nama }} (NIM/NPM: {{ $s->nisn }} - {{ $s->kelas->nama_kelas ?? 'Kelas -' }})
                         </option>
                     @endforeach
                 </select>
@@ -165,10 +165,10 @@
         const guruSection = document.getElementById('guruSection');
         const siswaSection = document.getElementById('siswaSection');
 
-        if (role === 'guru') {
+        if (role === 'dosen' || role === 'guru') {
             guruSection.classList.remove('hidden');
             siswaSection.classList.add('hidden');
-        } else if (role === 'siswa') {
+        } else if (role === 'mahasiswa' || role === 'siswa') {
             siswaSection.classList.remove('hidden');
             guruSection.classList.add('hidden');
         } else {

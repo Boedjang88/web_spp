@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Guru;
+use App\Models\Dosen;
 use App\Models\JadwalPelajaran;
 use App\Models\Kelas;
 use App\Models\Mapel;
@@ -11,6 +12,7 @@ use App\Models\Nilai;
 use App\Models\Pembayaran;
 use App\Models\Presensi;
 use App\Models\Siswa;
+use App\Models\Mahasiswa;
 use App\Models\Spp;
 use App\Models\User;
 use Illuminate\View\View;
@@ -34,9 +36,9 @@ class DashboardController extends Controller
         $hariIni = $mapHari[now()->format('l')] ?? 'Senin';
 
         // 1. Data Khusus Siswa / Mahasiswa
-        if ($user && ($user->role === 'siswa' || $user->role === 'mahasiswa')) {
+        if ($user && $user->isMahasiswa()) {
             $siswa = $user->siswa ?? Siswa::with(['kelas', 'spp'])->first();
-            $mahasiswa = $user->mahasiswa ?? \App\Models\Mahasiswa::first();
+            $mahasiswa = $user->mahasiswa ?? Mahasiswa::first();
 
             $jadwalSiswa = collect();
             $nilaiSiswa = collect();
@@ -79,8 +81,8 @@ class DashboardController extends Controller
             return view('dashboard.siswa', compact('siswa', 'jadwalSiswa', 'nilaiSiswa', 'presensiSummary', 'tunggakan', 'riwayatPembayaran', 'hariIni'));
         }
 
-        // 2. Data Khusus Dewan Guru
-        if ($user && $user->role === 'guru') {
+        // 2. Data Khusus Dosen / Guru
+        if ($user && $user->isDosen()) {
             $guru = $user->guru ?? Guru::first();
 
             $jadwalGuruHariIni = collect();
@@ -106,9 +108,9 @@ class DashboardController extends Controller
             return view('dashboard.guru', compact('guru', 'jadwalGuruHariIni', 'totalJadwalAjar', 'nilaiTerbaruGuru', 'hariIni'));
         }
 
-        // 3. Data Umum / Superadmin & Admin TU
-        $totalSiswa = Siswa::count();
-        $totalGuru = Guru::count();
+        // 3. Data Umum / Superadmin, Admin TU & BAAK
+        $totalSiswa = User::whereIn('role', ['mahasiswa', 'siswa', 'student'])->count();
+        $totalGuru = User::whereIn('role', ['dosen', 'guru', 'lecturer'])->count();
         $totalMapel = Mapel::count();
         $totalKelas = Kelas::count();
         $totalUsers = User::count();

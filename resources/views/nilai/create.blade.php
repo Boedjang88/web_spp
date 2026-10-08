@@ -39,9 +39,9 @@
                 </div>
 
                 <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Guru Pengampu</label>
+                    <label class="block font-semibold text-slate-700 mb-1">Dosen Pengampu</label>
                     <select name="id_guru" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">-- Pilih Guru (Opsional) --</option>
+                        <option value="">-- Pilih Dosen (Opsional) --</option>
                         @foreach($guruList as $g)
                             <option value="{{ $g->id }}" {{ old('id_guru') == $g->id ? 'selected' : '' }}>{{ $g->nama_guru }}</option>
                         @endforeach
@@ -88,7 +88,7 @@
             </div>
 
             <div>
-                <label class="block font-semibold text-slate-700 mb-1">Catatan Guru / Capaian Kompetensi</label>
+                <label class="block font-semibold text-slate-700 mb-1">Catatan Dosen / Capaian Kompetensi</label>
                 <textarea name="catatan" rows="2" placeholder="Catatan kemajuan belajar siswa..."
                     class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('catatan') }}</textarea>
             </div>
