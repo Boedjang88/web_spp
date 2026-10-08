@@ -100,13 +100,12 @@
                     @enderror
                 </div>
 
-                <!-- Remember Me & Public Check -->
+                <!-- Remember Me -->
                 <div class="flex items-center justify-between text-xs pt-1">
                     <label class="flex items-center text-slate-300 cursor-pointer select-none">
                         <input type="checkbox" name="remember" class="rounded border-slate-700 bg-[#0b132b] text-blue-600 focus:ring-blue-500 mr-2">
                         Ingat Saya
                     </label>
-                    <a href="{{ route('cek.index') }}" class="text-blue-400 hover:text-blue-300 hover:underline transition font-medium">Cek Tagihan &rarr;</a>
                 </div>
 
                 <!-- Submit Button -->

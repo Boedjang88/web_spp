@@ -38,9 +38,6 @@
         </div>
 
         <nav class="flex items-center gap-3">
-            <a href="{{ route('cek.index') }}" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 active:scale-[0.98] transition-all duration-150 border border-transparent">
-                Cek Tagihan UKT Publik
-            </a>
             @auth
                 <a href="{{ url('/dashboard') }}" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] text-white shadow-lg shadow-indigo-600/30 transition-all duration-150 flex items-center gap-2">
                     <span>Buka Dashboard</span>
@@ -83,9 +80,6 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                     </a>
                 @endauth
-                <a href="{{ route('cek.index') }}" class="px-6 py-3.5 bg-white/5 hover:bg-white/10 text-slate-200 border border-white/10 font-semibold text-sm rounded-xl backdrop-blur transition inline-flex items-center gap-2">
-                    <span>Cek Status Tagihan UKT</span>
-                </a>
             </div>
 
             <!-- Feature Pills -->
