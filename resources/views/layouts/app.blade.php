@@ -312,6 +312,24 @@
                     </button>
                 </div>
 
+                @auth
+                <!-- Mobile User Profile Card (Dynamic) -->
+                <div class="mb-4 p-3 bg-slate-900 rounded-xl border border-slate-800 flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-full bg-brand-600/30 border border-brand-400/40 text-brand-300 font-bold flex items-center justify-center text-xs flex-shrink-0 overflow-hidden">
+                        @if(auth()->user()->avatar_url)
+                            <img src="{{ auth()->user()->avatar_url }}" class="w-full h-full object-cover">
+                        @else
+                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                        @endif
+                    </div>
+                    <div class="truncate">
+                        <span class="font-bold text-xs text-white block truncate">{{ auth()->user()->siswa?->nama ?? auth()->user()->guru?->nama_guru ?? auth()->user()->name }}</span>
+                        <span class="text-[10px] text-brand-300 font-mono block">{{ auth()->user()->siswa?->nisn ?? auth()->user()->siswa?->nis ?? auth()->user()->guru?->nip ?? auth()->user()->dosen?->nidn ?? auth()->user()->email }}</span>
+                        <span class="px-2 py-0.5 rounded-full text-[9px] font-bold font-mono bg-brand-500/20 text-brand-200 border border-brand-500/30 uppercase inline-block mt-0.5">{{ ucfirst(auth()->user()->role ?? 'Mahasiswa') }}</span>
+                    </div>
+                </div>
+                @endauth
+
                 <nav class="space-y-1 text-xs">
                     <a href="{{ route('dashboard') }}" onclick="toggleMobileMenu(true)" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-medium transition {{ request()->routeIs('dashboard') ? 'bg-brand-600 text-white font-semibold shadow-sm' : 'text-slate-300 hover:bg-slate-900' }}">
                         <svg class="w-4 h-4 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
@@ -463,8 +481,8 @@
                     @endif
                 </div>
                 <div class="truncate">
-                    <span class="font-bold text-xs text-white block truncate">{{ auth()->user()->name }}</span>
-                    <span class="text-[10px] text-brand-300 font-mono block">{{ auth()->user()->siswa?->nisn ?? auth()->user()->siswa?->nis ?? auth()->user()->guru?->nip ?? auth()->user()->dosen?->nidn ?? '109240940090' }}</span>
+                    <span class="font-bold text-xs text-white block truncate">{{ auth()->user()->siswa?->nama ?? auth()->user()->guru?->nama_guru ?? auth()->user()->name }}</span>
+                    <span class="text-[10px] text-brand-300 font-mono block">{{ auth()->user()->siswa?->nisn ?? auth()->user()->siswa?->nis ?? auth()->user()->guru?->nip ?? auth()->user()->dosen?->nidn ?? auth()->user()->email }}</span>
                     <span class="px-2 py-0.5 rounded-full text-[9px] font-bold font-mono bg-brand-500/20 text-brand-200 border border-brand-500/30 uppercase inline-block mt-0.5">{{ ucfirst(auth()->user()->role ?? 'Mahasiswa') }}</span>
                 </div>
             </div>

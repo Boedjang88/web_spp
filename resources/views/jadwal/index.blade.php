@@ -33,9 +33,9 @@
             
             <p class="text-xs md:text-sm text-indigo-200/80 mt-1 max-w-2xl leading-relaxed">
                 @if(auth()->user() && auth()->user()->isMahasiswa())
-                    Jadwal alokasi perkuliahan mingguan untuk <span class="font-semibold text-white">{{ $user->siswa?->nama ?? $user->mahasiswa?->nama_lengkap ?? $user->name }}</span> (Kelas {{ $user->siswa?->kelas?->nama_kelas ?? 'Reguler' }}).
+                    Jadwal perkuliahan mingguan untuk <span class="font-semibold text-white">{{ auth()->user()->siswa?->nama ?? auth()->user()->mahasiswa?->nama_lengkap ?? auth()->user()->name }}</span>@if(auth()->user()->siswa?->kelas) (Kelas {{ auth()->user()->siswa->kelas->nama_kelas }})@endif.
                 @elseif(auth()->user() && auth()->user()->isDosen())
-                    Alokasi jam mengajar tatap muka untuk Dosen <span class="font-semibold text-white">{{ $user->guru?->nama_guru ?? $user->name }}</span>.
+                    Alokasi jam mengajar tatap muka untuk Dosen <span class="font-semibold text-white">{{ auth()->user()->guru?->nama_guru ?? auth()->user()->name }}</span>.
                 @else
                     Kelola dan pantau alokasi jam tatap muka, kelas kuliah, dosen pengampu, dan pemakaian ruang perkuliahan.
                 @endif

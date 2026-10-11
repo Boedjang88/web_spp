@@ -21,12 +21,12 @@ class JadwalController extends Controller
 
         // Scope schedule by user role if student or lecturer
         if ($user && $user->isMahasiswa()) {
-            $siswa = $user->siswa ?? $user->mahasiswa ?? \App\Models\Siswa::first();
+            $siswa = $user->siswa ?? $user->mahasiswa ?? \App\Models\Siswa::where('nama', $user->name)->first();
             if ($siswa && $siswa->id_kelas) {
                 $query->where('id_kelas', $siswa->id_kelas);
             }
         } elseif ($user && $user->isDosen()) {
-            $guru = $user->guru ?? $user->dosen ?? \App\Models\Guru::first();
+            $guru = $user->guru ?? $user->dosen ?? \App\Models\Guru::where('nama_guru', $user->name)->first();
             if ($guru) {
                 $query->where('id_guru', $guru->id);
             }
