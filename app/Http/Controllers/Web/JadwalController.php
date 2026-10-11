@@ -73,10 +73,37 @@ class JadwalController extends Controller
             $jadwalMingguan[$day] = $allJadwals->where('hari', $day)->values();
         }
 
+        $hariIni = match (now()->dayOfWeekIso) {
+            1 => 'Senin',
+            2 => 'Selasa',
+            3 => 'Rabu',
+            4 => 'Kamis',
+            5 => 'Jumat',
+            6 => 'Sabtu',
+            default => 'Minggu',
+        };
+
+        $totalJadwal = $allJadwals->count();
+        $totalSks = $allJadwals->sum(fn($j) => $j->mapel?->sks ?? $j->mapel?->sks_total ?? 2);
+        $totalHariAktif = collect($jadwalMingguan)->filter(fn($items) => count($items) > 0)->count();
+        $totalRuangan = $allJadwals->pluck('ruangan')->filter()->unique()->count();
+
         $kelasList = Kelas::orderBy('nama_kelas')->get();
         $tahunAkademikAktif = \App\Models\TahunAkademik::where('is_active', true)->first() ?? \App\Models\TahunAkademik::latest()->first();
 
-        return view('jadwal.index', compact('jadwals', 'jadwalMingguan', 'kelasList', 'tahunAkademikAktif', 'user'));
+        return view('jadwal.index', compact(
+            'jadwals',
+            'allJadwals',
+            'jadwalMingguan',
+            'kelasList',
+            'tahunAkademikAktif',
+            'user',
+            'hariIni',
+            'totalJadwal',
+            'totalSks',
+            'totalHariAktif',
+            'totalRuangan'
+        ));
     }
 
     public function create(): View
