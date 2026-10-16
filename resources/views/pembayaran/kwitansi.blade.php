@@ -137,11 +137,11 @@
     <div class="receipt-box">
         <div class="header">
             <div>
-                <div class="school-name">SMK NEGERI / SWASTA CONTOH</div>
-                <div class="school-address">Jl. Pendidikan No. 123, Kota Bandung, Jawa Barat</div>
+                <div class="school-name">UNIVERSITAS TEKNOLOGI NUSANTARA</div>
+                <div class="school-address">Biro Administrasi Keuangan (BAK) &bull; Kampus Terpadu Indonesia</div>
             </div>
             <div class="doc-title">
-                <h2>BUKTI PEMBAYARAN SPP</h2>
+                <h2>BUKTI PEMBAYARAN SPP / UKT MAHASISWA</h2>
                 <span>No: KWT-{{ str_pad($pembayaran->id, 6, '0', STR_PAD_LEFT) }}</span>
             </div>
         </div>
@@ -153,19 +153,19 @@
                 <td class="value">{{ $pembayaran->siswa?->nama }}</td>
             </tr>
             <tr>
-                <td class="label">NISN / NIS</td>
+                <td class="label">NIM / NISN</td>
                 <td class="separator">:</td>
-                <td class="value">{{ $pembayaran->siswa?->nisn }} / {{ $pembayaran->siswa?->nis }}</td>
+                <td class="value">{{ $pembayaran->siswa?->nim ?? $pembayaran->siswa?->nis }} / {{ $pembayaran->siswa?->nisn }}</td>
             </tr>
             <tr>
-                <td class="label">Kelas / Jurusan</td>
+                <td class="label">Program Studi / Kelas</td>
                 <td class="separator">:</td>
                 <td class="value">{{ $pembayaran->siswa?->kelas?->nama_kelas }} ({{ $pembayaran->siswa?->kelas?->kompetensi_keahlian }})</td>
             </tr>
             <tr>
                 <td class="label">Untuk Pembayaran</td>
                 <td class="separator">:</td>
-                <td class="value">SPP Bulan {{ $pembayaran->bulan_dibayar }} Tahun {{ $pembayaran->tahun_dibayar }}</td>
+                <td class="value">UKT / SPP Bulan {{ $pembayaran->bulan_dibayar }} Tahun {{ $pembayaran->tahun_dibayar }}</td>
             </tr>
             <tr>
                 <td class="label">Tanggal Bayar</td>
@@ -182,15 +182,15 @@
 
         <div class="footer-signatures">
             <div class="signature-box">
-                <div>Siswa / Pembayar</div>
+                <div>Mahasiswa / Penyetor</div>
                 <div class="signature-space"></div>
                 <div class="signature-name">{{ $pembayaran->siswa?->nama }}</div>
             </div>
             <div class="signature-box">
-                <div>Bandung, {{ \Carbon\Carbon::parse($pembayaran->tgl_bayar)->translatedFormat('d F Y') }}</div>
-                <div>Petugas Loket Pembayaran</div>
+                <div>Kota Kampus, {{ \Carbon\Carbon::parse($pembayaran->tgl_bayar)->translatedFormat('d F Y') }}</div>
+                <div>Petugas Loket Kasir BAK Universitas</div>
                 <div class="signature-space"></div>
-                <div class="signature-name">{{ $pembayaran->petugas?->name ?? 'Petugas SPP' }}</div>
+                <div class="signature-name">{{ $pembayaran->petugas?->name ?? 'Petugas Keuangan' }}</div>
             </div>
         </div>
     </div>

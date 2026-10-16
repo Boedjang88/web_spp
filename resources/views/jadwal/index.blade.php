@@ -3,7 +3,13 @@
 @section('title', 'Jadwal Perkuliahan')
 
 @section('content')
-<div class="space-y-6" x-data="{ viewMode: 'grid', activeDayTab: 'all' }">
+@php
+    $currentView = request('view', 'grid');
+    if (!in_array($currentView, ['grid', 'table'])) {
+        $currentView = 'grid';
+    }
+@endphp
+<div class="space-y-6" x-data="{ viewMode: '{{ $currentView }}', activeDayTab: 'all' }">
 
     <!-- Top Header Banner (Enterprise Modern Style) -->
     <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-950 p-6 md:p-8 rounded-2xl border border-indigo-900/40 text-white flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 shadow-xl relative overflow-hidden print:bg-white print:text-black print:p-0 print:border-none print:shadow-none">
@@ -45,7 +51,7 @@
         <!-- Action Buttons (Print & Add) -->
         <div class="relative z-10 flex flex-wrap items-center gap-2.5 self-stretch sm:self-auto print:hidden">
             <button onclick="window.print()" class="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white border border-white/15 rounded-xl text-xs font-semibold backdrop-blur-sm transition flex items-center gap-2 shadow-sm">
-                <svg class="w-4 h-4 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                <svg class="w-4 h-4 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
                 <span>Cetak Jadwal</span>
             </button>
 
@@ -121,6 +127,8 @@
     <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 p-4 shadow-soft flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-4 print:hidden">
         <!-- Filter Form -->
         <form method="GET" action="{{ route('web.jadwal.index') }}" class="flex flex-wrap items-center gap-2.5 text-xs flex-1">
+            <input type="hidden" name="view" id="filter-view-input" value="{{ $currentView }}" :value="viewMode">
+
             @if(auth()->user() && auth()->user()->isAdmin())
                 <div class="w-full sm:w-48">
                     <select name="id_kelas" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -158,28 +166,32 @@
                     <span>Filter</span>
                 </button>
                 @if(request('id_kelas') || request('hari') || request('semester'))
-                    <a href="{{ route('web.jadwal.index') }}" class="px-3 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-200 rounded-xl font-semibold transition">
+                    <a href="{{ route('web.jadwal.index', ['view' => $currentView]) }}" class="px-3 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-200 rounded-xl font-semibold transition">
                         Reset
                     </a>
                 @endif
             </div>
         </form>
 
-        <!-- View Switcher Tabs (Pill Design) -->
-        <div class="flex items-center bg-slate-100 dark:bg-slate-900 p-1 rounded-xl self-start lg:self-auto shrink-0 border border-slate-200/60 dark:border-slate-800">
-            <button @click="viewMode = 'grid'" :class="viewMode === 'grid' ? 'bg-white dark:bg-indigo-600 text-indigo-700 dark:text-white shadow-sm font-bold' : 'text-slate-600 dark:text-slate-400 font-medium hover:text-slate-900 dark:hover:text-white'" class="px-3.5 py-1.5 rounded-lg text-xs transition flex items-center gap-1.5">
+        <!-- View Switcher Tabs (Pill Design - Mutually Exclusive) -->
+        <div class="flex items-center bg-slate-100 dark:bg-slate-900 p-1 rounded-xl self-start lg:self-auto shrink-0 border border-slate-200/60 dark:border-slate-800" role="tablist" aria-label="Pilihan Tampilan Jadwal">
+            <button type="button" id="tab-btn-grid" onclick="setJadwalView('grid')" @click="viewMode = 'grid'"
+                :class="viewMode === 'grid' ? 'bg-white dark:bg-indigo-600 text-indigo-700 dark:text-white shadow-sm font-bold' : 'text-slate-600 dark:text-slate-400 font-medium hover:text-slate-900 dark:hover:text-white'"
+                class="px-3.5 py-1.5 rounded-lg text-xs transition flex items-center gap-1.5 {{ $currentView === 'grid' ? 'bg-white dark:bg-indigo-600 text-indigo-700 dark:text-white shadow-sm font-bold' : 'text-slate-600 dark:text-slate-400 font-medium hover:text-slate-900 dark:hover:text-white' }}">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
                 <span>Grid Mingguan</span>
             </button>
-            <button @click="viewMode = 'table'" :class="viewMode === 'table' ? 'bg-white dark:bg-indigo-600 text-indigo-700 dark:text-white shadow-sm font-bold' : 'text-slate-600 dark:text-slate-400 font-medium hover:text-slate-900 dark:hover:text-white'" class="px-3.5 py-1.5 rounded-lg text-xs transition flex items-center gap-1.5">
+            <button type="button" id="tab-btn-table" onclick="setJadwalView('table')" @click="viewMode = 'table'"
+                :class="viewMode === 'table' ? 'bg-white dark:bg-indigo-600 text-indigo-700 dark:text-white shadow-sm font-bold' : 'text-slate-600 dark:text-slate-400 font-medium hover:text-slate-900 dark:hover:text-white'"
+                class="px-3.5 py-1.5 rounded-lg text-xs transition flex items-center gap-1.5 {{ $currentView === 'table' ? 'bg-white dark:bg-indigo-600 text-indigo-700 dark:text-white shadow-sm font-bold' : 'text-slate-600 dark:text-slate-400 font-medium hover:text-slate-900 dark:hover:text-white' }}">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
                 <span>Tabel List</span>
             </button>
         </div>
     </div>
 
-    <!-- VIEW MODE 1: WEEKLY TIMETABLE GRID -->
-    <div x-show="viewMode === 'grid'" class="space-y-4">
+    <!-- VIEW MODE 1: WEEKLY TIMETABLE GRID (ONLY SHOWN WHEN viewMode === 'grid') -->
+    <div id="jadwal-grid-container" x-show="viewMode === 'grid'" x-cloak class="space-y-4" style="{{ $currentView === 'grid' ? '' : 'display: none;' }}">
         <!-- Day Filter Tabs Bar (Useful on mobile & tablet) -->
         <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none print:hidden">
             <button @click="activeDayTab = 'all'" :class="activeDayTab === 'all' ? 'bg-indigo-600 text-white font-bold shadow-sm' : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-50'" class="px-3 py-1.5 rounded-xl text-xs whitespace-nowrap transition flex items-center gap-1.5">
@@ -266,7 +278,7 @@
                                         <span>&bull;</span>
                                         <span>{{ $item->mapel?->sks ?? $item->mapel?->sks_total ?? 2 }} SKS</span>
                                         @if($item->mapel?->semester || $item->mapel?->semester_rekomendasi)
-                                            <span>&bull;</span>
+                                             <span>&bull;</span>
                                             <span class="text-indigo-600 dark:text-indigo-400 font-semibold">Sem. {{ $item->mapel?->semester ?? $item->mapel?->semester_rekomendasi }}</span>
                                         @endif
                                     </div>
@@ -327,8 +339,8 @@
         </div>
     </div>
 
-    <!-- VIEW MODE 2: TABLE LIST -->
-    <div x-show="viewMode === 'table'" class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-soft overflow-hidden">
+    <!-- VIEW MODE 2: TABLE LIST (ONLY SHOWN WHEN viewMode === 'table') -->
+    <div id="jadwal-table-container" x-show="viewMode === 'table'" x-cloak class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-soft overflow-hidden" style="{{ $currentView === 'table' ? '' : 'display: none;' }}">
         <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
                 <thead>
@@ -381,13 +393,24 @@
                                 </span>
                             </td>
                             @if(auth()->user() && auth()->user()->isAdmin())
-                                <td class="py-3.5 px-4 text-right space-x-2 whitespace-nowrap print:hidden">
-                                    <a href="{{ route('web.jadwal.edit', $jadwal->id) }}" class="text-amber-600 dark:text-amber-400 hover:text-amber-700 font-semibold">Edit</a>
-                                    <form action="{{ route('web.jadwal.destroy', $jadwal->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus jadwal perkuliahan ini?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-rose-600 dark:text-rose-400 hover:text-rose-700 font-semibold">Hapus</button>
-                                    </form>
+                                <td class="py-3.5 px-4 text-right print:hidden">
+                                    <div class="flex items-center justify-end gap-1.5 flex-wrap">
+                                        <a href="{{ route('web.jadwal.edit', $jadwal->id) }}"
+                                            class="inline-flex items-center gap-1 text-[11px] font-medium text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 hover:bg-amber-100 dark:hover:bg-amber-900/60 border border-amber-200/70 dark:border-amber-800/70 px-2.5 py-1 rounded-lg transition" title="Edit Jadwal">
+                                            <svg class="w-3 h-3 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                            Edit
+                                        </a>
+                                        <form action="{{ route('web.jadwal.destroy', $jadwal->id) }}" method="POST" class="inline-block"
+                                            onsubmit="return confirm('Hapus jadwal perkuliahan {{ $jadwal->mapel?->nama_mapel }}?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="inline-flex items-center gap-1 text-[11px] font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/60 hover:text-rose-700 dark:hover:text-rose-300 border border-rose-200/70 dark:border-rose-800/70 px-2 py-1 rounded-lg transition" title="Hapus Jadwal">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             @endif
                         </tr>
@@ -410,6 +433,61 @@
     </div>
 
 </div>
+
+<!-- View Switcher Script -->
+<script>
+    function setJadwalView(mode) {
+        // 1. Update Alpine reactivity state if available
+        const root = document.querySelector('[x-data]');
+        if (window.Alpine && root && root._x_dataStack && root._x_dataStack[0]) {
+            root._x_dataStack[0].viewMode = mode;
+        }
+
+        // 2. Guaranteed zero-latency DOM display toggle
+        const gridEl = document.getElementById('jadwal-grid-container');
+        const tableEl = document.getElementById('jadwal-table-container');
+        if (gridEl && tableEl) {
+            if (mode === 'grid') {
+                gridEl.style.display = '';
+                tableEl.style.display = 'none';
+            } else {
+                gridEl.style.display = 'none';
+                tableEl.style.display = '';
+            }
+        }
+
+        // 3. Update tab buttons active classes
+        const btnGrid = document.getElementById('tab-btn-grid');
+        const btnTable = document.getElementById('tab-btn-table');
+        const activeClasses = ['bg-white', 'dark:bg-indigo-600', 'text-indigo-700', 'dark:text-white', 'shadow-sm', 'font-bold'];
+        const inactiveClasses = ['text-slate-600', 'dark:text-slate-400', 'font-medium'];
+
+        if (btnGrid && btnTable) {
+            if (mode === 'grid') {
+                btnGrid.classList.add(...activeClasses);
+                btnGrid.classList.remove(...inactiveClasses);
+                btnTable.classList.remove(...activeClasses);
+                btnTable.classList.add(...inactiveClasses);
+            } else {
+                btnTable.classList.add(...activeClasses);
+                btnTable.classList.remove(...inactiveClasses);
+                btnGrid.classList.remove(...activeClasses);
+                btnGrid.classList.add(...inactiveClasses);
+            }
+        }
+
+        // 4. Update hidden input in filter form
+        const viewInput = document.getElementById('filter-view-input');
+        if (viewInput) viewInput.value = mode;
+
+        // 5. Update browser URL query parameter without page reload
+        try {
+            const url = new URL(window.location);
+            url.searchParams.set('view', mode);
+            window.history.replaceState({}, '', url);
+        } catch(e) {}
+    }
+</script>
 
 <!-- Print Styles -->
 <style>

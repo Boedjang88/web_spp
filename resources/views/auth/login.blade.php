@@ -4,34 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Portal - SIAKAD Enterprise</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#eff6ff',
-                            100: '#dbeafe',
-                            500: '#3b82f6',
-                            600: '#2563eb',
-                            700: '#1d4ed8',
-                            800: '#1e40af',
-                            900: '#1e3a8a',
-                        },
-                        navy: {
-                            800: '#1c2541',
-                            900: '#0b132b',
-                            950: '#070d1e',
+    <!-- Assets: Vite Compiled Assets with Prototyping CDN Fallback -->
+    @if(file_exists(public_path('build/manifest.json')))
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @else
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                darkMode: 'class',
+                theme: {
+                    extend: {
+                        colors: {
+                            brand: {
+                                50: '#eff6ff',
+                                100: '#dbeafe',
+                                500: '#3b82f6',
+                                600: '#2563eb',
+                                700: '#1d4ed8',
+                                800: '#1e40af',
+                                900: '#1e3a8a',
+                            },
+                            navy: {
+                                800: '#1c2541',
+                                900: '#0b132b',
+                                950: '#070d1e',
+                            }
                         }
                     }
                 }
             }
-        }
-    </script>
+        </script>
+    @endif
+    <!-- Preconnect to Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0b132b; color: #f8fafc; }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
 
@@ -45,12 +53,12 @@
 <body class="bg-[#0b132b] min-h-screen flex items-center justify-center p-4 antialiased text-slate-100">
 
     <!-- Sleek Top Progress Bar -->
-    <div id="topProgressBar" class="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-indigo-500 to-cyan-400 z-[9999] opacity-0 pointer-events-none transition-all duration-300 transform -translate-x-full"></div>
+    <div id="topProgressBar" class="fixed top-0 left-0 right-0 h-1 bg-linear-to-r from-blue-600 via-indigo-500 to-cyan-400 z-9999 opacity-0 pointer-events-none transition-all duration-300 transform -translate-x-full"></div>
 
     <div class="max-w-md w-full animate-card-in my-6">
         <!-- Logo & Header -->
         <div class="text-center mb-6">
-            <div class="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-blue-600 to-blue-800 text-white rounded-2xl text-sm font-bold mb-3 shadow-lg shadow-blue-500/20 ring-4 ring-blue-500/10">
+            <div class="inline-flex items-center justify-center w-14 h-14 bg-linear-to-br from-blue-600 to-blue-800 text-white rounded-2xl text-sm font-bold mb-3 shadow-lg shadow-blue-500/20 ring-4 ring-blue-500/10">
                 SIAKAD
             </div>
             <h1 class="text-2xl font-extrabold tracking-tight text-white">SIAKAD ENTERPRISE</h1>
@@ -80,23 +88,33 @@
 
                 <!-- Email Field -->
                 <div>
-                    <label for="email" class="block text-xs font-semibold text-blue-100 mb-1.5 font-mono">NPM / NIDN / Email Kampus</label>
-                    <input type="email" id="email" name="email" value="{{ old('email', 'admin@siakad.ac.id') }}" required autofocus
-                        class="w-full px-4 py-2.5 bg-[#0b132b] border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition"
+                    <label for="email" class="block text-xs font-semibold text-blue-100 mb-1.5 font-mono">NPM / NIDN / Email Kampus <span class="text-rose-400">*</span></label>
+                    <input type="email" id="email" name="email" value="{{ old('email', 'admin@siakad.ac.id') }}" required aria-required="true" autofocus
+                        @error('email') aria-invalid="true" aria-describedby="email-error" @enderror
+                        @class([
+                            'w-full px-4 py-2.5 bg-[#0b132b] border rounded-xl text-xs text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition',
+                            'border-rose-500' => $errors->has('email'),
+                            'border-slate-700/80' => !$errors->has('email'),
+                        ])
                         placeholder="nama@siakad.ac.id">
                     @error('email')
-                        <p class="text-xs text-rose-400 mt-1 font-mono">{{ $message }}</p>
+                        <p id="email-error" class="text-xs text-rose-400 mt-1 font-mono" role="alert">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Password Field -->
                 <div>
-                    <label for="password" class="block text-xs font-semibold text-blue-100 mb-1.5 font-mono">Kata Sandi</label>
-                    <input type="password" id="password" name="password" value="password123" required
-                        class="w-full px-4 py-2.5 bg-[#0b132b] border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition"
+                    <label for="password" class="block text-xs font-semibold text-blue-100 mb-1.5 font-mono">Kata Sandi <span class="text-rose-400">*</span></label>
+                    <input type="password" id="password" name="password" value="password123" required aria-required="true"
+                        @error('password') aria-invalid="true" aria-describedby="password-error" @enderror
+                        @class([
+                            'w-full px-4 py-2.5 bg-[#0b132b] border rounded-xl text-xs text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition',
+                            'border-rose-500' => $errors->has('password'),
+                            'border-slate-700/80' => !$errors->has('password'),
+                        ])
                         placeholder="••••••••">
                     @error('password')
-                        <p class="text-xs text-rose-400 mt-1 font-mono">{{ $message }}</p>
+                        <p id="password-error" class="text-xs text-rose-400 mt-1 font-mono" role="alert">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -159,6 +177,62 @@
             document.getElementById('email').value = email;
             document.getElementById('password').value = 'password123';
         }
+
+        document.addEventListener('submit', function(e) {
+            if (e.defaultPrevented) return;
+            const form = e.target;
+
+            // Guard against invalid HTML5 form submissions
+            if (form.checkValidity && !form.checkValidity()) {
+                return;
+            }
+
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn && !submitBtn.disabled) {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+                submitBtn.setAttribute('aria-busy', 'true');
+                const origText = submitBtn.innerHTML;
+                submitBtn.dataset.originalHtml = origText;
+                submitBtn.innerHTML = `
+                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 inline-block text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" role="status" aria-label="Memproses Masuk">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                    </svg>
+                    <span>Memproses Masuk...</span>
+                `;
+
+                let isNavigating = false;
+                const onBeforeUnload = () => { isNavigating = true; };
+                window.addEventListener('beforeunload', onBeforeUnload, { once: true });
+
+                setTimeout(() => {
+                    window.removeEventListener('beforeunload', onBeforeUnload);
+                    if (!isNavigating && submitBtn && submitBtn.disabled && submitBtn.dataset.originalHtml) {
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+                        submitBtn.removeAttribute('aria-busy');
+                        submitBtn.innerHTML = submitBtn.dataset.originalHtml;
+                        delete submitBtn.dataset.originalHtml;
+                    }
+                }, 12000);
+            }
+        });
+
+        // Re-enable button if browser constraint validation flags invalid input
+        document.addEventListener('invalid', function(e) {
+            const form = e.target.form;
+            if (form) {
+                const submitBtn = form.querySelector('button[type="submit"]');
+                if (submitBtn && submitBtn.disabled && submitBtn.dataset.originalHtml) {
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+                    submitBtn.removeAttribute('aria-busy');
+                    submitBtn.innerHTML = submitBtn.dataset.originalHtml;
+                    delete submitBtn.dataset.originalHtml;
+                }
+            }
+        }, true);
     </script>
 </body>
 </html>

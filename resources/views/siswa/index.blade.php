@@ -77,16 +77,41 @@
                                 <span class="block text-[10px] text-slate-400">Thn {{ $item->spp?->tahun }}</span>
                             </td>
                             <td class="py-3 px-4 text-slate-600">{{ $item->no_telp }}</td>
-                            <td class="py-3 px-4 text-right space-x-1 whitespace-nowrap">
-                                <a href="{{ route('web.siswa.kartuUjian', $item->id) }}" target="_blank" class="text-indigo-600 hover:text-indigo-700 font-semibold bg-indigo-50 border border-indigo-200/60 px-2 py-1 rounded-lg text-[11px]">Kartu Ujian</a>
-                                <a href="{{ route('web.pembayaran.create', ['id_siswa' => $item->id]) }}" class="text-emerald-700 hover:text-emerald-800 font-bold bg-emerald-50 border border-emerald-200/60 px-2 py-1 rounded-lg text-[11px]">Bayar UKT</a>
-                                <a href="{{ route('web.siswa.show', $item->id) }}" class="text-slate-600 hover:text-slate-900 font-semibold text-[11px] px-1.5">Detail</a>
-                                <a href="{{ route('web.siswa.edit', $item->id) }}" class="text-amber-600 hover:text-amber-700 font-semibold text-[11px] px-1.5">Edit</a>
-                                <form action="{{ route('web.siswa.destroy', $item->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus mahasiswa ini?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-rose-600 hover:text-rose-700 font-semibold text-[11px] px-1.5">Hapus</button>
-                                </form>
+                            <td class="py-3 px-4 text-right">
+                                <div class="flex items-center justify-end gap-1.5 flex-wrap">
+                                    <a href="{{ route('web.siswa.kartuUjian', $item->id) }}" target="_blank"
+                                        class="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200/70 px-2 py-1 rounded-lg transition">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2"/></svg>
+                                        Kartu Ujian
+                                    </a>
+                                    <a href="{{ route('web.pembayaran.create', ['id_siswa' => $item->id]) }}"
+                                        class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/70 px-2 py-1 rounded-lg transition">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                                        Bayar UKT
+                                    </a>
+                                    {{-- Secondary action group --}}
+                                    <div class="flex items-center border border-slate-200 rounded-lg overflow-hidden">
+                                        <a href="{{ route('web.siswa.show', $item->id) }}"
+                                            class="inline-flex items-center px-2 py-1 text-[11px] font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition border-r border-slate-200">
+                                            Detail
+                                        </a>
+                                        <a href="{{ route('web.siswa.edit', $item->id) }}"
+                                            class="inline-flex items-center px-2 py-1 text-[11px] font-medium text-amber-600 hover:bg-amber-50 hover:text-amber-700 transition">
+                                            Edit
+                                        </a>
+                                    </div>
+                                    {{-- Destructive action (visually separated) --}}
+                                    <form action="{{ route('web.siswa.destroy', $item->id) }}" method="POST" class="inline-block"
+                                        onsubmit="return confirm('Hapus mahasiswa {{ $item->nama }}? Data yang terhapus tidak dapat dikembalikan.')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="inline-flex items-center gap-1 text-[11px] font-medium text-rose-600 hover:bg-rose-50 hover:text-rose-700 border border-rose-200/70 px-2 py-1 rounded-lg transition" title="Hapus Mahasiswa">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty

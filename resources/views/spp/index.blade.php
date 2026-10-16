@@ -58,18 +58,34 @@
                                     {{ $item->siswas_count }} Mahasiswa
                                 </span>
                             </td>
-                            <td class="py-3 px-4 text-right space-x-2">
-                                <a href="{{ route('web.spp.edit', $item->id) }}" class="text-amber-600 hover:text-amber-700 font-semibold">Edit</a>
-                                <form action="{{ route('web.spp.destroy', $item->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus tarif UKT ini?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-rose-600 hover:text-rose-700 font-semibold">Hapus</button>
-                                </form>
+                            <td class="py-3 px-4 text-right">
+                                <div class="flex items-center justify-end gap-1.5 flex-wrap">
+                                    <a href="{{ route('web.spp.edit', $item->id) }}"
+                                        class="inline-flex items-center gap-1 text-[11px] font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200/70 px-2.5 py-1 rounded-lg transition" title="Edit Tarif UKT">
+                                        <svg class="w-3 h-3 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                        Edit
+                                    </a>
+                                    <form action="{{ route('web.spp.destroy', $item->id) }}" method="POST" class="inline-block"
+                                        onsubmit="return confirm('Hapus tarif UKT Tahun {{ $item->tahun }}? Data mahasiswa dengan tarif ini akan terpengaruh.')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="inline-flex items-center gap-1 text-[11px] font-medium text-rose-600 hover:bg-rose-50 hover:text-rose-700 border border-rose-200/70 px-2 py-1 rounded-lg transition" title="Hapus Tarif UKT">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="py-8 text-center text-slate-400">Tidak ada data tarif UKT.</td>
+                            <td colspan="5" class="py-12 text-center text-slate-400">
+                                <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center mx-auto mb-2 text-slate-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                </div>
+                                <span class="font-medium text-xs">Tidak ada data tarif UKT yang tercatat.</span>
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>

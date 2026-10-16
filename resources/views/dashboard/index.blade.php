@@ -5,16 +5,47 @@
 @section('content')
 <div class="space-y-6">
 
-    <!-- Executive Header Banner -->
+    <!-- Accessible Breadcrumbs -->
+    <nav class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-medium" aria-label="Breadcrumb">
+        <a href="{{ route('dashboard') }}" class="text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            <span>Dashboard</span>
+        </a>
+        <span>/</span>
+        <span class="text-slate-700 dark:text-slate-300 font-semibold" aria-current="page">Ringkasan Eksekutif</span>
+    </nav>
+
+    @php
+        $hour = now()->hour;
+        $greeting = match(true) {
+            $hour < 11 => 'Selamat Pagi',
+            $hour < 15 => 'Selamat Siang',
+            $hour < 18 => 'Selamat Sore',
+            default => 'Selamat Malam',
+        };
+        $roleName = match(auth()->user()->role ?? '') {
+            'admin', 'superadmin' => 'Administrator Sistem',
+            'petugas' => 'Petugas Keuangan & TU',
+            'wali', 'parent' => 'Wali Mahasiswa',
+            'siswa', 'mahasiswa' => 'Mahasiswa Aktif',
+            'guru', 'dosen' => 'Dosen Pengajar',
+            default => ucfirst(auth()->user()->role ?? 'Pengguna')
+        };
+    @endphp
+
+    <!-- Executive Header Banner (F-Pattern Anchor) -->
     <div class="bg-gradient-to-r from-blue-950 via-slate-900 to-indigo-950 rounded-2xl p-6 text-white border border-blue-900/50 shadow-soft flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-            <div class="flex items-center gap-2 mb-2">
+            <div class="flex flex-wrap items-center gap-2 mb-2">
                 <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white/10 text-blue-200 border border-white/10 font-mono">
                     Sistem Akademik &amp; Keuangan Perguruan Tinggi
                 </span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-500/20 text-blue-300 border border-blue-400/30">
+                    {{ $roleName }}
+                </span>
                 <span class="text-xs text-blue-200/80 font-mono">T.A. 2025/2026</span>
             </div>
-            <h1 class="text-xl md:text-2xl font-bold tracking-tight text-white">Executive Dashboard &bull; {{ auth()->user()->name }}</h1>
+            <h1 class="text-xl md:text-2xl font-bold tracking-tight text-white">{{ $greeting }}, {{ auth()->user()->name }}!</h1>
             <p class="text-slate-300 text-xs mt-1 max-w-xl leading-relaxed">
                 Ringkasan real-time aktivitas akademik, presensi mahasiswa, jadwal perkuliahan, dan arus kas pembayaran UKT.
             </p>

@@ -4,7 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Surat Tagihan SPP - {{ $siswa->nama }} ({{ $siswa->nisn }})</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Assets: Vite Compiled Assets with Prototyping CDN Fallback -->
+    @if(file_exists(public_path('build/manifest.json')))
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @else
+        <script src="https://cdn.tailwindcss.com"></script>
+    @endif
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;500;600;700;800&display=swap');
         body {
@@ -55,12 +60,13 @@
                     <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
                 </div>
                 <div class="text-center flex-1">
-                    <h2 class="text-xs uppercase tracking-widest font-bold text-slate-500">Pemerintah Provinsi - Dinas Pendidikan</h2>
-                    <h1 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">SMK MERDEKA BELAJAR</h1>
-                    <p class="text-[11px] text-slate-600 mt-0.5 font-medium">Jl. Pendidikan No. 45, Kompleks Akademika, Telp. (021) 789-0123 | Email: tu@smkmerdeka.sch.id</p>
+                    <h2 class="text-xs uppercase tracking-widest font-bold text-slate-500">Kementerian Pendidikan Tinggi, Sains, dan Teknologi</h2>
+                    <h1 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">UNIVERSITAS TEKNOLOGI NUSANTARA</h1>
+                    <p class="text-[11px] text-blue-800 font-bold uppercase tracking-wider">FAKULTAS VOKASI &amp; TEKNIK (SMK MERDEKA BELAJAR)</p>
+                    <p class="text-[10px] text-slate-600 mt-0.5 font-medium">Jl. Kampus Terpadu No. 45, Kompleks Akademika, Telp. (021) 789-0123 | Email: bak@universitas.ac.id</p>
                 </div>
                 <div class="w-16 flex-shrink-0 text-right">
-                    <span class="text-[9px] font-mono uppercase bg-slate-100 text-slate-600 px-2 py-1 rounded border border-slate-200">FORM-SPP/{{ date('Y') }}</span>
+                    <span class="text-[9px] font-mono uppercase bg-slate-100 text-slate-600 px-2 py-1 rounded border border-slate-200">FORM-UKT/{{ date('Y') }}</span>
                 </div>
             </div>
         </div>
@@ -72,23 +78,23 @@
                     <tr>
                         <td class="pr-3 text-slate-500 font-medium">Nomor Surat</td>
                         <td class="pr-2">:</td>
-                        <td class="font-mono font-bold text-slate-800">421.5/SPP-{{ str_pad($siswa->id, 4, '0', STR_PAD_LEFT) }}/{{ date('Y') }}</td>
+                        <td class="font-mono font-bold text-slate-800">421.5/BAK-UKT-{{ str_pad($siswa->id, 4, '0', STR_PAD_LEFT) }}/{{ date('Y') }}</td>
                     </tr>
                     <tr>
                         <td class="pr-3 text-slate-500 font-medium">Lampiran</td>
                         <td class="pr-2">:</td>
-                        <td class="text-slate-800">1 (Satu) Berkas Rekapitulasi</td>
+                        <td class="text-slate-800">1 (Satu) Berkas Rekapitulasi Tagihan</td>
                     </tr>
                     <tr>
                         <td class="pr-3 text-slate-500 font-medium">Perihal</td>
                         <td class="pr-2">:</td>
-                        <td class="font-semibold text-slate-900">Pemberitahuan & Tagihan Iuran SPP</td>
+                        <td class="font-semibold text-slate-900">Pemberitahuan &amp; Tagihan Iuran SPP / UKT Perkuliahan</td>
                     </tr>
                 </table>
             </div>
             <div class="text-right text-xs">
-                <p class="text-slate-700">Jakarta, {{ now()->translatedFormat('d F Y') }}</p>
-                <p class="text-slate-500 mt-1">Kepada Yth. Orang Tua / Wali dari:</p>
+                <p class="text-slate-700">Kota Kampus, {{ now()->translatedFormat('d F Y') }}</p>
+                <p class="text-slate-500 mt-1">Kepada Yth. Orang Tua / Wali Mahasiswa dari:</p>
                 <p class="font-bold text-slate-900 text-sm">{{ $siswa->nama }}</p>
             </div>
         </div>
@@ -97,22 +103,22 @@
         <div class="space-y-4 text-xs text-slate-700">
             <p>Dengan hormat,</p>
             <p class="text-justify leading-relaxed">
-                Sehubungan dengan kewajiban administrasi pendidikan dan pemeliharaan fasilitas belajar mengajar di lingkungan SMK Merdeka Belajar, bersama surat ini kami sampaikan rincian status pembayaran Iuran Pembinaan Pendidikan (SPP) atas nama peserta didik berikut:
+                Sehubungan dengan kewajiban administrasi pendidikan dan pemeliharaan fasilitas perkuliahan di lingkungan Universitas Teknologi Nusantara (SMK MERDEKA BELAJAR Kampus), bersama surat ini kami sampaikan rincian status pembayaran Iuran Pembinaan Pendidikan (SPP) / Biaya UKT atas nama peserta didik / mahasiswa berikut:
             </p>
 
             <!-- Student Data Table -->
             <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 my-3 text-xs">
                 <div class="grid grid-cols-2 gap-y-2">
-                    <div><span class="text-slate-500">Nama Siswa:</span> <span class="font-bold text-slate-900">{{ $siswa->nama }}</span></div>
-                    <div><span class="text-slate-500">NISN / NIS:</span> <span class="font-mono font-semibold text-slate-900">{{ $siswa->nisn }} / {{ $siswa->nis }}</span></div>
-                    <div><span class="text-slate-500">Kelas / Jurusan:</span> <span class="font-semibold text-slate-900">{{ $siswa->kelas?->nama_kelas }} ({{ $siswa->kelas?->kompetensi_keahlian }})</span></div>
-                    <div><span class="text-slate-500">Tarif SPP:</span> <span class="font-semibold text-slate-900">Rp {{ number_format($siswa->spp?->nominal ?? 0, 0, ',', '.') }} / bulan</span></div>
+                    <div><span class="text-slate-500">Nama Siswa / Mahasiswa:</span> <span class="font-bold text-slate-900">{{ $siswa->nama }}</span></div>
+                    <div><span class="text-slate-500">NIM / NISN:</span> <span class="font-mono font-semibold text-slate-900">{{ $siswa->nim ?? $siswa->nis }} / {{ $siswa->nisn }}</span></div>
+                    <div><span class="text-slate-500">Program Studi / Kelas:</span> <span class="font-semibold text-slate-900">{{ $siswa->kelas?->nama_kelas }} ({{ $siswa->kelas?->kompetensi_keahlian }})</span></div>
+                    <div><span class="text-slate-500">Tarif UKT / SPP:</span> <span class="font-semibold text-slate-900">Rp {{ number_format($siswa->spp?->nominal ?? 0, 0, ',', '.') }} / periode</span></div>
                 </div>
             </div>
 
             <!-- Breakdown Table -->
             <div>
-                <h3 class="font-bold text-slate-900 mb-2">Rekapitulasi Tagihan dan Pembayaran Tahun Ajaran {{ $siswa->spp?->tahun }}:</h3>
+                <h3 class="font-bold text-slate-900 mb-2">Rekapitulasi Tagihan dan Pembayaran Tahun Akademik {{ $siswa->spp?->tahun }}:</h3>
                 <div class="overflow-x-auto border border-slate-200 rounded-xl">
                     <table class="w-full text-left text-xs">
                         <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
@@ -184,7 +190,7 @@
         <!-- Signature Section -->
         <div class="mt-8 pt-4 flex justify-between items-end text-xs text-slate-800">
             <div class="text-center w-48">
-                <p class="text-slate-500 mb-16">Mengetahui,<br>Orang Tua / Wali Murid</p>
+                <p class="text-slate-500 mb-16">Mengetahui,<br>Orang Tua / Wali Mahasiswa</p>
                 <div class="border-b border-slate-400 w-36 mx-auto"></div>
                 <p class="text-[10px] text-slate-400 mt-1">(Nama & Tanda Tangan)</p>
             </div>
@@ -192,10 +198,10 @@
             <div class="text-center w-56 relative">
                 <!-- Stempel Cap Digital Effect -->
                 <div class="absolute right-4 top-4 w-24 h-24 border-2 border-blue-600/40 rounded-full flex items-center justify-center -rotate-12 pointer-events-none opacity-60">
-                    <span class="text-[8px] uppercase tracking-tighter font-black text-blue-700 text-center">TATA USAHA<br>SMK MERDEKA<br>BELAJAR</span>
+                    <span class="text-[8px] uppercase tracking-tighter font-black text-blue-700 text-center">BIRO KEUANGAN<br>UNIVERSITAS<br>SMK MERDEKA BELAJAR</span>
                 </div>
 
-                <p class="text-slate-500 mb-16">Jakarta, {{ now()->translatedFormat('d F Y') }}<br>Kepala Tata Usaha,</p>
+                <p class="text-slate-500 mb-16">Kota Kampus, {{ now()->translatedFormat('d F Y') }}<br>Kepala Biro Administrasi Keuangan (BAK),</p>
                 <div class="border-b border-slate-800 w-44 mx-auto"></div>
                 <p class="font-bold text-slate-900 mt-1">Drs. H. Hendra Wijaya, M.Pd</p>
                 <p class="text-[10px] text-slate-500">NIP. 19780514 200312 1 002</p>

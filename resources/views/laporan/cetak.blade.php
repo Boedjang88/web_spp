@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Rekapitulasi Pembayaran SPP</title>
+    <title>Laporan Rekapitulasi Pembayaran UKT Perkuliahan</title>
     <style>
         @page {
             size: A4 portrait;
@@ -102,8 +102,8 @@
 
     <!-- Official Header -->
     <div class="header">
-        <div class="school-title">UNIVERSITAS SIAKAD ENTERPRISE</div>
-        <div class="meta-info">Jl. Kampus Utama No. 123, Indonesia | Telp: (021) 789-0123 | Website: www.siakad.ac.id</div>
+        <div class="school-title">UNIVERSITAS TEKNOLOGI NUSANTARA</div>
+        <div class="meta-info">Biro Administrasi Keuangan (BAK) &amp; Rekapitulasi Pembayaran UKT | Kampus Utama</div>
         <div class="report-subtitle">LAPORAN REKAPITULASI PEMBAYARAN UKT</div>
         <div class="meta-info">
             Periode: {{ $startDate ?? 'Awal' }} s/d {{ $endDate ?? 'Sekarang' }} 
@@ -160,7 +160,7 @@
     <div class="signatures">
         <div class="sig-col">
             <div>Mengetahui,</div>
-            <div>Kepala BAAK / Dekan</div>
+            <div>Kepala Biro Keuangan (BAK) / Dekan</div>
             <div class="sig-space"></div>
             <div class="sig-name">Dr. H. Hendra Wijaya, M.Kom.</div>
             <div style="font-size: 9px; color: #64748b;">NIDN. 197508152000031001</div>
@@ -168,10 +168,10 @@
 
         <div class="sig-col">
             <div>Kota Kampus, {{ now()->translatedFormat('d F Y') }}</div>
-            <div>Bendahara / Petugas UKT</div>
+            <div>Bendahara / Petugas Kasir BAK</div>
             <div class="sig-space"></div>
             <div class="sig-name">{{ auth()->user()->name ?? 'Administrator UKT' }}</div>
-            <div style="font-size: 9px; color: #64748b;">Petugas BAAK Terverifikasi</div>
+            <div style="font-size: 9px; color: #64748b;">Petugas BAAK / BAK Terverifikasi</div>
         </div>
     </div>
 

@@ -80,9 +80,19 @@
                                 </td>
                                 <td class="py-3 px-3 text-slate-700 dark:text-slate-300 border-r border-slate-100 dark:border-slate-800">{{ $surat->keperluan }}</td>
                                 <td class="py-3 px-3 text-center border-r border-slate-100 dark:border-slate-800">
-                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold font-mono uppercase bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 border border-emerald-200 dark:border-emerald-800">
-                                        {{ $surat->status }}
-                                    </span>
+                                    @if($surat->status === 'DISETUJUI')
+                                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold font-mono uppercase bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 border border-emerald-200 dark:border-emerald-800">
+                                            Disetujui
+                                        </span>
+                                    @elseif($surat->status === 'DITOLAK')
+                                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold font-mono uppercase bg-rose-50 dark:bg-rose-950/60 text-rose-600 border border-rose-200 dark:border-rose-800">
+                                            Ditolak
+                                        </span>
+                                    @else
+                                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold font-mono uppercase bg-amber-50 dark:bg-amber-950/60 text-amber-600 border border-amber-200 dark:border-amber-800">
+                                            Menunggu Review
+                                        </span>
+                                    @endif
                                 </td>
                                 <td class="py-3 px-3 text-center">
                                     <a href="#" onclick="alert('Digital Verification Token: {{ substr($surat->qr_verification_token, 0, 24) }}...')" class="px-2.5 py-1 bg-blue-600 text-white rounded text-[11px] font-bold transition">

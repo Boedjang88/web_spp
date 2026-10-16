@@ -84,7 +84,20 @@
                                     <div class="text-[11px] text-slate-500 italic">Arahan Dosen: {{ $log->catatan_dosen ?? '-' }}</div>
                                 </td>
                                 <td class="py-3 px-3 text-center">
-                                    <span class="px-2 py-0.5 rounded-full text-[9px] font-bold font-mono bg-emerald-50 text-emerald-600 border border-emerald-200">ACC PARAF</span>
+                                    @if($log->status_acc === 'Disetujui')
+                                        <span class="px-2 py-0.5 rounded-full text-[9px] font-bold font-mono bg-emerald-50 text-emerald-600 border border-emerald-200">ACC PARAF</span>
+                                    @elseif($log->status_acc === 'Perlu Revisi')
+                                        <span class="px-2 py-0.5 rounded-full text-[9px] font-bold font-mono bg-rose-50 text-rose-600 border border-rose-200">PERLU REVISI</span>
+                                    @else
+                                        <span class="px-2 py-0.5 rounded-full text-[9px] font-bold font-mono bg-amber-50 text-amber-600 border border-amber-200">MENUNGGU REVIEW</span>
+                                    @endif
+
+                                    @if(in_array(auth()->user()->role ?? '', ['superadmin', 'admin', 'guru', 'dosen']) && $log->status_acc !== 'Disetujui')
+                                        <form method="POST" action="{{ route('siakad.dbpta.bimbingan.approve', $log->id) }}" class="inline-block mt-1">
+                                            @csrf
+                                            <button type="submit" class="text-[9px] font-bold text-blue-600 hover:underline">Paraf Sekarang &rarr;</button>
+                                        </form>
+                                    @endif
                                 </td>
                             </tr>
                         @empty

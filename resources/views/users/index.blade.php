@@ -149,20 +149,36 @@
                             <td class="px-6 py-4 text-slate-500 dark:text-slate-400 font-mono text-[11px] border-r border-slate-100 dark:border-slate-800">
                                 {{ $u->created_at ? $u->created_at->format('d M Y') : '-' }}
                             </td>
-                            <td class="px-6 py-4 text-right space-x-2 whitespace-nowrap">
-                                <a href="{{ route('web.users.edit', $u->id) }}" class="text-amber-600 dark:text-amber-400 hover:underline font-bold text-xs">Edit</a>
-                                @if($u->id !== auth()->id())
-                                    <form action="{{ route('web.users.destroy', $u->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-rose-600 dark:text-rose-400 hover:underline font-bold text-xs">Hapus</button>
-                                    </form>
-                                @endif
+                            <td class="px-6 py-4 text-right">
+                                <div class="flex items-center justify-end gap-1.5 flex-wrap">
+                                    <a href="{{ route('web.users.edit', $u->id) }}"
+                                        class="inline-flex items-center gap-1 text-[11px] font-medium text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 hover:bg-amber-100 dark:hover:bg-amber-900/60 border border-amber-200/70 dark:border-amber-800/70 px-2.5 py-1 rounded-lg transition" title="Edit Pengguna">
+                                        <svg class="w-3 h-3 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                        Edit
+                                    </a>
+                                    @if($u->id !== auth()->id())
+                                        <form action="{{ route('web.users.destroy', $u->id) }}" method="POST" class="inline-block"
+                                            onsubmit="return confirm('Hapus akun {{ $u->name }}? Tindakan ini tidak dapat diurungkan.')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="inline-flex items-center gap-1 text-[11px] font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/60 hover:text-rose-700 dark:hover:text-rose-300 border border-rose-200/70 dark:border-rose-800/70 px-2 py-1 rounded-lg transition" title="Hapus Pengguna">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="py-10 text-center text-slate-400 font-mono">Tidak ada pengguna yang ditemukan.</td>
+                            <td colspan="6" class="py-12 text-center text-slate-400 font-mono">
+                                <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mx-auto mb-2 text-slate-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                                </div>
+                                <span class="text-xs">Tidak ada data akun pengguna yang ditemukan.</span>
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>
