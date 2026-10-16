@@ -53,6 +53,7 @@ class StudentEsuratTest extends TestCase
         $this->assertDatabaseHas('surat_akademiks', [
             'id_siswa' => $siswa->id,
             'jenis_surat' => 'Surat Keterangan Mahasiswa Aktif',
+            'status' => 'MENUNGGU_PERSETUJUAN',
         ]);
     }
 
@@ -98,6 +99,54 @@ class StudentEsuratTest extends TestCase
         $this->assertEquals(2, SuratAkademik::count());
         $this->assertDatabaseHas('surat_akademiks', [
             'nomor_surat' => 'SKMA/' . date('Y/m/') . '0002',
+            'status' => 'MENUNGGU_PERSETUJUAN',
         ]);
+    }
+
+    public function test_baak_admin_can_view_pending_esurat_and_approve_or_reject()
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $studentUser = User::factory()->create(['role' => 'siswa']);
+        $kelas = Kelas::create(['nama_kelas' => 'IF-2026-B', 'kompetensi_keahlian' => 'Informatika']);
+        $spp = Spp::create(['tahun' => 2026, 'nominal' => 5000000]);
+
+        $siswa = Siswa::create([
+            'nisn' => '1122334455',
+            'nis' => '11223',
+            'nama' => 'Mahasiswa Approval Test',
+            'id_kelas' => $kelas->id,
+            'id_spp' => $spp->id,
+            'alamat' => 'Jl. Kampus No. 1',
+            'no_telp' => '081234567890',
+            'status_kelulusan' => 'Aktif',
+        ]);
+        $studentUser->update(['id_siswa' => $siswa->id]);
+
+        $surat = SuratAkademik::create([
+            'id_siswa' => $siswa->id,
+            'jenis_surat' => 'Surat Keterangan Mahasiswa Aktif',
+            'nomor_surat' => 'SKMA/' . date('Y/m/') . '9999',
+            'perihal' => 'Surat Aktif Kuliah',
+            'keperluan' => 'Persyaratan Beasiswa',
+            'qr_verification_token' => 'token-test',
+            'file_pdf_path' => 'doc.pdf',
+            'status' => 'MENUNGGU_PERSETUJUAN',
+            'tgl_terbit' => now(),
+        ]);
+
+        // Admin views pending list
+        $viewResponse = $this->actingAs($admin)->get(route('siakad.baak.esurat.index'));
+        $viewResponse->assertStatus(200);
+        $viewResponse->assertSee($surat->nomor_surat);
+
+        // Admin approves
+        $approveResponse = $this->actingAs($admin)->post(route('siakad.baak.esurat.approve', $surat->id));
+        $approveResponse->assertRedirect();
+        $this->assertEquals('DISETUJUI', $surat->fresh()->status);
+
+        // Admin rejects
+        $rejectResponse = $this->actingAs($admin)->post(route('siakad.baak.esurat.reject', $surat->id));
+        $rejectResponse->assertRedirect();
+        $this->assertEquals('DITOLAK', $surat->fresh()->status);
     }
 }

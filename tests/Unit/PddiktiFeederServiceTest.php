@@ -3,7 +3,6 @@
 namespace Tests\Unit;
 
 use App\Models\Kelas;
-use App\Models\KelasKuliah;
 use App\Models\PddiktiSyncLog;
 use App\Models\Siswa;
 use App\Models\Spp;

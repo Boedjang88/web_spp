@@ -3,7 +3,6 @@
 namespace Tests\Feature\Web;
 
 use App\Models\ActivityLog;
-use App\Models\Kelas;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;

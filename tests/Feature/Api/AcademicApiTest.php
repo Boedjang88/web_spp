@@ -3,11 +3,8 @@
 namespace Tests\Feature\Api;
 
 use App\Models\Guru;
-use App\Models\JadwalPelajaran;
 use App\Models\Kelas;
 use App\Models\Mapel;
-use App\Models\Nilai;
-use App\Models\Presensi;
 use App\Models\Siswa;
 use App\Models\Spp;
 use App\Models\User;

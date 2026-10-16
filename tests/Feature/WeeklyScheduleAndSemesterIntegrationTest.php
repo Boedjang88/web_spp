@@ -140,4 +140,31 @@ class WeeklyScheduleAndSemesterIntegrationTest extends TestCase
         $response->assertSee('Algoritma Pemrograman');
         $response->assertDontSee('Struktur Data');
     }
+
+    public function test_schedule_view_defaults_to_grid_and_hides_table()
+    {
+        $user = User::factory()->create(['role' => 'admin']);
+
+        $response = $this->actingAs($user)->get('/web/jadwal');
+
+        $response->assertStatus(200);
+        // Table container is hidden by default
+        $response->assertSee('id="jadwal-table-container" x-show="viewMode === \'table\'" x-cloak class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-soft overflow-hidden" style="display: none;"', false);
+        // Grid container is active without display:none
+        $response->assertSee('id="jadwal-grid-container" x-show="viewMode === \'grid\'" x-cloak class="space-y-4" style=""', false);
+    }
+
+    public function test_schedule_view_can_switch_to_table_and_hides_grid()
+    {
+        $user = User::factory()->create(['role' => 'admin']);
+
+        $response = $this->actingAs($user)->get('/web/jadwal?view=table');
+
+        $response->assertStatus(200);
+        // Grid container is hidden when table view is requested
+        $response->assertSee('id="jadwal-grid-container" x-show="viewMode === \'grid\'" x-cloak class="space-y-4" style="display: none;"', false);
+        // Table container is active without display:none
+        $response->assertSee('id="jadwal-table-container" x-show="viewMode === \'table\'" x-cloak class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-soft overflow-hidden" style=""', false);
+    }
 }
+

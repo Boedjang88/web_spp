@@ -15,7 +15,6 @@ use App\Models\Mahasiswa;
 use App\Models\MataKuliah;
 use App\Models\ProgramStudi;
 use App\Models\Ruangan;
-use App\Models\Submission;
 use App\Models\TagihanUkt;
 use App\Models\TahunAkademik;
 use App\Models\Ukt;

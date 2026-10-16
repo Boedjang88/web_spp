@@ -3,13 +3,10 @@
 namespace Tests\Unit;
 
 use App\Models\Dosen;
-use App\Models\Fakultas;
 use App\Models\Kelas;
-use App\Models\ProgramStudi;
 use App\Models\Siswa;
 use App\Models\Spp;
 use App\Models\TahunAkademik;
-use App\Models\TugasAkhir;
 use App\Models\User;
 use App\Services\Academic\KknService;
 use App\Services\Analytics\StudentProfileAnalyticsService;

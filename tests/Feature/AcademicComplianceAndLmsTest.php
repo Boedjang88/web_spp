@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Assignment;
-use App\Models\CourseMaterial;
 use App\Models\Guru;
 use App\Models\Kelas;
 use App\Models\KelasKuliah;
@@ -12,11 +11,9 @@ use App\Models\KrsDetail;
 use App\Models\Kurikulum;
 use App\Models\MataKuliah;
 use App\Models\ProgramStudi;
-use App\Models\ReconciliationLog;
 use App\Models\Siswa;
 use App\Models\SkpiAktivitas;
 use App\Models\Spp;
-use App\Models\Submission;
 use App\Models\TahunAkademik;
 use App\Models\TransaksiH2h;
 use App\Models\User;

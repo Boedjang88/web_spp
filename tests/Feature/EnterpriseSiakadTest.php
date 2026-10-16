@@ -180,12 +180,16 @@ class EnterpriseSiakadTest extends TestCase
         $this->assertFalse((bool) ($clearance?->is_krs_unlocked ?? false));
 
         // 2. Bank Webhook Callback Payload
+        $trxId = 'TRX-BNI-' . time();
+        $signature = hash_hmac('sha256', $tagihan->nomor_va . '|' . $trxId . '|4500000', $this->bankMitra->secret_key);
+
         $response = $this->postJson('/api/h2h/webhook', [
             'nomor_va' => $tagihan->nomor_va,
-            'nomor_transaksi_bank' => 'TRX-BNI-' . time(),
+            'nomor_transaksi_bank' => $trxId,
             'jumlah_bayar' => 4500000,
             'kode_bank' => 'BNI',
             'channel_bayar' => 'Mobile Banking',
+            'signature' => $signature,
         ]);
 
         $response->assertStatus(200)
