@@ -28,6 +28,11 @@ class Guru extends Model
         'consent_pdp_at' => 'datetime',
     ];
 
+    public function getNidnAttribute(): ?string
+    {
+        return $this->nip;
+    }
+
     public function user(): HasOne
     {
         return $this->hasOne(User::class, 'id_guru');

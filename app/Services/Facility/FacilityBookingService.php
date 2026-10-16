@@ -4,7 +4,6 @@ namespace App\Services\Facility;
 
 use App\Models\Facility;
 use App\Models\FacilityBooking;
-use App\Models\JadwalKuliah;
 use App\Models\JadwalPelajaran;
 use Carbon\Carbon;
 use Exception;

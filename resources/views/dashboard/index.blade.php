@@ -5,26 +5,57 @@
 @section('content')
 <div class="space-y-6">
 
-    <!-- Executive Header Banner -->
-    <div class="bg-gradient-to-r from-blue-950 via-slate-900 to-indigo-950 rounded-2xl p-6 text-white border border-blue-900/50 shadow-soft flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <!-- Accessible Breadcrumbs -->
+    <nav class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-medium" aria-label="Breadcrumb">
+        <a href="{{ route('dashboard') }}" class="text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            <span>Dashboard</span>
+        </a>
+        <span>/</span>
+        <span class="text-slate-700 dark:text-slate-300 font-semibold" aria-current="page">Ringkasan Eksekutif</span>
+    </nav>
+
+    @php
+        $hour = now()->hour;
+        $greeting = match(true) {
+            $hour < 11 => 'Selamat Pagi',
+            $hour < 15 => 'Selamat Siang',
+            $hour < 18 => 'Selamat Sore',
+            default => 'Selamat Malam',
+        };
+        $roleName = match(auth()->user()->role ?? '') {
+            'admin', 'superadmin' => 'Administrator Sistem',
+            'petugas' => 'Petugas Keuangan & TU',
+            'wali', 'parent' => 'Wali Mahasiswa',
+            'siswa', 'mahasiswa' => 'Mahasiswa Aktif',
+            'guru', 'dosen' => 'Dosen Pengajar',
+            default => ucfirst(auth()->user()->role ?? 'Pengguna')
+        };
+    @endphp
+
+    <!-- Executive Header Banner (Google Academic Workspace Clean Surface) -->
+    <div class="bg-white dark:bg-[#1e1f20] rounded-2xl p-5 sm:p-6 border border-slate-200/90 dark:border-slate-800 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition-colors">
         <div>
-            <div class="flex items-center gap-2 mb-2">
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white/10 text-blue-200 border border-white/10 font-mono">
-                    Sistem Akademik &amp; Keuangan Perguruan Tinggi
+            <div class="flex flex-wrap items-center gap-2 mb-2 font-sans">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                    Sistem Akademik &amp; Keuangan Terpadu
                 </span>
-                <span class="text-xs text-blue-200/80 font-mono">T.A. 2025/2026</span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 border border-brand-200/80 dark:border-brand-800/60">
+                    {{ $roleName }}
+                </span>
+                <span class="text-xs text-slate-500 dark:text-slate-400 font-mono">T.A. 2025/2026</span>
             </div>
-            <h1 class="text-xl md:text-2xl font-bold tracking-tight text-white">Executive Dashboard &bull; {{ auth()->user()->name }}</h1>
-            <p class="text-slate-300 text-xs mt-1 max-w-xl leading-relaxed">
+            <h1 class="text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">{{ $greeting }}, {{ auth()->user()->name }}</h1>
+            <p class="text-slate-500 dark:text-slate-400 text-xs mt-1 max-w-xl leading-relaxed">
                 Ringkasan real-time aktivitas akademik, presensi mahasiswa, jadwal perkuliahan, dan arus kas pembayaran UKT.
             </p>
         </div>
-        <div class="flex flex-wrap items-center gap-2">
-            <a href="{{ route('web.pembayaran.create') }}" class="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition inline-flex items-center gap-1.5 shadow-sm">
+        <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+            <a href="{{ route('web.pembayaran.create') }}" class="flex-1 sm:flex-none justify-center bg-brand-600 hover:bg-brand-700 text-white font-semibold px-4 py-2 rounded-xl text-xs shadow-xs transition inline-flex items-center gap-1.5 min-h-[38px]">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 <span>Catat UKT</span>
             </a>
-            <a href="{{ route('web.nilai.create') }}" class="bg-white/10 hover:bg-white/20 text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition inline-flex items-center gap-1.5 border border-white/10 backdrop-blur">
+            <a href="{{ route('web.nilai.create') }}" class="flex-1 sm:flex-none justify-center bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold px-4 py-2 rounded-xl text-xs transition inline-flex items-center gap-1.5 border border-slate-200 dark:border-slate-700 min-h-[38px]">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                 <span>Input Nilai</span>
             </a>

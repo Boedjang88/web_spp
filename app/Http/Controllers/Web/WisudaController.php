@@ -15,7 +15,7 @@ class WisudaController extends Controller
     public function index(GraduationClearanceService $clearanceService): View
     {
         $user = auth()->user();
-        $siswa = $user?->siswa ?? $user?->mahasiswa ?? Siswa::first();
+        $siswa = $user?->siswa ?? $user?->mahasiswa;
 
         $clearanceReport = null;
         if ($siswa) {
@@ -35,15 +35,17 @@ class WisudaController extends Controller
     public function register(Request $request): RedirectResponse
     {
         $user = auth()->user();
-        $siswa = $user?->siswa ?? $user?->mahasiswa ?? Siswa::first();
+        $siswa = $user?->siswa ?? $user?->mahasiswa;
 
-        if ($siswa) {
-            $siswa->update([
-                'status_kelulusan' => 'Lulus Wisuda',
-                'tgl_kelulusan' => now(),
-                'nomor_ijazah' => 'PIN/' . date('Y') . '/' . sprintf('%06d', $siswa->id),
-            ]);
+        if (!$siswa) {
+            return back()->with('error', 'Profil mahasiswa Anda belum terhubung. Tidak dapat mendaftar wisuda.');
         }
+
+        $siswa->update([
+            'status_kelulusan' => 'Lulus Wisuda',
+            'tgl_kelulusan' => now(),
+            'nomor_ijazah' => 'PIN/' . date('Y') . '/' . sprintf('%06d', $siswa->id),
+        ]);
 
         ActivityLog::record('WISUDA_REGISTER', "Mahasiswa mendaftar wisuda & clearance PIN kelulusan.");
 

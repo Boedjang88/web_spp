@@ -4,7 +4,6 @@ namespace App\Traits;
 
 use App\Models\PiiAccessLog;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Str;
 
 trait EncryptsPiiData
 {

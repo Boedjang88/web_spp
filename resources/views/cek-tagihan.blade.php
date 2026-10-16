@@ -2,25 +2,33 @@
 <html lang="id" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
     <title>Portal Layanan Mahasiswa - SIAKAD Enterprise</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        zinc: {
-                            950: '#09090b',
+    <!-- Preconnect to Google Fonts for Fast Non-Blocking Delivery -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+    <!-- Assets: Vite Compiled Assets with Prototyping CDN Fallback -->
+    @if(file_exists(public_path('build/manifest.json')))
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @else
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                darkMode: 'class',
+                theme: {
+                    extend: {
+                        colors: {
+                            zinc: {
+                                950: '#09090b',
+                            }
                         }
                     }
                 }
             }
-        }
-    </script>
+        </script>
+    @endif
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #09090b; color: #fafafa; }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
 
@@ -92,7 +100,7 @@
 <body class="min-h-screen flex flex-col justify-between items-center p-3 sm:p-6 bg-zinc-950 text-zinc-100 antialiased">
 
     <!-- Top Sleek Page Loading Progress Bar -->
-    <div id="topProgressBar" class="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-zinc-500 via-indigo-500 to-emerald-400 z-[9999] opacity-0 pointer-events-none transition-all duration-300 transform -translate-x-full"></div>
+    <div id="topProgressBar" class="fixed top-0 left-0 right-0 h-1 bg-linear-to-r from-zinc-500 via-indigo-500 to-emerald-400 z-9999 opacity-0 pointer-events-none transition-all duration-300 transform -translate-x-full"></div>
 
     <!-- Top Navigation Bar -->
     <div class="w-full max-w-4xl flex justify-between items-center py-3 px-4 mb-4 text-white border-b border-zinc-800">
@@ -158,6 +166,10 @@
                 @php 
                     $info = $siswa->info_tunggakan;
                     $kehadiran = $siswa->rekap_kehadiran;
+                    $words = explode(' ', $siswa->nama);
+                    $maskedName = implode(' ', array_map(function($w) {
+                        return strlen($w) > 1 ? substr($w, 0, 1) . str_repeat('*', max(1, strlen($w) - 1)) : $w;
+                    }, $words));
                 @endphp
 
                 <div class="space-y-5">
@@ -169,7 +181,7 @@
                                 <span class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold uppercase tracking-wider bg-zinc-800 text-zinc-300 border border-zinc-700">Mahasiswa Aktif</span>
                                 <span class="text-xs text-zinc-400 font-mono">NIM: {{ $siswa->nis }}</span>
                             </div>
-                            <h2 class="text-lg font-bold text-white mt-1">{{ $siswa->nama }}</h2>
+                            <h2 class="text-lg font-bold text-white mt-1">{{ auth()->check() ? $siswa->nama : $maskedName }}</h2>
                             <div class="text-zinc-400 text-xs mt-1 flex flex-wrap items-center gap-2 font-mono">
                                 <span><strong>NISN:</strong> {{ $siswa->nisn }}</span>
                                 <span>&bull;</span>
@@ -180,11 +192,13 @@
                         </div>
                         
                         <div class="flex flex-wrap items-center gap-2">
-                            <a href="{{ route('web.nilai.rapor', $siswa->id) }}" target="_blank"
-                                class="px-3 py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 rounded-lg text-xs font-semibold transition inline-flex items-center gap-1 font-mono">
-                                Cetak E-KHS
-                            </a>
-                            <a href="{{ route('web.siswa.suratTagihan', $siswa->id) }}" target="_blank"
+                            @auth
+                                <a href="{{ route('web.nilai.khs', $siswa->id) }}" target="_blank"
+                                    class="px-3 py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 rounded-lg text-xs font-semibold transition inline-flex items-center gap-1 font-mono">
+                                    Cetak E-KHS
+                                </a>
+                            @endauth
+                            <a href="{{ route('web.mahasiswa.suratTagihan', $siswa->id) }}" target="_blank"
                                 class="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-lg text-xs font-semibold border border-zinc-700 transition inline-flex items-center gap-1 font-mono">
                                 Surat Billing UKT
                             </a>
@@ -310,7 +324,7 @@
                         <div class="bg-zinc-950 rounded-lg border border-zinc-800 overflow-hidden">
                             <div class="p-3 border-b border-zinc-800 flex justify-between items-center font-mono">
                                 <h3 class="font-bold text-xs uppercase tracking-wider text-zinc-300">Capaian Akademik &amp; KHS</h3>
-                                <a href="{{ route('web.nilai.rapor', $siswa->id) }}" target="_blank" class="text-xs text-zinc-300 hover:underline">
+                                <a href="{{ route('web.nilai.khs', $siswa->id) }}" target="_blank" class="text-xs text-zinc-300 hover:underline">
                                     Cetak Lembar E-KHS &rarr;
                                 </a>
                             </div>
@@ -410,7 +424,7 @@
     <div id="toastContainer" class="fixed top-4 right-4 z-50 flex flex-col gap-2.5 max-w-md w-auto sm:w-96 pointer-events-none"></div>
 
     <!-- Global Modal Alert Dialog -->
-    <div id="alertModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/80 backdrop-blur-sm p-4 transition-opacity duration-150 animate-modal-backdrop">
+    <div id="alertModal" class="hidden fixed inset-0 z-50 items-center justify-center bg-zinc-950/80 backdrop-blur-sm p-4 transition-opacity duration-150 animate-modal-backdrop">
         <div class="bg-zinc-900 border border-zinc-800 text-zinc-100 rounded-xl max-w-md w-full p-5 shadow-2xl space-y-4 animate-modal-enter">
             <div class="flex items-start justify-between gap-3">
                 <div class="flex items-center gap-2.5">
@@ -486,7 +500,7 @@
 
             const dialogBox = modal.querySelector('div');
             modal.classList.remove('hidden', 'animate-backdrop-leave');
-            modal.classList.add('animate-modal-backdrop');
+            modal.classList.add('flex', 'animate-modal-backdrop');
             if (dialogBox) {
                 dialogBox.classList.remove('animate-modal-leave');
                 dialogBox.classList.add('animate-modal-enter');
@@ -507,7 +521,7 @@
 
             setTimeout(() => {
                 modal.classList.add('hidden');
-                modal.classList.remove('animate-backdrop-leave');
+                modal.classList.remove('flex', 'animate-backdrop-leave');
                 if (dialogBox) dialogBox.classList.remove('animate-modal-leave');
             }, 150);
         }

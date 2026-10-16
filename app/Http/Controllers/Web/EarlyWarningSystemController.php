@@ -29,7 +29,19 @@ class EarlyWarningSystemController extends Controller
 
     public function runScan(EarlyWarningService $ewsService)
     {
-        $students = Siswa::take(50)->get();
+        $totalActive = Siswa::where('status_kelulusan', 'Aktif')->count();
+
+        if ($totalActive > 50) {
+            Siswa::where('status_kelulusan', 'Aktif')->chunkById(100, function ($students) {
+                foreach ($students as $siswa) {
+                    \App\Jobs\AnalyzeStudentDropoutRisk::dispatch($siswa->id);
+                }
+            });
+
+            return redirect()->back()->with('success', "Pemindaian Early Warning System (EWS) untuk {$totalActive} mahasiswa sedang diproses di latar belakang.");
+        }
+
+        $students = Siswa::where('status_kelulusan', 'Aktif')->get();
         $count = 0;
 
         foreach ($students as $siswa) {

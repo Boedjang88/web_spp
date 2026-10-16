@@ -4,7 +4,6 @@ namespace App\Services\Academic;
 
 use App\Models\KknRegistrasi;
 use App\Models\Siswa;
-use InvalidArgumentException;
 
 class KknService
 {

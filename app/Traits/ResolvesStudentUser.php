@@ -69,7 +69,7 @@ trait ResolvesStudentUser
             'id_ukt' => $ukt?->id,
             'alamat' => 'Jl. Boulevard Kampus No. 1',
             'nama_ibu_kandung' => 'Ibu Kandung',
-            'no_telp' => '081234567890',
+            'no_telp' => null,
             'status_kelulusan' => 'Aktif',
             'consent_pdp_at' => now(),
         ]);

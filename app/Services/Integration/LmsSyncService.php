@@ -4,7 +4,6 @@ namespace App\Services\Integration;
 
 use App\Models\KelasKuliah;
 use App\Models\LmsSyncQueue;
-use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 

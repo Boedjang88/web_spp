@@ -63,28 +63,44 @@ class PembayaranUkt extends Model
 
     public static function terbilang(int $angka): string
     {
-        $angka = abs($angka);
+        if ($angka === 0) {
+            return 'nol';
+        }
+
+        $prefix = '';
+        if ($angka < 0) {
+            $prefix = 'minus ';
+            $angka = abs($angka);
+        }
+
+        return trim(preg_replace('/\s+/', ' ', $prefix . self::rawTerbilang($angka)));
+    }
+
+    private static function rawTerbilang(int $angka): string
+    {
         $baca = ['', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'tujuh', 'delapan', 'sembilan', 'sepuluh', 'sebelas'];
         $terbilang = '';
 
         if ($angka < 12) {
             $terbilang = ' ' . $baca[$angka];
         } elseif ($angka < 20) {
-            $terbilang = self::terbilang($angka - 10) . ' belas';
+            $terbilang = self::rawTerbilang($angka - 10) . ' belas';
         } elseif ($angka < 100) {
-            $terbilang = self::terbilang((int) ($angka / 10)) . ' puluh' . self::terbilang($angka % 10);
+            $terbilang = self::rawTerbilang((int) ($angka / 10)) . ' puluh' . self::rawTerbilang($angka % 10);
         } elseif ($angka < 200) {
-            $terbilang = ' seratus' . self::terbilang($angka - 100);
+            $terbilang = ' seratus' . self::rawTerbilang($angka - 100);
         } elseif ($angka < 1000) {
-            $terbilang = self::terbilang((int) ($angka / 100)) . ' ratus' . self::terbilang($angka % 100);
+            $terbilang = self::rawTerbilang((int) ($angka / 100)) . ' ratus' . self::rawTerbilang($angka % 100);
         } elseif ($angka < 2000) {
-            $terbilang = ' seribu' . self::terbilang($angka - 1000);
+            $terbilang = ' seribu' . self::rawTerbilang($angka - 1000);
         } elseif ($angka < 1000000) {
-            $terbilang = self::terbilang((int) ($angka / 1000)) . ' ribu' . self::terbilang($angka % 1000);
+            $terbilang = self::rawTerbilang((int) ($angka / 1000)) . ' ribu' . self::rawTerbilang($angka % 1000);
         } elseif ($angka < 1000000000) {
-            $terbilang = self::terbilang((int) ($angka / 1000000)) . ' juta' . self::terbilang($angka % 1000000);
+            $terbilang = self::rawTerbilang((int) ($angka / 1000000)) . ' juta' . self::rawTerbilang($angka % 1000000);
+        } elseif ($angka < 1000000000000) {
+            $terbilang = self::rawTerbilang((int) ($angka / 1000000000)) . ' milyar' . self::rawTerbilang($angka % 1000000000);
         }
 
-        return trim($terbilang);
+        return $terbilang;
     }
 }

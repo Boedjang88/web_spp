@@ -55,6 +55,8 @@ class RoleMiddleware
             'guru' => ['dosen', 'guru', 'lecturer'],
             'mahasiswa' => ['mahasiswa', 'siswa', 'student'],
             'siswa' => ['mahasiswa', 'siswa', 'student'],
+            'wali' => ['wali', 'parent', 'orang_tua'],
+            'parent' => ['wali', 'parent', 'orang_tua'],
         ];
 
         // Check exact match or alias group match

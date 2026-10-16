@@ -10,7 +10,6 @@ use App\Services\Security\UploadSecurityGateway;
 use DomainException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class LmsService

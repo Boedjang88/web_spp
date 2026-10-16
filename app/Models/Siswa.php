@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Siswa extends Model
 {
@@ -39,6 +40,12 @@ class Siswa extends Model
         'total_skpi_points' => 'integer',
     ];
 
+    // Accessor NIM untuk kompatibilitas tampilan portal universitas
+    public function getNimAttribute(): ?string
+    {
+        return $this->nis ?? $this->nisn;
+    }
+
     // INI WAJIB ADA BIAR DROPDOWN MUNCUL
     public function kelas(): BelongsTo
     {
@@ -50,8 +57,19 @@ class Siswa extends Model
         return $this->belongsTo(Spp::class, 'id_spp');
     }
 
+    public function mahasiswa(): HasOne
+    {
+        return $this->hasOne(Mahasiswa::class, 'nim', 'nisn');
+    }
+
+    protected ?array $cachedInfoTunggakan = null;
+
     public function getInfoTunggakanAttribute()
     {
+        if ($this->cachedInfoTunggakan !== null) {
+            return $this->cachedInfoTunggakan;
+        }
+
         // 0. Cek Verifikasi Lunas Terpusat (TagihanUKT / FinancialClearance)
         $hasLunasUkt = TagihanUkt::where('id_mahasiswa', $this->id)
             ->where(function ($q) {
@@ -67,12 +85,14 @@ class Siswa extends Model
             })->exists();
 
         if ($hasLunasUkt || $hasClearance) {
-            return ['total_bulan' => 0, 'total_rupiah' => 0, 'list_bulan' => []];
+            return $this->cachedInfoTunggakan = ['total_bulan' => 0, 'total_rupiah' => 0, 'list_bulan' => []];
         }
 
         // 1. Ambil Data SPP Siswa
         $spp = $this->spp;
-        if (!$spp) return ['total_bulan' => 0, 'total_rupiah' => 0, 'list_bulan' => []];
+        if (!$spp) {
+            return $this->cachedInfoTunggakan = ['total_bulan' => 0, 'total_rupiah' => 0, 'list_bulan' => []];
+        }
 
         // 2. Tentukan Rentang Tahun Ajaran
         $tahunMulai = (int) $spp->tahun;
@@ -121,9 +141,9 @@ class Siswa extends Model
             }
         }
 
-        $totalNunggak = count($listNunggak) * $spp->nominal;
+        $totalNunggak = max(0, count($listNunggak) * (int) ($spp->nominal ?? 0));
 
-        return [
+        return $this->cachedInfoTunggakan = [
             'total_bulan' => count($listNunggak),
             'total_rupiah' => $totalNunggak,
             'list_bulan' => $listNunggak,

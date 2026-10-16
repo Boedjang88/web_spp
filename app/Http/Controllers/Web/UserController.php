@@ -55,8 +55,12 @@ class UserController extends Controller
 
     public function create(): View
     {
-        $gurus = Guru::orderBy('nama_guru')->get();
-        $siswas = Siswa::with('kelas')->orderBy('nama')->get();
+        $gurus = Guru::orderBy('nama_guru')->limit(100)->get();
+        $siswas = Siswa::with('kelas')
+            ->whereDoesntHave('user')
+            ->orderBy('nama')
+            ->limit(100)
+            ->get();
 
         return view('users.create', compact('gurus', 'siswas'));
     }
@@ -93,8 +97,24 @@ class UserController extends Controller
 
     public function edit(User $user): View
     {
-        $gurus = Guru::orderBy('nama_guru')->get();
-        $siswas = Siswa::with('kelas')->orderBy('nama')->get();
+        $gurus = Guru::orderBy('nama_guru')->limit(100)->get();
+        if ($user->id_guru && !$gurus->contains('id', $user->id_guru)) {
+            $currentGuru = Guru::find($user->id_guru);
+            if ($currentGuru) {
+                $gurus->prepend($currentGuru);
+            }
+        }
+
+        $siswas = Siswa::with('kelas')
+            ->where(function ($q) use ($user) {
+                $q->whereDoesntHave('user');
+                if ($user->id_siswa) {
+                    $q->orWhere('id', $user->id_siswa);
+                }
+            })
+            ->orderBy('nama')
+            ->limit(100)
+            ->get();
 
         return view('users.edit', compact('user', 'gurus', 'siswas'));
     }

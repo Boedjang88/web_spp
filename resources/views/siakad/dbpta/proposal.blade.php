@@ -24,6 +24,23 @@
         <div class="lg:col-span-6 bg-white dark:bg-[#1c2541] rounded-2xl border border-slate-200/80 dark:border-blue-900/50 p-6 shadow-sm space-y-4">
             <h2 class="font-bold text-slate-900 dark:text-white text-sm uppercase font-mono tracking-wider">Formulir Proposal Skripsi</h2>
 
+            <!-- Eligibility Indicator -->
+            <div class="p-3.5 rounded-xl border {{ ($isEligible ?? false) ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800' : 'bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800' }} text-xs">
+                <div class="flex items-center justify-between font-mono font-bold">
+                    <span class="text-slate-600 dark:text-slate-300">SYARAT MINIMAL:</span>
+                    <span class="text-slate-900 dark:text-white">{{ $minSks ?? 110 }} SKS Lulus</span>
+                </div>
+                <div class="flex items-center justify-between font-mono font-bold mt-1">
+                    <span class="text-slate-600 dark:text-slate-300">SKS LULUS ANDA:</span>
+                    <span class="{{ ($isEligible ?? false) ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }}">{{ $passedSks ?? 0 }} SKS</span>
+                </div>
+                @if(!($isEligible ?? false))
+                    <p class="text-[11px] text-amber-700 dark:text-amber-300 font-medium mt-2 leading-relaxed">
+                        &Delta; Anda belum memenuhi ambang batas 110 SKS untuk mengajukan proposal Tugas Akhir/Skripsi. Selesaikan SKS prasyarat terlebih dahulu.
+                    </p>
+                @endif
+            </div>
+
             <form method="POST" action="{{ route('siakad.dbpta.proposal.store') }}" class="space-y-4 text-xs">
                 @csrf
 

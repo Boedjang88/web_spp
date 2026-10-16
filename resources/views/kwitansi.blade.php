@@ -63,9 +63,9 @@
 
     <div class="container">
         <div class="header">
-            <h2>SMK MERDEKA BELAJAR</h2>
-            <h4>BUKTI PEMBAYARAN SPP</h4>
-            <small>Jl. Pendidikan No. 1, Bekasi | Telp: 021-12345678</small>
+            <h2>UNIVERSITAS TEKNOLOGI NUSANTARA</h2>
+            <h4>BUKTI PEMBAYARAN SPP / UKT</h4>
+            <small>Jl. Kampus Terpadu No. 1, Indonesia | Telp: 021-12345678</small>
         </div>
 
         <div class="content">
@@ -75,12 +75,12 @@
                 <div class="value">{{ \Carbon\Carbon::parse($pembayaran->tgl_bayar)->translatedFormat('d F Y') }}</div>
             </div>
             <div class="row">
-                <div class="label">Nama Siswa</div>
+                <div class="label">Nama Mahasiswa</div>
                 <div class="separator">:</div>
-                <div class="value">{{ $pembayaran->siswa->nama }}</div>
+                <div class="value">{{ $pembayaran->siswa->nama }} (NIM: {{ $pembayaran->siswa->nim ?? $pembayaran->siswa->nis }})</div>
             </div>
             <div class="row">
-                <div class="label">Kelas / Jurusan</div>
+                <div class="label">Program Studi / Kelas</div>
                 <div class="separator">:</div>
                 <div class="value">
                     {{ $pembayaran->siswa->kelas->nama_kelas ?? '-' }} - 
@@ -88,12 +88,12 @@
                 </div>
             </div>
             <div class="row">
-                <div class="label">Pembayaran Bulan</div>
+                <div class="label">Pembayaran Periode</div>
                 <div class="separator">:</div>
                 <div class="value">{{ $pembayaran->bulan_dibayar }} {{ $pembayaran->tahun_dibayar }}</div>
             </div>
             <div class="row">
-                <div class="label">Tahun Ajaran SPP</div>
+                <div class="label">Tahun Akademik UKT/SPP</div>
                 <div class="separator">:</div>
                 <div class="value">{{ $pembayaran->spp->tahun }}</div>
             </div>
@@ -108,12 +108,12 @@
 
         <div class="footer">
             <div class="signature">
-                <p>Siswa / Penyetor</p>
+                <p>Mahasiswa / Penyetor</p>
                 <div class="line"></div>
                 <p>{{ $pembayaran->siswa->nama }}</p>
             </div>
             <div class="signature">
-                <p>Petugas Penerima</p>
+                <p>Petugas Kasir BAK</p>
                 <div class="line"></div>
                 <p>{{ $pembayaran->petugas->name ?? 'Admin' }}</p>
             </div>

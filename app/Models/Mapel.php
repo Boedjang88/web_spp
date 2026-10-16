@@ -19,6 +19,16 @@ class Mapel extends Model
         'semester_rekomendasi',
     ];
 
+    public function getSksAttribute(): int
+    {
+        return $this->attributes['sks'] ?? 3;
+    }
+
+    public function getSksTotalAttribute(): int
+    {
+        return $this->attributes['sks_total'] ?? 3;
+    }
+
     public function jadwals(): HasMany
     {
         return $this->hasMany(JadwalPelajaran::class, 'id_mapel');

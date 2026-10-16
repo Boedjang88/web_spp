@@ -59,56 +59,160 @@ class DatabaseSeeder extends Seeder
         $guru1 = Guru::firstOrCreate(
             ['nip' => '198501152010011002'],
             [
+                'nik' => '3273011501850001',
                 'nama_guru' => 'Dr. Budi Santoso, M.Kom.',
                 'jenis_kelamin' => 'L',
                 'no_telp' => '081234567891',
                 'email' => 'budi.santoso@univ.ac.id',
                 'alamat' => 'Jl. Dago No. 15, Bandung',
+                'consent_pdp_at' => now(),
+                'consent_pdp_ip' => '127.0.0.1',
             ]
         );
 
         $guru2 = Guru::firstOrCreate(
             ['nip' => '198807222015022001'],
             [
+                'nik' => '3273012207880002',
                 'nama_guru' => 'Dr. Sri Wahyuni, M.Pd.',
                 'jenis_kelamin' => 'P',
                 'no_telp' => '081234567892',
                 'email' => 'sri.wahyuni@univ.ac.id',
                 'alamat' => 'Jl. Setiabudi No. 40, Bandung',
+                'consent_pdp_at' => now(),
+                'consent_pdp_ip' => '127.0.0.1',
             ]
         );
 
         $guru3 = Guru::firstOrCreate(
             ['nip' => '199012052018011003'],
             [
+                'nik' => '3273010512900003',
                 'nama_guru' => 'Dr. Hendra Pratama, S.Kom., M.T.',
                 'jenis_kelamin' => 'L',
                 'no_telp' => '081234567893',
                 'email' => 'hendra.pratama@univ.ac.id',
                 'alamat' => 'Jl. Riau No. 100, Bandung',
+                'consent_pdp_at' => now(),
+                'consent_pdp_ip' => '127.0.0.1',
             ]
         );
 
-        $mapelRPL = Mapel::firstOrCreate(['kode_mapel' => 'RPL-01'], ['nama_mapel' => 'Pemrograman Web & Perangkat Bergerak', 'kelompok' => 'Kejuruan', 'kkm' => 75]);
-        $mapelDB = Mapel::firstOrCreate(['kode_mapel' => 'RPL-02'], ['nama_mapel' => 'Basis Data & Arsitektur API', 'kelompok' => 'Kejuruan', 'kkm' => 75]);
-        $mapelMat = Mapel::firstOrCreate(['kode_mapel' => 'MAT-01'], ['nama_mapel' => 'Matematika Terapan', 'kelompok' => 'Umum', 'kkm' => 70]);
-
-        JadwalPelajaran::firstOrCreate(
-            ['id_kelas' => $rpl1->id, 'id_mapel' => $mapelRPL->id, 'hari' => 'Senin'],
-            ['id_guru' => $guru1->id, 'jam_mulai' => '07:30', 'jam_selesai' => '09:30', 'ruangan' => 'Lab RPL 1']
+        $guru4 = Guru::firstOrCreate(
+            ['nip' => '199203112019032004'],
+            [
+                'nik' => '3273011103920004',
+                'nama_guru' => 'Prof. Dr. Rina Supriyati, M.T.',
+                'jenis_kelamin' => 'P',
+                'no_telp' => '081234567894',
+                'email' => 'rina.supriyati@univ.ac.id',
+                'alamat' => 'Jl. Ir. H. Juanda No. 88, Bandung',
+                'consent_pdp_at' => now(),
+                'consent_pdp_ip' => '127.0.0.1',
+            ]
         );
+
+        $guru5 = Guru::firstOrCreate(
+            ['nip' => '198906152016011005'],
+            [
+                'nik' => '3273011506890005',
+                'nama_guru' => 'Dr. Ir. Agung Perkasa, M.Sc.',
+                'jenis_kelamin' => 'L',
+                'no_telp' => '081234567895',
+                'email' => 'agung.perkasa@univ.ac.id',
+                'alamat' => 'Jl. Dipatiukur No. 42, Bandung',
+                'consent_pdp_at' => now(),
+                'consent_pdp_ip' => '127.0.0.1',
+            ]
+        );
+
+        $guru6 = Guru::firstOrCreate(
+            ['nip' => '199104182017022006'],
+            [
+                'nik' => '3273011804910006',
+                'nama_guru' => 'Nabila Salsabila, M.T.',
+                'jenis_kelamin' => 'P',
+                'no_telp' => '081234567896',
+                'email' => 'nabila.salsabila@univ.ac.id',
+                'alamat' => 'Jl. Buah Batu No. 120, Bandung',
+                'consent_pdp_at' => now(),
+                'consent_pdp_ip' => '127.0.0.1',
+            ]
+        );
+
+        $allGurus = [$guru1, $guru2, $guru3, $guru4, $guru5, $guru6];
+
+        // 12 Mata Kuliah / Mapel dengan Semester dan KKM Lengkap
+        $mapelRPL = Mapel::firstOrCreate(['kode_mapel' => 'RPL-01'], ['nama_mapel' => 'Pemrograman Web & Perangkat Bergerak', 'kelompok' => 'Kejuruan', 'kkm' => 75, 'semester' => 3, 'semester_rekomendasi' => 3]);
+        $mapelDB = Mapel::firstOrCreate(['kode_mapel' => 'RPL-02'], ['nama_mapel' => 'Basis Data & Arsitektur API', 'kelompok' => 'Kejuruan', 'kkm' => 75, 'semester' => 3, 'semester_rekomendasi' => 3]);
+        $mapelMat = Mapel::firstOrCreate(['kode_mapel' => 'MAT-01'], ['nama_mapel' => 'Matematika Terapan & Statistika', 'kelompok' => 'Umum', 'kkm' => 70, 'semester' => 1, 'semester_rekomendasi' => 1]);
+        $mapelIF101 = Mapel::firstOrCreate(['kode_mapel' => 'IF-101'], ['nama_mapel' => 'Algoritma & Pemrograman Dasar', 'kelompok' => 'Kejuruan', 'kkm' => 75, 'semester' => 1, 'semester_rekomendasi' => 1]);
+        $mapelIF102 = Mapel::firstOrCreate(['kode_mapel' => 'IF-102'], ['nama_mapel' => 'Struktur Data & Analisis Algoritma', 'kelompok' => 'Kejuruan', 'kkm' => 75, 'semester' => 2, 'semester_rekomendasi' => 2]);
+        $mapelIF201 = Mapel::firstOrCreate(['kode_mapel' => 'IF-201'], ['nama_mapel' => 'Rekayasa Perangkat Lunak Enterprise', 'kelompok' => 'Kejuruan', 'kkm' => 75, 'semester' => 4, 'semester_rekomendasi' => 4]);
+        $mapelIF202 = Mapel::firstOrCreate(['kode_mapel' => 'IF-202'], ['nama_mapel' => 'Jaringan Komputer & Cyber Security', 'kelompok' => 'Kejuruan', 'kkm' => 75, 'semester' => 4, 'semester_rekomendasi' => 4]);
+        $mapelIF301 = Mapel::firstOrCreate(['kode_mapel' => 'IF-301'], ['nama_mapel' => 'Kecerdasan Buatan & Machine Learning', 'kelompok' => 'Kejuruan', 'kkm' => 75, 'semester' => 5, 'semester_rekomendasi' => 5]);
+        $mapelSI101 = Mapel::firstOrCreate(['kode_mapel' => 'SI-101'], ['nama_mapel' => 'Analisis & Perancangan Sistem Enterprise', 'kelompok' => 'Kejuruan', 'kkm' => 75, 'semester' => 3, 'semester_rekomendasi' => 3]);
+        $mapelBD101 = Mapel::firstOrCreate(['kode_mapel' => 'BD-101'], ['nama_mapel' => 'Manajemen Bisnis Digital & Startup', 'kelompok' => 'Kejuruan', 'kkm' => 75, 'semester' => 1, 'semester_rekomendasi' => 1]);
+        $mapelBD102 = Mapel::firstOrCreate(['kode_mapel' => 'BD-102'], ['nama_mapel' => 'Digital Marketing & Growth Hacking', 'kelompok' => 'Kejuruan', 'kkm' => 75, 'semester' => 3, 'semester_rekomendasi' => 3]);
+        $mapelENG01 = Mapel::firstOrCreate(['kode_mapel' => 'ENG-01'], ['nama_mapel' => 'Bahasa Inggris Komunikasi Profesional', 'kelompok' => 'Umum', 'kkm' => 75, 'semester' => 2, 'semester_rekomendasi' => 2]);
+
+        $allMapels = [$mapelRPL, $mapelDB, $mapelMat, $mapelIF101, $mapelIF102, $mapelIF201, $mapelIF202, $mapelIF301, $mapelSI101, $mapelBD101, $mapelBD102, $mapelENG01];
+
+        // Jadwal Perkuliahan Mingguan Lengkap (Senin s/d Sabtu) untuk Semua Kelas
+        $jadwalDefinitions = [
+            ['hari' => 'Senin', 'kelas' => $rpl1->id, 'mapel' => $mapelRPL->id, 'guru' => $guru1->id, 'mulai' => '07:30', 'selesai' => '09:30', 'ruang' => 'Lab Software Engineering 1'],
+            ['hari' => 'Senin', 'kelas' => $rpl1->id, 'mapel' => $mapelIF101->id, 'guru' => $guru2->id, 'mulai' => '10:00', 'selesai' => '12:00', 'ruang' => 'Ruang Teori FTI 301'],
+            ['hari' => 'Senin', 'kelas' => $rpl2->id, 'mapel' => $mapelDB->id, 'guru' => $guru3->id, 'mulai' => '13:00', 'selesai' => '15:00', 'ruang' => 'Lab Software Engineering 2'],
+            ['hari' => 'Senin', 'kelas' => $tkj1->id, 'mapel' => $mapelSI101->id, 'guru' => $guru4->id, 'mulai' => '08:00', 'selesai' => '10:00', 'ruang' => 'Ruang Teori FEB 101'],
+
+            ['hari' => 'Selasa', 'kelas' => $rpl1->id, 'mapel' => $mapelDB->id, 'guru' => $guru1->id, 'mulai' => '08:00', 'selesai' => '10:00', 'ruang' => 'Lab Software Engineering 1'],
+            ['hari' => 'Selasa', 'kelas' => $rpl1->id, 'mapel' => $mapelIF201->id, 'guru' => $guru3->id, 'mulai' => '10:15', 'selesai' => '12:15', 'ruang' => 'Ruang Teori FTI 302'],
+            ['hari' => 'Selasa', 'kelas' => $rpl2->id, 'mapel' => $mapelIF102->id, 'guru' => $guru2->id, 'mulai' => '13:00', 'selesai' => '15:00', 'ruang' => 'Lab Software Engineering 2'],
+            ['hari' => 'Selasa', 'kelas' => $dkv1->id, 'mapel' => $mapelBD101->id, 'guru' => $guru5->id, 'mulai' => '08:30', 'selesai' => '10:30', 'ruang' => 'Ruang Teori FEB 101'],
+
+            ['hari' => 'Rabu', 'kelas' => $rpl1->id, 'mapel' => $mapelMat->id, 'guru' => $guru4->id, 'mulai' => '08:00', 'selesai' => '10:00', 'ruang' => 'Ruang Teori FTI 301'],
+            ['hari' => 'Rabu', 'kelas' => $rpl1->id, 'mapel' => $mapelIF202->id, 'guru' => $guru5->id, 'mulai' => '10:30', 'selesai' => '12:30', 'ruang' => 'Lab Jaringan NOC'],
+            ['hari' => 'Rabu', 'kelas' => $tkj1->id, 'mapel' => $mapelIF202->id, 'guru' => $guru3->id, 'mulai' => '13:30', 'selesai' => '15:30', 'ruang' => 'Lab AI & Cyber Security'],
+            ['hari' => 'Rabu', 'kelas' => $dkv1->id, 'mapel' => $mapelBD102->id, 'guru' => $guru6->id, 'mulai' => '09:00', 'selesai' => '11:00', 'ruang' => 'Lab Multimedia'],
+
+            ['hari' => 'Kamis', 'kelas' => $rpl1->id, 'mapel' => $mapelIF301->id, 'guru' => $guru1->id, 'mulai' => '08:00', 'selesai' => '10:00', 'ruang' => 'Lab AI & Cyber Security'],
+            ['hari' => 'Kamis', 'kelas' => $rpl1->id, 'mapel' => $mapelENG01->id, 'guru' => $guru6->id, 'mulai' => '10:15', 'selesai' => '12:15', 'ruang' => 'Ruang Teori FTI 301'],
+            ['hari' => 'Kamis', 'kelas' => $rpl2->id, 'mapel' => $mapelRPL->id, 'guru' => $guru2->id, 'mulai' => '13:00', 'selesai' => '15:00', 'ruang' => 'Lab Software Engineering 1'],
+            ['hari' => 'Kamis', 'kelas' => $tkj1->id, 'mapel' => $mapelDB->id, 'guru' => $guru4->id, 'mulai' => '08:30', 'selesai' => '10:30', 'ruang' => 'Ruang Teori FTI 302'],
+
+            ['hari' => 'Jumat', 'kelas' => $rpl1->id, 'mapel' => $mapelSI101->id, 'guru' => $guru3->id, 'mulai' => '08:00', 'selesai' => '10:00', 'ruang' => 'Ruang Teori FTI 301'],
+            ['hari' => 'Jumat', 'kelas' => $rpl2->id, 'mapel' => $mapelMat->id, 'guru' => $guru4->id, 'mulai' => '13:30', 'selesai' => '15:30', 'ruang' => 'Ruang Teori FTI 302'],
+            ['hari' => 'Jumat', 'kelas' => $dkv1->id, 'mapel' => $mapelENG01->id, 'guru' => $guru6->id, 'mulai' => '08:30', 'selesai' => '10:30', 'ruang' => 'Ruang Teori FEB 101'],
+
+            ['hari' => 'Sabtu', 'kelas' => $rpl1->id, 'mapel' => $mapelIF102->id, 'guru' => $guru2->id, 'mulai' => '08:30', 'selesai' => '10:30', 'ruang' => 'Lab Software Engineering 1'],
+            ['hari' => 'Sabtu', 'kelas' => $rpl2->id, 'mapel' => $mapelIF301->id, 'guru' => $guru5->id, 'mulai' => '10:45', 'selesai' => '12:45', 'ruang' => 'Lab AI & Cyber Security'],
+            ['hari' => 'Sabtu', 'kelas' => $tkj1->id, 'mapel' => $mapelBD101->id, 'guru' => $guru6->id, 'mulai' => '09:00', 'selesai' => '11:00', 'ruang' => 'Ruang Teori FTI 301'],
+            ['hari' => 'Sabtu', 'kelas' => $dkv1->id, 'mapel' => $mapelRPL->id, 'guru' => $guru1->id, 'mulai' => '13:00', 'selesai' => '15:00', 'ruang' => 'Lab Multimedia'],
+        ];
+
+        foreach ($jadwalDefinitions as $jd) {
+            JadwalPelajaran::firstOrCreate(
+                ['id_kelas' => $jd['kelas'], 'id_mapel' => $jd['mapel'], 'hari' => $jd['hari']],
+                ['id_guru' => $jd['guru'], 'jam_mulai' => $jd['mulai'], 'jam_selesai' => $jd['selesai'], 'ruangan' => $jd['ruang']]
+            );
+        }
 
         $siswa1 = Siswa::firstOrCreate(
             ['nisn' => '0051234567'],
             [
                 'nis' => '2301010001',
+                'nik' => '3273011505040001',
                 'nama' => 'Muhammad Fauzan',
                 'id_kelas' => $rpl1->id,
                 'alamat' => 'Jl. Merdeka No. 45, Bandung',
+                'nama_ibu_kandung' => 'Siti Aminah',
                 'no_telp' => '081234567890',
+                'no_hp_wali' => '081234567800',
                 'id_spp' => $spp2025->id,
                 'status_kelulusan' => 'Aktif',
+                'total_skpi_points' => 65,
                 'consent_pdp_at' => now(),
+                'consent_pdp_ip' => '127.0.0.1',
             ]
         );
 
@@ -116,13 +220,18 @@ class DatabaseSeeder extends Seeder
             ['nisn' => '0057654321'],
             [
                 'nis' => '2301010002',
+                'nik' => '3273011505040002',
                 'nama' => 'Siti Nurhaliza',
                 'id_kelas' => $rpl1->id,
                 'alamat' => 'Jl. Pahlawan No. 12, Bandung',
+                'nama_ibu_kandung' => 'Nurhayati',
                 'no_telp' => '081298765432',
+                'no_hp_wali' => '081298765400',
                 'id_spp' => $spp2025->id,
                 'status_kelulusan' => 'Aktif',
+                'total_skpi_points' => 70,
                 'consent_pdp_at' => now(),
+                'consent_pdp_ip' => '127.0.0.1',
             ]
         );
 
@@ -273,7 +382,7 @@ class DatabaseSeeder extends Seeder
 
         $mahasiswaModels = [];
         $siswaModels = [];
-        foreach ($studentDataset as $s) {
+        foreach ($studentDataset as $idx => $s) {
             $m = Mahasiswa::firstOrCreate(
                 ['nim' => $s['nim']],
                 [
@@ -287,17 +396,18 @@ class DatabaseSeeder extends Seeder
                     'id_prodi' => $s['prodi'],
                     'id_dosen_pa' => $s['pa'],
                     'id_ukt' => $s['ukt'],
-                    'alamat' => 'Jl. Merdeka No. ' . rand(1, 100) . ', Bandung',
-                    'rt' => '0' . rand(1, 9),
-                    'rw' => '0' . rand(1, 9),
+                    'alamat' => 'Jl. Merdeka No. ' . ($idx * 5 + 10) . ', Bandung',
+                    'rt' => '0' . (($idx % 9) + 1),
+                    'rw' => '0' . (($idx % 9) + 1),
                     'kelurahan' => 'Babakan Ciamis',
                     'kecamatan' => 'Sumur Bandung',
                     'kota' => 'Kota Bandung',
                     'kode_pos' => '40117',
-                    'nama_ibu_kandung' => 'Siti Aminah',
+                    'nama_ibu_kandung' => 'Ibu ' . explode(' ', $s['nama'])[1] ?? 'Siti Aminah',
                     'no_telp' => $s['phone'],
                     'email_pribadi' => $s['email'],
                     'status_kelulusan' => 'Aktif',
+                    'total_skpi_points' => rand(45, 95),
                     'consent_pdp_at' => now(),
                     'consent_pdp_ip' => '127.0.0.1',
                 ]
@@ -308,13 +418,18 @@ class DatabaseSeeder extends Seeder
                 ['nisn' => $s['nisn']],
                 [
                     'nis' => $s['nim'],
+                    'nik' => $s['nik'],
                     'nama' => $s['nama'],
                     'id_kelas' => $allKelasIds[$idx % count($allKelasIds)],
-                    'alamat' => 'Jl. Merdeka No. ' . rand(1, 100) . ', Bandung',
+                    'alamat' => 'Jl. Merdeka No. ' . ($idx * 5 + 10) . ', Bandung',
+                    'nama_ibu_kandung' => 'Ibu ' . explode(' ', $s['nama'])[1] ?? 'Siti Aminah',
                     'no_telp' => $s['phone'],
+                    'no_hp_wali' => '0812' . sprintf('%08d', 80000000 + $idx * 1111),
                     'id_spp' => $spp2025->id,
                     'status_kelulusan' => 'Aktif',
+                    'total_skpi_points' => rand(45, 95),
                     'consent_pdp_at' => now(),
+                    'consent_pdp_ip' => '127.0.0.1',
                 ]
             );
 
@@ -396,11 +511,34 @@ class DatabaseSeeder extends Seeder
                 KrsDetail::firstOrCreate(['id_krs' => $krs->id, 'id_kelas_kuliah' => $kelas3->id], ['status_ambil' => 'Baru']);
                 KrsDetail::firstOrCreate(['id_krs' => $krs->id, 'id_kelas_kuliah' => $kelas4->id], ['status_ambil' => 'Baru']);
 
-                // Academic Grade Record
-                Nilai::firstOrCreate(
-                    ['id_siswa' => $sis->id, 'id_mapel' => $mapelRPL->id],
-                    ['id_guru' => $guru1->id, 'nilai_tugas' => rand(85, 95), 'nilai_uts' => rand(80, 90), 'nilai_uas' => rand(85, 95), 'nilai_akhir' => rand(85, 93), 'predikat' => 'A']
-                );
+                // Academic Grade Records for multiple courses
+                $sampleCourses = [$mapelRPL, $mapelDB, $mapelMat, $mapelIF101, $mapelIF102];
+                foreach ($sampleCourses as $cIdx => $cr) {
+                    $assignedG = $allGurus[$cIdx % count($allGurus)];
+                    $nTugas = rand(78, 96);
+                    $nUts = rand(75, 92);
+                    $nUas = rand(80, 98);
+                    $nAkhir = round(($nTugas * 0.3) + ($nUts * 0.3) + ($nUas * 0.4), 2);
+                    $pred = $nAkhir >= 85 ? 'A' : ($nAkhir >= 75 ? 'B' : 'C');
+                    $notes = [
+                        'A' => 'Sangat Baik - Pemahaman konsep dan implementasi proyek sangat memuaskan.',
+                        'B' => 'Baik - Menguasai teori dengan baik, pertahankan keaktifan dan tugas mandiri.',
+                        'C' => 'Cukup - Memenuhi standar kompetensi minimal, perlu peningkatan pada praktikum.',
+                    ];
+
+                    Nilai::firstOrCreate(
+                        ['id_siswa' => $sis->id, 'id_mapel' => $cr->id, 'semester' => 'Ganjil', 'tahun_ajaran' => '2025/2026'],
+                        [
+                            'id_guru' => $assignedG->id,
+                            'nilai_tugas' => $nTugas,
+                            'nilai_uts' => $nUts,
+                            'nilai_uas' => $nUas,
+                            'nilai_akhir' => $nAkhir,
+                            'predikat' => $pred,
+                            'catatan' => $notes[$pred] ?? 'Performa akademik baik.',
+                        ]
+                    );
+                }
             }
         }
 
@@ -501,36 +639,119 @@ class DatabaseSeeder extends Seeder
         User::updateOrCreate(['email' => 'dosen@univ.ac.id'], ['name' => 'Dr. Budi Santoso, M.Kom.', 'password' => Hash::make('password123'), 'role' => 'guru', 'id_guru' => $guru1->id, 'id_dosen' => $dosen1->id, 'is_active' => true]);
         User::updateOrCreate(['email' => 'mahasiswa@univ.ac.id'], ['name' => 'Muhammad Fauzan', 'password' => Hash::make('password123'), 'role' => 'siswa', 'id_siswa' => $siswa1->id, 'id_mahasiswa' => $mahasiswa1->id, 'is_active' => true]);
 
-        // Pembayaran Receipt Record
-        if ($tagihan1) {
-            PembayaranUkt::firstOrCreate(
-                ['nomor_kuitansi' => 'KW-20251-00089'],
+        // Buat akun pengguna untuk SELURUH Dosen / Guru
+        foreach ($allGurus as $gIdx => $g) {
+            User::updateOrCreate(
+                ['email' => $g->email],
                 [
-                    'id_user' => $adminUser->id,
-                    'id_tagihan_ukt' => $tagihan1->id,
-                    'id_mahasiswa' => $mahasiswa1->id,
-                    'id_ukt' => $uktIF_3->id,
-                    'nomor_transaksi_bank' => 'BNI-H2H-20250901-098231',
-                    'jumlah_bayar' => 5750000,
-                    'semester_dibayar' => 'Ganjil',
-                    'tahun_dibayar' => '2025',
-                    'kode_bank' => 'BNI',
-                    'channel_bayar' => 'Virtual Account BNI Direct',
-                    'status_transaksi' => 'SUCCESS',
-                    'tgl_bayar' => now(),
-                ]
-            );
-
-            Pembayaran::firstOrCreate(
-                ['id_siswa' => $siswa1->id, 'bulan_dibayar' => 'September'],
-                [
-                    'id_petugas' => $adminUser->id,
-                    'tgl_bayar' => now()->toDateString(),
-                    'tahun_dibayar' => '2025',
-                    'id_spp' => $spp2025->id,
-                    'jumlah_bayar' => 300000,
+                    'name' => $g->nama_guru,
+                    'password' => Hash::make('password123'),
+                    'role' => 'guru',
+                    'id_guru' => $g->id,
+                    'is_active' => true,
+                    'consent_pdp_at' => now(),
+                    'consent_pdp_ip' => '127.0.0.1',
                 ]
             );
         }
+
+        // Buat akun pengguna untuk SELURUH Mahasiswa / Siswa
+        foreach ($studentDataset as $sIdx => $sData) {
+            $sisLinked = $siswaModels[$sIdx] ?? $siswa1;
+            $mhsLinked = $mahasiswaModels[$sIdx] ?? $mahasiswa1;
+
+            User::updateOrCreate(
+                ['email' => $sData['email']],
+                [
+                    'name' => $sData['nama'],
+                    'password' => Hash::make('password123'),
+                    'role' => 'siswa',
+                    'id_siswa' => $sisLinked->id,
+                    'id_mahasiswa' => $mhsLinked->id,
+                    'is_active' => true,
+                    'consent_pdp_at' => now(),
+                    'consent_pdp_ip' => '127.0.0.1',
+                ]
+            );
+        }
+
+        // =========================================================================
+        // 9. HISTORI TRANSAKSI PEMBAYARAN UKT / SPP LENGKAP UNTUK SEMUA MAHASISWA
+        // =========================================================================
+        $monthsToSeed = [
+            ['bulan' => 'Juli', 'tahun' => '2025', 'tgl' => '2025-07-15'],
+            ['bulan' => 'Agustus', 'tahun' => '2025', 'tgl' => '2025-08-14'],
+            ['bulan' => 'September', 'tahun' => '2025', 'tgl' => '2025-09-10'],
+            ['bulan' => 'Oktober', 'tahun' => '2025', 'tgl' => '2025-10-12'],
+            ['bulan' => 'November', 'tahun' => '2025', 'tgl' => '2025-11-08'],
+            ['bulan' => 'Desember', 'tahun' => '2025', 'tgl' => '2025-12-05'],
+            ['bulan' => 'Januari', 'tahun' => '2026', 'tgl' => '2026-01-10'],
+        ];
+
+        foreach ($siswaModels as $sisIdx => $sisItem) {
+            $mhsItem = $mahasiswaModels[$sisIdx] ?? $mahasiswa1;
+            $tagihanItem = TagihanUkt::where('id_mahasiswa', $mhsItem->id)->first();
+
+            // Mahasiswa 1 s/d 12 bayar penuh semua bulan, 13 s/d 15 bayar beberapa bulan
+            $monthsCount = ($sisIdx < 12) ? count($monthsToSeed) : (($sisIdx < 14) ? 4 : 2);
+            $selectedMonths = array_slice($monthsToSeed, 0, $monthsCount);
+
+            foreach ($selectedMonths as $mInfo) {
+                Pembayaran::firstOrCreate(
+                    [
+                        'id_siswa' => $sisItem->id,
+                        'bulan_dibayar' => $mInfo['bulan'],
+                        'tahun_dibayar' => $mInfo['tahun'],
+                    ],
+                    [
+                        'id_petugas' => $adminUser->id,
+                        'tgl_bayar' => $mInfo['tgl'],
+                        'id_spp' => $spp2025->id,
+                        'jumlah_bayar' => 300000,
+                    ]
+                );
+            }
+
+            if ($tagihanItem && $tagihanItem->status_pembayaran === 'Lunas') {
+                PembayaranUkt::firstOrCreate(
+                    ['nomor_kuitansi' => 'KW-20251-' . str_pad($sisIdx + 1, 5, '0', STR_PAD_LEFT)],
+                    [
+                        'id_user' => $adminUser->id,
+                        'id_tagihan_ukt' => $tagihanItem->id,
+                        'id_mahasiswa' => $mhsItem->id,
+                        'id_ukt' => $mhsItem->id_ukt ?? $uktIF_3->id,
+                        'nomor_transaksi_bank' => 'BNI-H2H-202509-' . str_pad(1000 + $sisIdx, 6, '0', STR_PAD_LEFT),
+                        'jumlah_bayar' => 5750000,
+                        'semester_dibayar' => 'Ganjil',
+                        'tahun_dibayar' => '2025',
+                        'kode_bank' => 'BNI',
+                        'channel_bayar' => 'Virtual Account BNI Direct',
+                        'status_transaksi' => 'SUCCESS',
+                        'tgl_bayar' => now()->subDays(rand(5, 30)),
+                    ]
+                );
+            }
+
+            // Presensi Kehadiran Siswa
+            Presensi::firstOrCreate(
+                ['id_siswa' => $sisItem->id, 'tanggal' => now()->subDays(2)->toDateString()],
+                [
+                    'id_kelas' => $sisItem->id_kelas,
+                    'status' => 'Hadir',
+                    'keterangan' => 'Hadir tatap muka di ruang kuliah tepat waktu',
+                ]
+            );
+            Presensi::firstOrCreate(
+                ['id_siswa' => $sisItem->id, 'tanggal' => now()->subDays(1)->toDateString()],
+                [
+                    'id_kelas' => $sisItem->id_kelas,
+                    'status' => 'Hadir',
+                    'keterangan' => 'Hadir dan aktif dalam diskusi kelompok',
+                ]
+            );
+        }
+
+        // Jalankan pengisian dan perbaikan seluruh field kosong
+        $this->call(FixEmptyDummyDataSeeder::class);
     }
 }

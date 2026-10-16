@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Rapor Hasil Belajar - {{ $siswa->nama }} ({{ $siswa->nisn }})</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Kartu Hasil Studi (E-KHS) - {{ $siswa->nama }} ({{ $siswa->nim ?? $siswa->nisn }})</title>
+    <!-- Assets: Vite Compiled Assets with Prototyping CDN Fallback -->
+    @if(file_exists(public_path('build/manifest.json')))
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @else
+        <script src="https://cdn.tailwindcss.com"></script>
+    @endif
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;500;600;700;800&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #1e293b; }
@@ -24,7 +29,7 @@
         </a>
         <button onclick="window.print()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold shadow-sm transition inline-flex items-center gap-1.5">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-            Cetak / Simpan Rapor PDF
+            Cetak / Simpan KHS PDF
         </button>
     </div>
 
@@ -38,9 +43,9 @@
                     <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
                 </div>
                 <div class="text-center flex-1">
-                    <h2 class="text-xs uppercase tracking-widest font-bold text-slate-500">KEMENTERIAN PENDIDIKAN TINGGI, RISET, DAN TEKNOLOGI</h2>
+                    <h2 class="text-xs uppercase tracking-widest font-bold text-slate-500">KEMENTERIAN PENDIDIKAN TINGGI, SAINS, DAN TEKNOLOGI</h2>
                     <h1 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">UNIVERSITAS SIAKAD ENTERPRISE</h1>
-                    <p class="text-[11px] text-slate-600 mt-0.5 font-medium">Jl. Kampus Utama No. 123, Indonesia | Akreditasi: Unggul (A)</p>
+                    <p class="text-[11px] text-slate-600 mt-0.5 font-medium">Biro Administrasi Akademik &amp; Kemahasiswaan (BAAK) | Akreditasi Unggul</p>
                 </div>
                 <div class="w-16 flex-shrink-0 text-right">
                     <span class="text-[9px] font-mono uppercase bg-slate-100 text-slate-600 px-2 py-1 rounded border border-slate-200">KHS-SIAKAD</span>
@@ -57,23 +62,23 @@
         <!-- Student Meta Details -->
         <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 my-4">
             <div class="grid grid-cols-2 gap-y-2">
-                <div><span class="text-slate-500">Nama Peserta Didik:</span> <strong class="text-slate-900 font-bold">{{ $siswa->nama }}</strong></div>
-                <div><span class="text-slate-500">NISN / NIS:</span> <span class="font-mono font-bold text-slate-900">{{ $siswa->nisn }} / {{ $siswa->nis }}</span></div>
-                <div><span class="text-slate-500">Kelas / Kompetensi:</span> <strong class="text-slate-900 font-bold">{{ $siswa->kelas?->nama_kelas }} ({{ $siswa->kelas?->kompetensi_keahlian }})</strong></div>
+                <div><span class="text-slate-500">Nama Mahasiswa:</span> <strong class="text-slate-900 font-bold">{{ $siswa->nama }}</strong></div>
+                <div><span class="text-slate-500">NIM / NISN:</span> <span class="font-mono font-bold text-slate-900">{{ $siswa->nim ?? $siswa->nisn }} / {{ $siswa->nis }}</span></div>
+                <div><span class="text-slate-500">Program Studi / Kelas:</span> <strong class="text-slate-900 font-bold">{{ $siswa->kelas?->nama_kelas }} ({{ $siswa->kelas?->kompetensi_keahlian }})</strong></div>
                 <div><span class="text-slate-500">Semester / Tahun:</span> <span class="font-semibold text-slate-900">{{ $semester }} / {{ $tahunAjaran }}</span></div>
             </div>
         </div>
 
         <!-- Academic Grades Table -->
         <div class="my-5">
-            <h3 class="font-bold text-slate-900 mb-2">A. Nilai Capaian Akademik:</h3>
+            <h3 class="font-bold text-slate-900 mb-2">A. Nilai Capaian Akademik Perkuliahan:</h3>
             <div class="border border-slate-200 rounded-xl overflow-hidden">
                 <table class="w-full text-left text-xs">
                     <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
                         <tr>
                             <th class="py-2.5 px-3">No</th>
-                            <th class="py-2.5 px-3">Mata Pelajaran</th>
-                            <th class="py-2.5 px-3 text-center">KKM</th>
+                            <th class="py-2.5 px-3">Mata Kuliah</th>
+                            <th class="py-2.5 px-3 text-center">SKS / Standar</th>
                             <th class="py-2.5 px-3 text-center">Tugas</th>
                             <th class="py-2.5 px-3 text-center">UTS</th>
                             <th class="py-2.5 px-3 text-center">UAS</th>
@@ -88,7 +93,7 @@
                                 <td class="py-2 px-3 text-slate-400">{{ $idx + 1 }}</td>
                                 <td class="py-2 px-3">
                                     <div class="font-bold text-slate-900">{{ $n->mapel?->nama_mapel }}</div>
-                                    <div class="text-[10px] text-slate-500">Pengampu: {{ $n->guru?->nama_guru ?? '-' }}</div>
+                                    <div class="text-[10px] text-slate-500">Dosen Pengampu: {{ $n->guru?->nama_guru ?? '-' }}</div>
                                 </td>
                                 <td class="py-2 px-3 text-center font-mono">{{ $n->mapel?->kkm }}</td>
                                 <td class="py-2 px-3 text-center font-mono">{{ (float) $n->nilai_tugas }}</td>
@@ -98,15 +103,15 @@
                                 <td class="py-2 px-3 text-center font-bold">{{ $n->predikat }}</td>
                                 <td class="py-2 px-3">
                                     @if($n->nilai_akhir >= ($n->mapel?->kkm ?? 75))
-                                        <span class="text-emerald-700 font-bold text-[11px]">✓ Tuntas</span>
+                                        <span class="text-emerald-700 font-bold text-[11px]">✓ Lulus Mata Kuliah</span>
                                     @else
-                                        <span class="text-rose-700 font-bold text-[11px]"><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg> Remedi</span>
+                                        <span class="text-rose-700 font-bold text-[11px]"><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg> Perbaikan / Remedi</span>
                                     @endif
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="9" class="py-6 text-center text-slate-400">Belum ada nilai akademik yang diinput untuk semester ini.</td>
+                                <td colspan="9" class="py-6 text-center text-slate-400">Belum ada nilai perkuliahan yang diinput untuk semester ini.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -129,7 +134,7 @@
 
         <!-- Attendance Summary -->
         <div class="my-5">
-            <h3 class="font-bold text-slate-900 mb-2">B. Rekapitulasi Kehadiran &amp; Presensi:</h3>
+            <h3 class="font-bold text-slate-900 mb-2">B. Rekapitulasi Presensi Perkuliahan:</h3>
             <div class="grid grid-cols-4 gap-3">
                 <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-center">
                     <span class="text-[11px] font-semibold text-emerald-800 block">Hadir</span>
@@ -153,7 +158,7 @@
         <!-- Signature Section -->
         <div class="mt-10 pt-4 grid grid-cols-3 gap-4 text-center text-slate-800">
             <div>
-                <p class="text-slate-500 mb-16">Mengetahui,<br>Orang Tua / Wali</p>
+                <p class="text-slate-500 mb-16">Mengetahui,<br>Mahasiswa / Wali Mahasiswa</p>
                 <div class="border-b border-slate-400 w-32 mx-auto"></div>
                 <p class="text-[10px] text-slate-400 mt-1">(....................................)</p>
             </div>

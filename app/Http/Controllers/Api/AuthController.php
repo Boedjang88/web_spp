@@ -111,6 +111,9 @@ class AuthController extends BaseApiController
             'password' => Hash::make($request->password),
         ]);
 
+        // Revoke all existing tokens upon password change to secure against session hijacking
+        $user->tokens()->delete();
+
         \App\Models\ActivityLog::record('CHANGE_PASSWORD_API', "User {$user->name} mengubah password via API.", $user->id);
 
         return $this->sendResponse(null, 'Kata sandi berhasil diperbarui.');

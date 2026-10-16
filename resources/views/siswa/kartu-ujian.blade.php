@@ -4,7 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kartu Ujian - {{ $siswa->nama }} (NISN: {{ $siswa->nisn }})</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Assets: Vite Compiled Assets with Prototyping CDN Fallback -->
+    @if(file_exists(public_path('build/manifest.json')))
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @else
+        <script src="https://cdn.tailwindcss.com"></script>
+    @endif
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -23,7 +28,7 @@
         <a href="{{ url()->previous() ?: route('dashboard') }}" class="text-xs font-semibold text-slate-600 hover:text-slate-900 inline-flex items-center gap-1.5">
             &larr; Kembali
         </a>
-        @if($isLunas)
+        @if($canPrint ?? $isLunas)
             <button onclick="window.print()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-md transition inline-flex items-center gap-1.5">
                 <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg></span> Cetak Kartu Ujian (PDF)
             </button>
@@ -59,7 +64,40 @@
 
             <div class="pt-2 flex justify-center gap-3">
                 <a href="{{ route('web.pembayaran.create') }}" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold shadow-md transition">
-                    <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg> Bayar Tagihan SPP Sekarang
+                    <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg> Bayar Tagihan UKT / SPP Sekarang
+                </a>
+            </div>
+        </div>
+    @elseif(isset($isAttendanceEligible) && !$isAttendanceEligible)
+        <!-- Attendance Clearance Locked Notice -->
+        <div class="max-w-2xl w-full bg-white rounded-3xl p-8 border border-amber-200 shadow-sm text-center space-y-4">
+            <div class="w-16 h-16 rounded-3xl bg-amber-100 text-amber-600 flex items-center justify-center text-3xl mx-auto border border-amber-200">
+                <svg class="w-6 h-6 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </div>
+            <div>
+                <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-700 border border-amber-200">
+                    Syarat Presensi Belum Terpenuhi
+                </span>
+                <h1 class="text-xl font-black text-slate-900 mt-2">Kartu Ujian Belum Memenuhi Syarat Kehadiran</h1>
+                <p class="text-xs text-slate-500 max-w-md mx-auto mt-1 leading-relaxed">
+                    Sesuai Standar Nasional Pendidikan Tinggi (SN-Dikti), mahasiswa wajib memenuhi kehadiran perkuliahan minimal <strong class="text-slate-800">{{ $minAttendance ?? 75 }}%</strong> untuk dapat mengikuti Ujian Akhir Semester.
+                </p>
+            </div>
+
+            <!-- Detail Kehadiran -->
+            <div class="bg-amber-50/60 p-4 rounded-2xl border border-amber-200/80 max-w-md mx-auto text-left text-xs space-y-2">
+                <div class="flex justify-between items-center text-amber-900 font-bold border-b border-amber-200/60 pb-2">
+                    <span>Tingkat Kehadiran Kumulatif:</span>
+                    <span>{{ $attendanceRate ?? 0 }}% / Target {{ $minAttendance ?? 75 }}%</span>
+                </div>
+                <div class="text-[11px] text-amber-800 leading-relaxed">
+                    Status presensi belum mencukupi kuota minimal. Silakan hubungi Dosen Pembimbing Akademik atau BAAK untuk konsultasi dispensasi/remedial perkuliahan.
+                </div>
+            </div>
+
+            <div class="pt-2 flex justify-center gap-3">
+                <a href="{{ route('web.presensi.index') ?? url('/siakad/presensi') }}" class="px-5 py-2.5 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-xs font-bold shadow-md transition">
+                    Lihat Riwayat Presensi
                 </a>
             </div>
         </div>
@@ -69,7 +107,7 @@
             
             <!-- Watermark -->
             <div class="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none text-9xl font-black select-none">
-                SMK
+                UNIVERSITAS
             </div>
 
             <!-- Kop Kartu Ujian -->
@@ -79,9 +117,9 @@
                         <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
                     </div>
                     <div>
-                        <h2 class="text-xs font-bold text-slate-500 uppercase tracking-widest">Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi</h2>
-                        <h1 class="text-base font-black text-slate-900">SMK MERDEKA BELAJAR</h1>
-                        <p class="text-[10px] text-slate-500">Jl. Pendidikan No. 45, Bandung &bull; Telp: (022) 7654321</p>
+                        <h2 class="text-xs font-bold text-slate-500 uppercase tracking-widest">Kementerian Pendidikan Tinggi, Sains, dan Teknologi</h2>
+                        <h1 class="text-base font-black text-slate-900">UNIVERSITAS TEKNOLOGI NUSANTARA</h1>
+                        <p class="text-[10px] text-slate-500">Jl. Kampus Terpadu No. 45, Bandung &bull; Telp: (022) 7654321</p>
                     </div>
                 </div>
                 <div class="text-right">
@@ -94,7 +132,7 @@
 
             <!-- Title -->
             <div class="text-center py-1 bg-slate-50 border border-slate-200 rounded-xl">
-                <h3 class="text-xs font-black uppercase tracking-wider text-slate-900">KARTU PESERTA UJIAN AKHIR SEMESTER (UAS)</h3>
+                <h3 class="text-xs font-black uppercase tracking-wider text-slate-900">KARTU PESERTA UJIAN AKHIR SEMESTER (UAS) MAHASISWA</h3>
             </div>
 
             <!-- Biodata & Photo Grid -->
@@ -111,26 +149,26 @@
                 <div class="col-span-8 sm:col-span-9 text-xs space-y-1.5">
                     <div class="grid grid-cols-12">
                         <span class="col-span-4 text-slate-400 font-semibold">Nomor Ujian</span>
-                        <span class="col-span-8 font-bold font-mono text-slate-900">: UAS-{{ $siswa->nisn }}-2025</span>
+                        <span class="col-span-8 font-bold font-mono text-slate-900">: UAS-{{ $siswa->nim ?? $siswa->nisn }}-2025</span>
                     </div>
                     <div class="grid grid-cols-12">
-                        <span class="col-span-4 text-slate-400 font-semibold">Nama Lengkap</span>
+                        <span class="col-span-4 text-slate-400 font-semibold">Nama Mahasiswa</span>
                         <span class="col-span-8 font-black text-slate-900 text-sm">: {{ $siswa->nama }}</span>
                     </div>
                     <div class="grid grid-cols-12">
-                        <span class="col-span-4 text-slate-400 font-semibold">NISN / NIS</span>
-                        <span class="col-span-8 font-mono text-slate-700">: {{ $siswa->nisn }} / {{ $siswa->nis }}</span>
+                        <span class="col-span-4 text-slate-400 font-semibold">NIM / NISN</span>
+                        <span class="col-span-8 font-mono text-slate-700">: {{ $siswa->nim ?? $siswa->nis }} / {{ $siswa->nisn }}</span>
                     </div>
                     <div class="grid grid-cols-12">
-                        <span class="col-span-4 text-slate-400 font-semibold">Kelas</span>
+                        <span class="col-span-4 text-slate-400 font-semibold">Kelas Kuliah</span>
                         <span class="col-span-8 font-bold text-slate-900">: {{ $siswa->kelas->nama_kelas ?? '-' }}</span>
                     </div>
                     <div class="grid grid-cols-12">
-                        <span class="col-span-4 text-slate-400 font-semibold">Kompetensi</span>
+                        <span class="col-span-4 text-slate-400 font-semibold">Program Studi</span>
                         <span class="col-span-8 text-slate-700">: {{ $siswa->kelas->kompetensi_keahlian ?? '-' }}</span>
                     </div>
                     <div class="grid grid-cols-12">
-                        <span class="col-span-4 text-slate-400 font-semibold">Status SPP</span>
+                        <span class="col-span-4 text-slate-400 font-semibold">Status Administrasi</span>
                         <span class="col-span-8 font-bold text-emerald-700">: Lunas Administrasi (Bebas Tanggungan)</span>
                     </div>
                 </div>

@@ -4,6 +4,7 @@ namespace App\Services\Messaging;
 
 use App\Jobs\SendWhatsAppNotificationJob;
 use App\Models\Siswa;
+use Illuminate\Support\Facades\Log;
 
 class WhatsAppNotificationService
 {
@@ -12,7 +13,12 @@ class WhatsAppNotificationService
      */
     public function sendUktPaymentReminder(Siswa $siswa, int $nominalUkt, string $dueDate): void
     {
-        $phone = $siswa->no_telp ?? '081234567890';
+        $phone = $siswa->no_telp ?: ($siswa->no_hp_wali ?: null);
+        if (empty($phone)) {
+            Log::info("WhatsApp UKT reminder skipped: Siswa/Mahasiswa {$siswa->id} has no valid phone number.");
+            return;
+        }
+
         $formattedNominal = 'Rp ' . number_format($nominalUkt, 0, ',', '.');
         $message = "Yth. Mahasiswa {$siswa->nama} (NIM: {$siswa->nisn}),\n\n"
                  . "Tagihan UKT Semester ini sebesar {$formattedNominal} akan jatuh tempo pada {$dueDate}.\n"
@@ -38,7 +44,12 @@ class WhatsAppNotificationService
      */
     public function sendEwsRiskAlert(Siswa $siswa, string $riskType, string $description): void
     {
-        $phone = $siswa->no_telp ?? '081234567890';
+        $phone = $siswa->no_telp ?: ($siswa->no_hp_wali ?: null);
+        if (empty($phone)) {
+            Log::info("WhatsApp EWS risk alert skipped: Siswa/Mahasiswa {$siswa->id} has no valid phone number.");
+            return;
+        }
+
         $message = "PERINGATAN AKADEMIK (EWS SIAKAD):\n"
                  . "Mahasiswa: {$siswa->nama} (NIM: {$siswa->nisn})\n"
                  . "Jenis Risiko: {$riskType}\n"

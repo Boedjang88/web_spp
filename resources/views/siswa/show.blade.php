@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Siswa - ' . $siswa->nama)
+@section('title', 'Detail Mahasiswa - ' . $siswa->nama)
 
 @section('content')
 <div class="space-y-6">
@@ -9,7 +9,7 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
             <div class="flex items-center gap-2">
-                <a href="{{ route('web.siswa.index') }}" class="text-xs font-semibold text-slate-500 hover:text-slate-800">&larr; Data Siswa</a>
+                <a href="{{ route('web.siswa.index') }}" class="text-xs font-semibold text-slate-500 hover:text-slate-800">&larr; Data Mahasiswa</a>
                 <span class="text-slate-300">/</span>
                 <span class="text-xs font-bold text-slate-900">{{ $siswa->nama }}</span>
             </div>
@@ -17,7 +17,7 @@
         </div>
         <div class="flex items-center gap-2">
             <a href="{{ route('web.pembayaran.create', ['id_siswa' => $siswa->id]) }}" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-sm transition inline-flex items-center gap-1.5">
-                <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></span> Catat Pembayaran
+                <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></span> Catat Pembayaran UKT
             </a>
             <a href="{{ route('web.siswa.suratTagihan', $siswa->id) }}" target="_blank" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold shadow-sm transition inline-flex items-center gap-1.5">
                 <span><svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></span> Surat Tagihan (PDF/Print)
@@ -33,31 +33,31 @@
 
         <!-- Info Card (1 Col) -->
         <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
-            <h2 class="font-bold text-sm text-slate-900 border-b border-slate-100 pb-3">Profil Biodata Siswa</h2>
+            <h2 class="font-bold text-sm text-slate-900 border-b border-slate-100 pb-3">Profil Biodata Mahasiswa</h2>
             
             <div class="space-y-3 text-xs">
                 <div>
-                    <span class="text-slate-400 block text-[11px]">NISN</span>
-                    <span class="font-mono font-bold text-slate-800 text-sm">{{ $siswa->nisn }}</span>
+                    <span class="text-slate-400 block text-[11px]">NIM / NISN</span>
+                    <span class="font-mono font-bold text-slate-800 text-sm">{{ $siswa->nim ?? $siswa->nis }} ({{ $siswa->nisn }})</span>
                 </div>
                 <div>
-                    <span class="text-slate-400 block text-[11px]">NIS</span>
+                    <span class="text-slate-400 block text-[11px]">Nomor Induk Mahasiswa</span>
                     <span class="font-medium text-slate-800">{{ $siswa->nis }}</span>
                 </div>
                 <div>
-                    <span class="text-slate-400 block text-[11px]">Kelas & Jurusan</span>
+                    <span class="text-slate-400 block text-[11px]">Program Studi &amp; Kelas</span>
                     <span class="font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded">{{ $siswa->kelas?->nama_kelas }} ({{ $siswa->kelas?->kompetensi_keahlian }})</span>
                 </div>
                 <div>
-                    <span class="text-slate-400 block text-[11px]">Tarif SPP Terikat</span>
-                    <span class="font-semibold text-slate-800">Rp {{ number_format($siswa->spp?->nominal ?? 0, 0, ',', '.') }} / bulan (Tahun {{ $siswa->spp?->tahun }})</span>
+                    <span class="text-slate-400 block text-[11px]">Tarif UKT Semester Terikat</span>
+                    <span class="font-semibold text-slate-800">Rp {{ number_format($siswa->spp?->nominal ?? 0, 0, ',', '.') }} / periode (Tahun {{ $siswa->spp?->tahun }})</span>
                 </div>
                 <div>
                     <span class="text-slate-400 block text-[11px]">No. Telepon / WhatsApp</span>
                     <span class="font-medium text-slate-800">{{ $siswa->no_telp }}</span>
                 </div>
                 <div>
-                    <span class="text-slate-400 block text-[11px]">Alamat</span>
+                    <span class="text-slate-400 block text-[11px]">Alamat Domisili</span>
                     <p class="text-slate-700 leading-relaxed">{{ $siswa->alamat }}</p>
                 </div>
             </div>
@@ -109,19 +109,19 @@
                     <div>
                         <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Status Pembayaran</span>
                         <div class="text-xl font-bold text-emerald-900 mt-1">LUNAS SAMPAI BULAN INI <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div>
-                        <p class="text-xs text-emerald-700 mt-0.5">Tidak ada tunggakan SPP yang jatuh tempo untuk siswa ini.</p>
+                        <p class="text-xs text-emerald-700 mt-0.5">Tidak ada tunggakan UKT yang jatuh tempo untuk mahasiswa ini.</p>
                     </div>
                 </div>
             @endif
 
             <!-- Riwayat Pembayaran Table -->
             <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-                <h3 class="font-bold text-slate-900 text-sm mb-4">Riwayat Pembayaran Siswa</h3>
+                <h3 class="font-bold text-slate-900 text-sm mb-4">Riwayat Pembayaran UKT Mahasiswa</h3>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs">
                         <thead>
                             <tr class="border-b border-slate-200 text-slate-400 uppercase tracking-wider">
-                                <th class="pb-3 font-semibold">Periode SPP</th>
+                                <th class="pb-3 font-semibold">Periode UKT</th>
                                 <th class="pb-3 font-semibold">Tgl Bayar</th>
                                 <th class="pb-3 font-semibold">Petugas</th>
                                 <th class="pb-3 font-semibold">Nominal</th>

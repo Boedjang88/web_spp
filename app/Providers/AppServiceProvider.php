@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\URL; // [Tambahkan Import Ini]
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,10 +23,18 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // [Tambahkan Kode Ini]
-        // Memaksa schema HTTPS jika aplikasi berjalan di environment production atau remote
         if (app()->environment('production')) {
             URL::forceScheme('https');
         }
+
+        // Rate limiter for public billing search (Anti-Scraping: 10 requests per minute per IP)
+        RateLimiter::for('public-billings', function (Request $request) {
+            return Limit::perMinute(10)->by($request->ip());
+        });
+
+        // Rate limiter for authenticated student billing portals (20 requests per minute)
+        RateLimiter::for('sensitive-portal', function (Request $request) {
+            return Limit::perMinute(20)->by($request->user()?->id ?: $request->ip());
+        });
     }
 }

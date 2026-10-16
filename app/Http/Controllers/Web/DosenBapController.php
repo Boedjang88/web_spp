@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
 use App\Models\BapPerkuliahan;
+use App\Models\Dosen;
 use App\Models\Guru;
 use App\Models\KelasKuliah;
 use Illuminate\Http\RedirectResponse;
@@ -13,14 +14,36 @@ use Illuminate\View\View;
 
 class DosenBapController extends Controller
 {
-    public function index(Request $request): View
+    protected function resolveFacultyUser()
     {
         $user = auth()->user();
-        $guru = $user->guru ?? Guru::first();
+        $guru = $user?->guru ?? ($user?->id_guru ? Guru::find($user->id_guru) : null);
+        $dosen = $user?->dosen ?? ($user?->id_dosen ? Dosen::find($user->id_dosen) : null);
+
+        return [$user, $guru, $dosen];
+    }
+
+    public function index(Request $request): View
+    {
+        [$user, $guru, $dosen] = $this->resolveFacultyUser();
+
+        if (!$user->isAdmin() && !$user->isSuperAdmin() && !$guru && !$dosen) {
+            abort(403, 'Akun Anda tidak memiliki peran Dosen Pengampu.');
+        }
+
+        $guruId = $guru?->id;
+        $dosenId = $dosen?->id;
 
         $kelasKuliahs = KelasKuliah::with('mataKuliah')
-            ->when($guru && !$user->isAdmin(), function ($q) use ($guru) {
-                $q->where('id_dosen', $guru->id);
+            ->when(!$user->isAdmin() && !$user->isSuperAdmin(), function ($q) use ($guruId, $dosenId) {
+                $q->where(function ($sub) use ($guruId, $dosenId) {
+                    if ($dosenId) {
+                        $sub->where('id_dosen', $dosenId);
+                    }
+                    if ($guruId) {
+                        $sub->orWhere('id_guru', $guruId);
+                    }
+                });
             })
             ->get();
 
@@ -33,7 +56,7 @@ class DosenBapController extends Controller
             ->orderBy('pertemuan_ke')
             ->get();
 
-        return view('siakad.dosen.bap-index', compact('guru', 'kelasKuliahs', 'selectedKelasId', 'bapList'));
+        return view('siakad.dosen.bap-index', compact('guru', 'dosen', 'kelasKuliahs', 'selectedKelasId', 'bapList'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -49,9 +72,18 @@ class DosenBapController extends Controller
             'total_mahasiswa_hadir' => 'required|integer|min:0',
         ]);
 
-        $user = auth()->user();
-        $guru = $user->guru ?? Guru::first();
+        [$user, $guru, $dosen] = $this->resolveFacultyUser();
 
+        $kelas = KelasKuliah::findOrFail($validated['id_kelas_kuliah']);
+
+        if (!$user->isAdmin() && !$user->isSuperAdmin()) {
+            $isAuthorized = ($dosen && $kelas->id_dosen == $dosen->id)
+                || ($guru && $kelas->id_guru == $guru->id);
+
+            abort_if(!$isAuthorized, 403, 'Anda bukan dosen pengampu untuk kelas perkuliahan ini.');
+        }
+
+        $lecturerId = $guru?->id ?? ($dosen?->id ?? 1);
         $signatureHash = hash('sha256', 'BAP-' . $validated['id_kelas_kuliah'] . '-P' . $validated['pertemuan_ke'] . '-' . now()->timestamp);
 
         BapPerkuliahan::updateOrCreate(
@@ -60,7 +92,7 @@ class DosenBapController extends Controller
                 'pertemuan_ke' => $validated['pertemuan_ke'],
             ],
             [
-                'id_guru' => $guru->id,
+                'id_guru' => $lecturerId,
                 'tanggal_pelaksanaan' => $validated['tanggal_pelaksanaan'],
                 'jam_mulai_real' => $validated['jam_mulai_real'],
                 'jam_selesai_real' => $validated['jam_selesai_real'],
@@ -76,5 +108,37 @@ class DosenBapController extends Controller
 
         return redirect()->route('siakad.dosen.bap.index', ['id_kelas_kuliah' => $validated['id_kelas_kuliah']])
             ->with('success', 'Berita Acara Perkuliahan (BAP) & Digital Signature berhasil disimpan!');
+    }
+
+    public function finalizeCourse(Request $request, int $id): RedirectResponse
+    {
+        [$user, $guru, $dosen] = $this->resolveFacultyUser();
+
+        $kelas = KelasKuliah::with('mataKuliah')->findOrFail($id);
+
+        if (!$user->isAdmin() && !$user->isSuperAdmin()) {
+            $isAuthorized = ($dosen && $kelas->id_dosen == $dosen->id)
+                || ($guru && $kelas->id_guru == $guru->id);
+
+            abort_if(!$isAuthorized, 403, 'Anda bukan dosen pengampu untuk kelas perkuliahan ini.');
+        }
+
+        $completedMeetings = BapPerkuliahan::where('id_kelas_kuliah', $id)
+            ->whereIn('status_verifikasi', ['Tersubmit', 'Diverifikasi BAAK'])
+            ->count();
+
+        if ($completedMeetings < 16) {
+            return redirect()->route('siakad.dosen.bap.index', ['id_kelas_kuliah' => $id])
+                ->with('error', "Gagal menutup perkuliahan! Sesuai standar SN-Dikti, kelas harus menyelesaikan minimal 16 pertemuan (termasuk UTS & UAS) sebelum dapat difinalisasi. Saat ini baru terlaksana {$completedMeetings} pertemuan.");
+        }
+
+        BapPerkuliahan::where('id_kelas_kuliah', $id)->update([
+            'status_verifikasi' => 'Diverifikasi BAAK',
+        ]);
+
+        ActivityLog::record('BAP_FINALIZE', "Dosen memfinalisasi 16 pertemuan perkuliahan kelas {$kelas->nama_kelas} ({$kelas->mataKuliah?->nama_mk}).");
+
+        return redirect()->route('siakad.dosen.bap.index', ['id_kelas_kuliah' => $id])
+            ->with('success', "Perkuliahan kelas {$kelas->nama_kelas} (16 pertemuan) berhasil difinalisasi! Pengisian nilai akhir mahasiswa telah dibuka.");
     }
 }

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('keperluan')->nullable();
             $table->string('qr_verification_token', 64)->unique();
             $table->string('file_pdf_path')->nullable();
-            $table->enum('status', ['DRAFT', 'DISETUJUI', 'DITOLAK'])->default('DISETUJUI');
+            $table->enum('status', ['DRAFT', 'MENUNGGU_PERSETUJUAN', 'DISETUJUI', 'DITOLAK'])->default('MENUNGGU_PERSETUJUAN');
             $table->timestamp('tgl_terbit')->useCurrent();
             $table->timestamps();
         });

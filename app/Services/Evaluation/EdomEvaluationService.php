@@ -6,7 +6,6 @@ use App\Models\EdomEvaluasi;
 use App\Models\EdomEvaluasiItem;
 use App\Models\Guru;
 use App\Models\KrsDetail;
-use Exception;
 use Illuminate\Support\Facades\DB;
 
 class EdomEvaluationService

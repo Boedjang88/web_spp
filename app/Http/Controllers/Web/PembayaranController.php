@@ -45,8 +45,22 @@ class PembayaranController extends Controller
     public function create(Request $request): View
     {
         $selectedSiswaId = $request->get('id_siswa');
-        $siswas = Siswa::with(['kelas', 'spp'])->orderBy('nama')->get();
+        $search = $request->get('search');
+
+        $siswasQuery = Siswa::with(['kelas', 'spp'])->orderBy('nama');
+        if ($search) {
+            $siswasQuery->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                  ->orWhere('nisn', 'like', "%{$search}%")
+                  ->orWhere('nis', 'like', "%{$search}%");
+            });
+        }
+        $siswas = $siswasQuery->limit(100)->get();
+
         $selectedSiswa = $selectedSiswaId ? Siswa::with(['kelas', 'spp'])->find($selectedSiswaId) : null;
+        if ($selectedSiswa && !$siswas->contains('id', $selectedSiswa->id)) {
+            $siswas->prepend($selectedSiswa);
+        }
 
         $daftarBulan = [
             'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
@@ -140,6 +154,28 @@ class PembayaranController extends Controller
             }
         }
 
+        // Auto-sync into PembayaranUkt SIAKAD record
+        try {
+            $mahasiswa = \App\Models\Mahasiswa::where('nisn', $siswa->nisn)->first()
+                ?? \App\Models\Mahasiswa::find($siswa->id);
+            if ($mahasiswa) {
+                foreach ($createdPayments as $p) {
+                    \App\Models\PembayaranUkt::create([
+                        'id_user' => Auth::id() ?? 1,
+                        'id_mahasiswa' => $mahasiswa->id,
+                        'id_ukt' => $idSpp,
+                        'tgl_bayar' => $p->tgl_bayar,
+                        'semester_dibayar' => $p->bulan_dibayar,
+                        'tahun_dibayar' => $p->tahun_dibayar,
+                        'jumlah_bayar' => $p->jumlah_bayar,
+                        'channel_bayar' => 'KASIR_BAAK',
+                        'nomor_kuitansi' => 'KWT-' . str_pad($p->id, 6, '0', STR_PAD_LEFT),
+                        'status_transaksi' => 'SUCCESS',
+                    ]);
+                }
+            }
+        } catch (\Throwable $e) {}
+
         \App\Models\ActivityLog::record(
             'PEMBAYARAN_CREATE',
             "Menerima pembayaran SPP siswa {$siswa->nama} (NISN: {$siswa->nisn}) sebanyak " . count($createdPayments) . " bulan ({$validated['tahun_dibayar']}) total Rp " . number_format($totalNominal, 0, ',', '.')
@@ -156,6 +192,13 @@ class PembayaranController extends Controller
     public function show(string|int $id): View
     {
         $pembayaran = Pembayaran::with(['petugas', 'siswa.kelas', 'spp'])->findOrFail($id);
+
+        $user = auth()->user();
+        if ($user && in_array($user->role, ['siswa', 'mahasiswa'])) {
+            $studentId = $user->id_siswa ?? $user->id_mahasiswa;
+            abort_if(!$studentId || (int)$studentId !== (int)$pembayaran->id_siswa, 403, 'Akses ditolak: Anda hanya dapat melihat pembayaran milik sendiri.');
+        }
+
         $terbilang = $this->terbilang($pembayaran->jumlah_bayar) . ' rupiah';
         $waLink = $this->generateWhatsAppLink($pembayaran);
 
@@ -165,6 +208,13 @@ class PembayaranController extends Controller
     public function cetakKwitansi(string|int $id): View
     {
         $pembayaran = Pembayaran::with(['petugas', 'siswa.kelas', 'spp'])->findOrFail($id);
+
+        $user = auth()->user();
+        if ($user && in_array($user->role, ['siswa', 'mahasiswa'])) {
+            $studentId = $user->id_siswa ?? $user->id_mahasiswa;
+            abort_if(!$studentId || (int)$studentId !== (int)$pembayaran->id_siswa, 403, 'Akses ditolak: Anda hanya dapat mencetak kwitansi pembayaran milik sendiri.');
+        }
+
         $terbilang = $this->terbilang($pembayaran->jumlah_bayar) . ' rupiah';
         $waLink = $this->generateWhatsAppLink($pembayaran);
 
@@ -178,7 +228,12 @@ class PembayaranController extends Controller
 
     private function generateWhatsAppLink(Pembayaran $pembayaran): string
     {
-        $phone = preg_replace('/[^0-9]/', '', $pembayaran->siswa?->no_telp ?? '');
+        $rawPhone = $pembayaran->siswa?->no_telp ?: ($pembayaran->siswa?->no_hp_wali ?: '');
+        $phone = preg_replace('/[^0-9]/', '', (string) $rawPhone);
+        if (empty($phone) || strlen($phone) < 8) {
+            return '';
+        }
+
         if (str_starts_with($phone, '0')) {
             $phone = '62' . substr($phone, 1);
         }
@@ -214,28 +269,44 @@ class PembayaranController extends Controller
 
     private function terbilang(int $angka): string
     {
-        $angka = abs($angka);
+        if ($angka === 0) {
+            return 'nol';
+        }
+
+        $prefix = '';
+        if ($angka < 0) {
+            $prefix = 'minus ';
+            $angka = abs($angka);
+        }
+
+        return trim(preg_replace('/\s+/', ' ', $prefix . $this->rawTerbilang($angka)));
+    }
+
+    private function rawTerbilang(int $angka): string
+    {
         $baca = ['', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'tujuh', 'delapan', 'sembilan', 'sepuluh', 'sebelas'];
         $terbilang = '';
 
         if ($angka < 12) {
             $terbilang = ' ' . $baca[$angka];
         } elseif ($angka < 20) {
-            $terbilang = $this->terbilang($angka - 10) . ' belas';
+            $terbilang = $this->rawTerbilang($angka - 10) . ' belas';
         } elseif ($angka < 100) {
-            $terbilang = $this->terbilang((int) ($angka / 10)) . ' puluh' . $this->terbilang($angka % 10);
+            $terbilang = $this->rawTerbilang((int) ($angka / 10)) . ' puluh' . $this->rawTerbilang($angka % 10);
         } elseif ($angka < 200) {
-            $terbilang = ' seratus' . $this->terbilang($angka - 100);
+            $terbilang = ' seratus' . $this->rawTerbilang($angka - 100);
         } elseif ($angka < 1000) {
-            $terbilang = $this->terbilang((int) ($angka / 100)) . ' ratus' . $this->terbilang($angka % 100);
+            $terbilang = $this->rawTerbilang((int) ($angka / 100)) . ' ratus' . $this->rawTerbilang($angka % 100);
         } elseif ($angka < 2000) {
-            $terbilang = ' seribu' . $this->terbilang($angka - 1000);
+            $terbilang = ' seribu' . $this->rawTerbilang($angka - 1000);
         } elseif ($angka < 1000000) {
-            $terbilang = $this->terbilang((int) ($angka / 1000)) . ' ribu' . $this->terbilang($angka % 1000);
+            $terbilang = $this->rawTerbilang((int) ($angka / 1000)) . ' ribu' . $this->rawTerbilang($angka % 1000);
         } elseif ($angka < 1000000000) {
-            $terbilang = $this->terbilang((int) ($angka / 1000000)) . ' juta' . $this->terbilang($angka % 1000000);
+            $terbilang = $this->rawTerbilang((int) ($angka / 1000000)) . ' juta' . $this->rawTerbilang($angka % 1000000);
+        } elseif ($angka < 1000000000000) {
+            $terbilang = $this->rawTerbilang((int) ($angka / 1000000000)) . ' milyar' . $this->rawTerbilang($angka % 1000000000);
         }
 
-        return trim($terbilang);
+        return $terbilang;
     }
 }

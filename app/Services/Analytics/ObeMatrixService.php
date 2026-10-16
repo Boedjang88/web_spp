@@ -4,7 +4,6 @@ namespace App\Services\Analytics;
 
 use App\Models\Cpl;
 use App\Models\Cpmk;
-use App\Models\KrsDetail;
 use App\Models\NilaiObe;
 use App\Models\Siswa;
 

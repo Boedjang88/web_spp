@@ -15,10 +15,20 @@ class BankMitra extends Model
     protected $fillable = [
         'kode_bank',
         'nama_bank',
+        'gateway_provider',
         'prefix_va',
         'secret_key',
+        'server_key',
+        'client_key',
+        'merchant_id',
+        'environment',
         'webhook_url',
         'is_active',
+    ];
+
+    protected $hidden = [
+        'secret_key',
+        'server_key',
     ];
 
     protected $casts = [
@@ -28,5 +38,20 @@ class BankMitra extends Model
     public function tagihanVas(): HasMany
     {
         return $this->hasMany(TagihanVa::class, 'id_bank_mitra');
+    }
+
+    public function isPaymentGateway(): bool
+    {
+        return in_array(strtoupper($this->gateway_provider ?? ''), ['MIDTRANS', 'XENDIT']);
+    }
+
+    public function isMidtrans(): bool
+    {
+        return strtoupper($this->gateway_provider ?? '') === 'MIDTRANS';
+    }
+
+    public function isXendit(): bool
+    {
+        return strtoupper($this->gateway_provider ?? '') === 'XENDIT';
     }
 }
