@@ -28,13 +28,10 @@ use App\Models\LogbookBimbingan;
 use App\Models\Mahasiswa;
 use App\Models\Mapel;
 use App\Models\MataKuliah;
-use App\Models\MbkmKonversi;
-use App\Models\MbkmKonversiDetail;
 use App\Models\Nilai;
 use App\Models\Pembayaran;
 use App\Models\PembayaranUkt;
 use App\Models\PendaftaranBeasiswa;
-use App\Models\Presensi;
 use App\Models\PresensiMahasiswa;
 use App\Models\ProgramStudi;
 use App\Models\Ruangan;
@@ -291,7 +288,7 @@ class EnterpriseFullDummySeeder extends Seeder
             );
         }
 
-        $hariList = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
+        $hariList = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
         $timeSlots = [
             ['mulai' => '08:00', 'selesai' => '10:30'],
             ['mulai' => '10:45', 'selesai' => '13:15'],
@@ -306,7 +303,7 @@ class EnterpriseFullDummySeeder extends Seeder
             $assignedDosen = $dosens[$mIdx % count($dosens)];
             $assignedRuang = $ruangans[$mIdx % count($ruangans)];
             $slot = $timeSlots[$mIdx % 4];
-            $hari = $hariList[$mIdx % 5];
+            $hari = $hariList[$mIdx % 6];
 
             $kKuliah = KelasKuliah::firstOrCreate(
                 ['id_mk' => $mk->id, 'id_tahun_akademik' => $taActive->id, 'nama_kelas' => 'Kelas A'],
@@ -322,10 +319,10 @@ class EnterpriseFullDummySeeder extends Seeder
             );
             $kelasKuliahs[] = $kKuliah;
 
-            // Generate 2-4 daily sessions per class across Monday-Friday
+            // Generate 2-4 daily sessions per class across Monday-Saturday
             foreach ($kelases as $kIdx => $kls) {
                 JadwalPelajaran::firstOrCreate(
-                    ['id_kelas' => $kls->id, 'id_mapel' => $mapels[$mIdx]->id, 'hari' => $hariList[($kIdx + $mIdx) % 5]],
+                    ['id_kelas' => $kls->id, 'id_mapel' => $mapels[$mIdx]->id, 'hari' => $hariList[($kIdx + $mIdx) % 6]],
                     [
                         'id_guru' => $gurus[$mIdx % count($gurus)]->id,
                         'jam_mulai' => $timeSlots[($kIdx + $mIdx) % 4]['mulai'],
