@@ -11,7 +11,7 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class ExecutiveKpiWidget extends BaseWidget
 {
-    protected static ?int $sort = 1;
+    protected static ?int $sort = 5;
 
     protected function getStats(): array
     {

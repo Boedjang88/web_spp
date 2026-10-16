@@ -25,59 +25,109 @@ class SiswaResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
     protected static ?string $navigationLabel = 'Data Mahasiswa';
-    protected static ?string $navigationGroup = 'Civitas Akademika';
+    protected static ?string $navigationGroup = 'Akademik';
+    protected static ?int $navigationSort = 1;
+    protected static ?string $recordTitleAttribute = 'nama';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['nisn', 'nis', 'nama', 'no_telp'];
+    }
+
+    public static function getGlobalSearchResultTitle(\Illuminate\Database\Eloquent\Model $record): string
+    {
+        return "{$record->nama} ({$record->nisn})";
+    }
+
+    public static function getGlobalSearchResultDetails(\Illuminate\Database\Eloquent\Model $record): array
+    {
+        return [
+            'Kelas' => $record->kelas?->nama_kelas ?? '-',
+            'Status' => $record->status_kelulusan ?? 'Aktif',
+        ];
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                TextInput::make('nisn')
-                    ->label('NIM / NISN')
-                    ->required()
-                    ->maxLength(20),
-                
-                TextInput::make('nis')
-                    ->label('NPM / Kode Mahasiswa')
-                    ->required()
-                    ->maxLength(20),
+                Forms\Components\Section::make('Identitas Akademik Mahasiswa')
+                    ->description('Nomor induk, nama lengkap, dan penempatan kelas program studi.')
+                    ->icon('heroicon-o-identification')
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('nisn')
+                            ->label('NIM / NISN')
+                            ->placeholder('Contoh: 2026001001')
+                            ->required()
+                            ->maxLength(20),
+                        
+                        TextInput::make('nis')
+                            ->label('NPM / Kode Mahasiswa')
+                            ->placeholder('Contoh: MHS-2026-01')
+                            ->required()
+                            ->maxLength(20),
 
-                TextInput::make('nama')
-                    ->label('Nama Lengkap Mahasiswa')
-                    ->required()
-                    ->maxLength(100),
+                        TextInput::make('nama')
+                            ->label('Nama Lengkap Mahasiswa')
+                            ->placeholder('Masukkan nama lengkap sesuai ijazah')
+                            ->required()
+                            ->maxLength(100),
 
-                Select::make('id_kelas')
-                    ->label('Kelas Kuliah / Program Studi')
-                    ->relationship('kelas', 'nama_kelas') 
-                    ->searchable() 
-                    ->preload() 
-                    ->required(),
+                        Select::make('id_kelas')
+                            ->label('Kelas Kuliah / Rombel')
+                            ->relationship('kelas', 'nama_kelas') 
+                            ->searchable() 
+                            ->preload() 
+                            ->required(),
+                    ]),
 
-                Select::make('id_spp')
-                    ->label('Tarif UKT')
-                    ->relationship('spp', 'tahun') 
-                    ->getOptionLabelFromRecordUsing(fn ($record) => "Tahun {$record->tahun} - Rp " . number_format($record->nominal, 0, ',', '.'))
-                    ->searchable()
-                    ->preload()
-                    ->required(),
+                Forms\Components\Section::make('Kewajiban Finansial & Kontak')
+                    ->description('Tarif UKT yang berlaku serta kontak domisili mahasiswa.')
+                    ->icon('heroicon-o-banknotes')
+                    ->columns(2)
+                    ->schema([
+                        Select::make('id_spp')
+                            ->label('Tarif UKT / Biaya Kuliah')
+                            ->relationship('spp', 'tahun') 
+                            ->getOptionLabelFromRecordUsing(fn ($record) => "Tahun {$record->tahun} - Rp " . number_format($record->nominal, 0, ',', '.'))
+                            ->searchable()
+                            ->preload()
+                            ->required(),
 
-                TextInput::make('no_telp')
-                    ->label('No. Telepon / WhatsApp')
-                    ->tel()
-                    ->maxLength(20),
+                        TextInput::make('no_telp')
+                            ->label('No. Telepon / WhatsApp')
+                            ->tel()
+                            ->placeholder('08123456789')
+                            ->maxLength(20),
 
-                Textarea::make('alamat')
-                    ->columnSpanFull(),
+                        Textarea::make('alamat')
+                            ->label('Alamat Domisili')
+                            ->placeholder('Alamat lengkap tempat tinggal saat ini')
+                            ->columnSpanFull(),
+                    ]),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+            ->striped()
             ->columns([
-                TextColumn::make('nisn')->label('NIM / NISN')->searchable()->sortable(),
-                TextColumn::make('nama')->label('Nama Mahasiswa')->searchable()->sortable(),
-                TextColumn::make('kelas.nama_kelas')->label('Kelas Kuliah')->sortable(),
+                TextColumn::make('nisn')
+                    ->label('NIM / NISN')
+                    ->searchable()
+                    ->sortable()
+                    ->copyable()
+                    ->copyMessage('NIM disalin!'),
+                TextColumn::make('nama')
+                    ->label('Nama Mahasiswa')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('kelas.nama_kelas')
+                    ->label('Kelas Kuliah')
+                    ->sortable()
+                    ->toggleable(),
                 
                 TextColumn::make('status_tunggakan')
                     ->label('Status UKT')
@@ -95,7 +145,15 @@ class SiswaResource extends Resource
                         default => 'danger',
                     }),
 
-                TextColumn::make('no_telp')->label('Telepon'),
+                TextColumn::make('no_telp')
+                    ->label('Telepon')
+                    ->toggleable(),
+            ])
+            ->emptyStateHeading('Belum Ada Data Mahasiswa')
+            ->emptyStateDescription('Daftarkan mahasiswa baru untuk memulai pengelolaan data akademik dan keuangan.')
+            ->emptyStateIcon('heroicon-o-user-plus')
+            ->emptyStateActions([
+                Tables\Actions\CreateAction::make()->label('Tambah Mahasiswa Baru'),
             ])
             ->filters([
                 SelectFilter::make('id_kelas')
