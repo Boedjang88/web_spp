@@ -5,31 +5,31 @@
 @section('content')
 <div class="space-y-6">
 
-    <!-- Top Header Banner (Enterprise Modern Style) -->
-    <div class="bg-linear-to-r from-blue-900 via-slate-900 to-indigo-950 p-5 sm:p-7 rounded-2xl border border-blue-900/50 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-5 shadow-sm relative overflow-hidden">
+    <!-- Top Header Banner (Google Academic Workspace Style) -->
+    <div class="bg-white dark:bg-[#1e1f20] p-5 sm:p-6 rounded-2xl border border-slate-200/90 dark:border-slate-800 text-slate-900 dark:text-slate-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 shadow-2xs relative">
         <div class="relative z-10">
             <div class="flex flex-wrap items-center gap-2 mb-2 font-mono">
-                <span class="px-2.5 py-0.5 bg-blue-500/20 text-blue-200 border border-blue-400/30 text-[10px] font-bold rounded-full uppercase tracking-wider">
+                <span class="px-2.5 py-0.5 bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300 border border-brand-200/80 dark:border-brand-800 text-[10px] font-bold rounded-full uppercase tracking-wider">
                     SMART KRS ENGINE &bull; LOCK VERIFIED
                 </span>
-                <span class="text-xs text-blue-200/80">T.A. {{ $activeYear?->nama_tahun }} ({{ $activeYear?->semester }})</span>
+                <span class="text-xs text-slate-500 dark:text-slate-400 font-sans">T.A. {{ $activeYear?->nama_tahun }} ({{ $activeYear?->semester }})</span>
             </div>
-            <h1 class="text-xl sm:text-2xl font-bold text-white tracking-tight">Kartu Rencana Studi (KRS) Online</h1>
-            <p class="text-xs text-blue-200/80 mt-1 max-w-xl leading-relaxed">
-                Pengisian rencana studi berkecepatan tinggi dengan proteksi batas SKS, prasyarat mata kuliah, kuota kelas, dan bentrok jadwal otomatis.
+            <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Kartu Rencana Studi (KRS) Online</h1>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-xl leading-relaxed">
+                Pengisian rencana studi terpadu dengan proteksi batas SKS, prasyarat mata kuliah, kuota kelas, dan bentrok jadwal otomatis.
             </p>
         </div>
 
         <!-- SKS Meter Indicator -->
-        <div class="relative z-10 w-full md:w-auto bg-slate-950/80 border border-blue-900/80 rounded-xl p-4 flex items-center justify-around sm:justify-start gap-6 font-mono shadow-inner">
+        <div class="relative z-10 w-full md:w-auto bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 rounded-xl p-4 flex items-center justify-around sm:justify-start gap-6 font-mono shadow-2xs">
             <div>
-                <span class="text-[10px] text-blue-300/70 font-semibold uppercase tracking-wider block">Batas SKS</span>
-                <span class="text-lg sm:text-xl font-bold text-white">{{ $krs?->max_sks_diizinkan ?? 24 }} <span class="text-xs text-blue-300">SKS</span></span>
+                <span class="text-[10px] text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wider block">Batas SKS</span>
+                <span class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">{{ $krs?->max_sks_diizinkan ?? 24 }} <span class="text-xs text-brand-600 dark:text-brand-400">SKS</span></span>
             </div>
-            <div class="w-px h-8 bg-blue-900/80"></div>
+            <div class="w-px h-8 bg-slate-200 dark:border-slate-700"></div>
             <div>
-                <span class="text-[10px] text-blue-300/70 font-semibold uppercase tracking-wider block">SKS Terambil</span>
-                <span class="text-lg sm:text-xl font-bold text-emerald-400">{{ $krs?->total_sks_diambil ?? 0 }} <span class="text-xs text-blue-300">SKS</span></span>
+                <span class="text-[10px] text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wider block">SKS Terambil</span>
+                <span class="text-lg sm:text-xl font-bold text-emerald-600 dark:text-emerald-400">{{ $krs?->total_sks_diambil ?? 0 }} <span class="text-xs text-brand-600 dark:text-brand-400">SKS</span></span>
             </div>
         </div>
     </div>
