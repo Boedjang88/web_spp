@@ -54,4 +54,9 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI', 'http://127.0.0.1:8000/auth/google/callback'),
     ],
 
+    'telegram' => [
+        'bot_token' => env('TELEGRAM_BOT_TOKEN'),
+        'default_chat_id' => env('TELEGRAM_DEFAULT_CHAT_ID'),
+    ],
+
 ];
