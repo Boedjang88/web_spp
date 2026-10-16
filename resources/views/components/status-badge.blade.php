@@ -30,8 +30,8 @@
             'dot' => 'bg-rose-500',
         ],
         'info' => [
-            'badge' => 'bg-blue-50 text-blue-900 border-blue-200/80 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800/60',
-            'dot' => 'bg-blue-500',
+            'badge' => 'bg-brand-50 text-brand-800 border-brand-200/80 dark:bg-brand-950/60 dark:text-brand-300 dark:border-brand-800/60',
+            'dot' => 'bg-brand-500',
         ],
         'neutral' => [
             'badge' => 'bg-slate-100 text-slate-800 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700',

@@ -57,20 +57,20 @@ h3, .fi-card-header-heading {
 .fi-section,
 .fi-wi-stats-overview-stat,
 .fi-ta-ctn {
-    box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.05) !important;
-    border: 1px solid rgba(226, 232, 240, 0.8) !important;
+    box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.08), 0 1px 3px 1px rgba(60, 64, 67, 0.04) !important;
+    border: 1px solid rgba(218, 222, 228, 0.8) !important;
 }
 
 .dark .fi-section,
 .dark .fi-wi-stats-overview-stat,
 .dark .fi-ta-ctn {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.25), 0 2px 4px -2px rgba(0, 0, 0, 0.2) !important;
-    border: 1px solid rgba(51, 65, 85, 0.5) !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15) !important;
+    border: 1px solid rgba(60, 64, 67, 0.6) !important;
 }
 
 .fi-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.15), 0 2px 4px -2px rgba(37, 99, 235, 0.1);
+    transform: translateY(-0.5px);
+    box-shadow: 0 1px 3px 0 rgba(26, 115, 232, 0.2) !important;
 }
 
 .fi-btn:active {
@@ -78,7 +78,7 @@ h3, .fi-card-header-heading {
 }
 
 /* ==========================================================================
-   WCAG 2.1 AA Accessibility & Focus Indicators
+   WCAG 2.2 AA Accessibility & Focus Indicators
    ========================================================================== */
 a:focus-visible,
 button:focus-visible,
@@ -86,9 +86,9 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 [tabindex]:focus-visible {
-    outline: 2px solid #2563eb !important;
+    outline: 2px solid #1a73e8 !important;
     outline-offset: 2px !important;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25) !important;
+    box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.25) !important;
 }
 
 .dark a:focus-visible,
@@ -97,15 +97,15 @@ textarea:focus-visible,
 .dark select:focus-visible,
 .dark textarea:focus-visible,
 .dark [tabindex]:focus-visible {
-    outline: 2px solid #60a5fa !important;
+    outline: 2px solid #8ab4f8 !important;
     outline-offset: 2px !important;
-    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3) !important;
+    box-shadow: 0 0 0 3px rgba(138, 180, 248, 0.3) !important;
 }
 
 /* Enhanced Contrast for Form Labels (WCAG 4.5:1 ratio) */
 .fi-fo-field-wrp-label label {
     font-weight: 600 !important;
-    color: #1e293b !important;
+    color: #202124 !important;
 }
 
 .dark .fi-fo-field-wrp-label label {

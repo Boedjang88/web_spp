@@ -9,9 +9,9 @@
     $isLecturer = in_array($role, ['guru', 'dosen']);
     $isAdmin = in_array($role, ['superadmin', 'admin', 'petugas']);
 
-    $linkBase = 'flex items-center gap-2.5 px-3 py-2.5 min-h-[44px] rounded-xl text-xs font-medium transition select-none';
+    $linkBase = 'flex items-center gap-2.5 px-3 py-2 min-h-[40px] rounded-xl text-xs font-medium transition-colors select-none';
     $activeClass = 'bg-brand-600 text-white font-semibold shadow-xs';
-    $inactiveClass = 'text-slate-400 hover:text-white hover:bg-slate-900/90 dark:text-slate-400 dark:hover:text-slate-100 dark:hover:bg-slate-800/80';
+    $inactiveClass = 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-100 dark:hover:bg-slate-800/80';
     $groupHeaderClass = 'px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block';
     $clickAction = $mobile ? 'onclick=toggleMobileMenu(true)' : '';
 @endphp
