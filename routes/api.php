@@ -27,12 +27,27 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:10,1')->name('api.auth.login');
 });
-Route::get('/portal/siswa/{nisn}', [PortalController::class, 'cekSiswa'])->name('api.portal.siswa');
+Route::get('/portal/siswa/{nisn}', [PortalController::class, 'cekSiswa'])
+    ->middleware('strict.rate_limit:10,1')
+    ->name('api.portal.siswa');
 
-// Observability & Health Monitoring Diagnostic Endpoint
-Route::get('/health', function (\App\Services\Monitoring\SystemHealthService $healthService) {
+// Observability & Health Monitoring Diagnostic Endpoint (Hardened against topology leaks)
+Route::get('/health', function (\Illuminate\Http\Request $request, \App\Services\Monitoring\SystemHealthService $healthService) {
     $report = $healthService->getSystemHealthReport();
     $statusCode = $report['status'] === 'HEALTHY' ? 200 : 503;
+
+    $healthKey = config('app.health_check_key', env('HEALTH_CHECK_KEY'));
+    $providedKey = $request->header('X-Health-Key') ?? $request->query('key');
+    $isAuthorized = ($healthKey && hash_equals((string) $healthKey, (string) $providedKey))
+        || ($request->user() && in_array($request->user()->role, ['admin', 'superadmin', 'baak']));
+
+    if (app()->environment('production') && !$isAuthorized) {
+        return response()->json([
+            'status' => $report['status'] === 'HEALTHY' ? 'UP' : 'DOWN',
+            'timestamp' => $report['timestamp'],
+        ], $statusCode);
+    }
+
     return response()->json($report, $statusCode);
 })->name('api.health');
 
@@ -43,6 +58,13 @@ Route::post('/h2h/webhook', [\App\Http\Controllers\Api\H2hWebhookController::cla
 Route::post('/v1/h2h/callback', [\App\Http\Controllers\Api\H2hWebhookController::class, 'callback'])
     ->middleware(['idempotent', 'throttle:30,1'])
     ->name('api.v1.h2h.callback');
+
+// Modern Payment Gateway Webhooks (Midtrans & Xendit Reconciliation)
+Route::prefix('v1/payment-gateway')->middleware(['idempotent', 'throttle:60,1'])->group(function () {
+    Route::post('/webhook/midtrans', [\App\Http\Controllers\Api\PaymentGatewayWebhookController::class, 'handleMidtrans'])->name('api.payment-gateway.midtrans');
+    Route::post('/webhook/xendit', [\App\Http\Controllers\Api\PaymentGatewayWebhookController::class, 'handleXendit'])->name('api.payment-gateway.xendit');
+    Route::post('/webhook', [\App\Http\Controllers\Api\PaymentGatewayWebhookController::class, 'handleUnified'])->name('api.payment-gateway.unified');
+});
 
 // --- Protected Routes (Requires Bearer Token) ---
 Route::middleware('auth:sanctum')->group(function () {

@@ -5,11 +5,10 @@ namespace App\Services\Academic;
 use App\Models\EarlyWarningLog;
 use App\Models\Krs;
 use App\Models\PresensiKuliah;
+use App\Models\PresensiMahasiswa;
 use App\Models\Siswa;
+use App\Models\TagihanUkt;
 use App\Models\TahunAkademik;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class EarlyWarningService
 {
@@ -53,6 +52,18 @@ class EarlyWarningService
                 'LOW_ATTENDANCE',
                 $attendanceViolation['reason'],
                 $attendanceViolation['payload']
+            );
+        }
+
+        // 4. Predictive Dropout Risk Scoring (Attendance 35% + Nilai 35% + Tagihan 30%)
+        $predictiveRisk = $this->calculatePredictiveDropoutRiskScore($siswa);
+        if ($predictiveRisk['total_risk_score'] >= 45) {
+            $createdLogs[] = $this->recordWarning(
+                $siswa,
+                $predictiveRisk['risk_category'],
+                'PREDICTIVE_DROPOUT_RISK',
+                "Skor risiko dropout prediktif mencapai {$predictiveRisk['total_risk_score']}/100 ({$predictiveRisk['risk_category']}). Presensi: {$predictiveRisk['breakdown']['presensi']['risk_score']}pt, Nilai: {$predictiveRisk['breakdown']['nilai']['risk_score']}pt, Tagihan: {$predictiveRisk['breakdown']['tagihan']['risk_score']}pt.",
+                $predictiveRisk
             );
         }
 
@@ -200,6 +211,115 @@ class EarlyWarningService
         }
 
         return null;
+    }
+
+    /**
+     * Calculate comprehensive predictive dropout risk score (0 - 100)
+     * based on weighted factors:
+     * - Attendance / Presensi: 35% weight
+     * - Academic Performance / Nilai: 35% weight
+     * - Financial Clearance / Tagihan: 30% weight
+     */
+    public function calculatePredictiveDropoutRiskScore(Siswa $siswa): array
+    {
+        // 1. Presensi Factor (35% weight)
+        $presensiQuery = PresensiKuliah::where('id_siswa', $siswa->id);
+        $totalKuliah = $presensiQuery->count();
+        $attendedKuliah = (clone $presensiQuery)->whereIn('status_kehadiran', ['HADIR', 'Hadir'])->count();
+
+        $presensiMhsQuery = PresensiMahasiswa::where('id_mahasiswa', $siswa->id);
+        $totalMhs = $presensiMhsQuery->count();
+        $attendedMhs = (clone $presensiMhsQuery)->whereIn('status', ['Hadir', 'HADIR'])->count();
+
+        $totalMeetings = $totalKuliah + $totalMhs;
+        $totalAttended = $attendedKuliah + $attendedMhs;
+
+        if ($totalMeetings > 0) {
+            $attendanceRate = round(($totalAttended / $totalMeetings) * 100, 2);
+            $presensiRisk = round(max(0, (100 - $attendanceRate) * 0.35), 2);
+        } else {
+            $attendanceRate = 100.0;
+            $presensiRisk = 0.0;
+        }
+
+        // 2. Nilai Factor (35% weight)
+        $recentKrs = Krs::where('id_siswa', $siswa->id)
+            ->whereNotNull('ips_lalu')
+            ->orderBy('id', 'desc')
+            ->take(3)
+            ->get();
+
+        if ($recentKrs->isNotEmpty()) {
+            $avgGpa = (float) $recentKrs->avg('ips_lalu');
+            // GPA scale: 0.00 - 4.00. 4.0 => 0 risk, 0.0 => 35 risk.
+            $nilaiRisk = round(max(0, min(35, (4.0 - $avgGpa) / 4.0 * 35.0)), 2);
+        } else {
+            $avgGpa = 3.0; // default safe baseline
+            $nilaiRisk = 0.0;
+        }
+
+        // 3. Tagihan Factor (30% weight)
+        $unpaidTagihan = TagihanUkt::where('id_mahasiswa', $siswa->id)
+            ->where('status_pembayaran', '!=', 'Lunas')
+            ->get();
+
+        $overdueTagihan = $unpaidTagihan->filter(function ($t) {
+            return $t->tgl_jatuh_tempo && $t->tgl_jatuh_tempo->isPast();
+        });
+
+        $infoTunggakan = $siswa->info_tunggakan ?? ['total_bulan' => 0, 'total_rupiah' => 0];
+        $totalUnpaidAmount = (float) $unpaidTagihan->sum('sisa_tagihan') + (float) ($infoTunggakan['total_rupiah'] ?? 0);
+
+        if ($overdueTagihan->isNotEmpty()) {
+            $tagihanRisk = 30.0;
+            $hasArrears = true;
+        } elseif ($unpaidTagihan->isNotEmpty()) {
+            $tagihanRisk = min(30.0, round($unpaidTagihan->count() >= 2 ? 30.0 : 15.0, 2));
+            $hasArrears = true;
+        } elseif (!empty($infoTunggakan['total_bulan']) && $infoTunggakan['total_bulan'] > 0) {
+            $tagihanRisk = min(30.0, round($infoTunggakan['total_bulan'] * 10.0, 2));
+            $hasArrears = true;
+        } else {
+            $tagihanRisk = 0.0;
+            $hasArrears = false;
+        }
+
+        $totalScore = (int) round(min(100, $presensiRisk + $nilaiRisk + $tagihanRisk));
+
+        $riskCategory = match (true) {
+            $totalScore >= 70 => 'CRITICAL',
+            $totalScore >= 45 => 'HIGH',
+            $totalScore >= 25 => 'MEDIUM',
+            default => 'LOW',
+        };
+
+        return [
+            'siswa_id' => $siswa->id,
+            'nama' => $siswa->nama,
+            'nisn' => $siswa->nisn,
+            'total_risk_score' => $totalScore,
+            'risk_category' => $riskCategory,
+            'breakdown' => [
+                'presensi' => [
+                    'rate_percent' => $attendanceRate,
+                    'total_meetings' => $totalMeetings,
+                    'attended' => $totalAttended,
+                    'risk_score' => $presensiRisk,
+                    'weight' => 0.35,
+                ],
+                'nilai' => [
+                    'gpa' => round($avgGpa, 2),
+                    'risk_score' => $nilaiRisk,
+                    'weight' => 0.35,
+                ],
+                'tagihan' => [
+                    'has_arrears' => $hasArrears,
+                    'unpaid_amount' => $totalUnpaidAmount,
+                    'risk_score' => $tagihanRisk,
+                    'weight' => 0.30,
+                ],
+            ],
+        ];
     }
 
     /**

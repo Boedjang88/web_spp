@@ -89,4 +89,14 @@ class KelasKuliah extends Model
     {
         return max(0, $this->kuota_maksimal - $this->total_terisi);
     }
+
+    public function hasCompletedAllMeetings(): bool
+    {
+        return $this->baps()->whereIn('status_verifikasi', ['Tersubmit', 'Diverifikasi BAAK'])->count() >= 16;
+    }
+
+    public function getMeetingCountAttribute(): int
+    {
+        return $this->baps()->whereIn('status_verifikasi', ['Tersubmit', 'Diverifikasi BAAK'])->count();
+    }
 }

@@ -132,6 +132,30 @@ class JadwalController extends Controller
             'jam_selesai.after' => 'Jam selesai harus setelah jam mulai.',
         ]);
 
+        // Validasi bentrok jadwal (Dosen/Guru, Kelas, dan Ruangan)
+        $clash = JadwalPelajaran::where('hari', $validated['hari'])
+            ->where(function ($q) use ($validated) {
+                $q->where('jam_mulai', '<', $validated['jam_selesai'])
+                  ->where('jam_selesai', '>', $validated['jam_mulai']);
+            })
+            ->where(function ($q) use ($validated) {
+                $q->where('id_guru', $validated['id_guru'])
+                  ->orWhere('id_kelas', $validated['id_kelas'])
+                  ->when(!empty($validated['ruangan']), function ($sub) use ($validated) {
+                      $sub->orWhere('ruangan', $validated['ruangan']);
+                  });
+            })
+            ->first();
+
+        if ($clash) {
+            $reason = $clash->id_guru == $validated['id_guru']
+                ? "Guru/Dosen yang bersangkutan sudah memiliki jadwal mengajar ({$clash->jam_mulai}-{$clash->jam_selesai})."
+                : ($clash->id_kelas == $validated['id_kelas']
+                    ? "Kelas yang bersangkutan sudah memiliki jadwal pelajaran lain ({$clash->jam_mulai}-{$clash->jam_selesai})."
+                    : "Ruangan '{$validated['ruangan']}' sedang digunakan pada jam tersebut.");
+            return back()->withInput()->with('error', "Bentrok Jadwal! {$reason}");
+        }
+
         $jadwal = JadwalPelajaran::create($validated);
         $jadwal->load(['kelas', 'mapel', 'guru']);
         ActivityLog::record('JADWAL_CREATE', "Menambahkan jadwal pelajaran {$jadwal->mapel?->nama_mapel} kelas {$jadwal->kelas?->nama_kelas} ({$jadwal->hari}).");
@@ -162,6 +186,31 @@ class JadwalController extends Controller
             'jam_selesai' => 'required|after:jam_mulai',
             'ruangan' => 'nullable|string|max:30',
         ]);
+
+        // Validasi bentrok jadwal (Dosen/Guru, Kelas, dan Ruangan)
+        $clash = JadwalPelajaran::where('id', '!=', $id)
+            ->where('hari', $validated['hari'])
+            ->where(function ($q) use ($validated) {
+                $q->where('jam_mulai', '<', $validated['jam_selesai'])
+                  ->where('jam_selesai', '>', $validated['jam_mulai']);
+            })
+            ->where(function ($q) use ($validated) {
+                $q->where('id_guru', $validated['id_guru'])
+                  ->orWhere('id_kelas', $validated['id_kelas'])
+                  ->when(!empty($validated['ruangan']), function ($sub) use ($validated) {
+                      $sub->orWhere('ruangan', $validated['ruangan']);
+                  });
+            })
+            ->first();
+
+        if ($clash) {
+            $reason = $clash->id_guru == $validated['id_guru']
+                ? "Guru/Dosen yang bersangkutan sudah memiliki jadwal mengajar ({$clash->jam_mulai}-{$clash->jam_selesai})."
+                : ($clash->id_kelas == $validated['id_kelas']
+                    ? "Kelas yang bersangkutan sudah memiliki jadwal pelajaran lain ({$clash->jam_mulai}-{$clash->jam_selesai})."
+                    : "Ruangan '{$validated['ruangan']}' sedang digunakan pada jam tersebut.");
+            return back()->withInput()->with('error', "Bentrok Jadwal! {$reason}");
+        }
 
         $jadwal->update($validated);
         ActivityLog::record('JADWAL_UPDATE', "Memperbarui jadwal pelajaran #{$jadwal->id}.");

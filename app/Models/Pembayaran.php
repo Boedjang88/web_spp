@@ -17,6 +17,16 @@ class Pembayaran extends Model
         'bulan_dibayar', 'tahun_dibayar', 'id_spp', 'jumlah_bayar'
     ];
 
+    protected static function booted(): void
+    {
+        static::saved(function () {
+            \Illuminate\Support\Facades\Cache::forget('dashboard_admin_aggregates_' . now()->toDateString());
+        });
+        static::deleted(function () {
+            \Illuminate\Support\Facades\Cache::forget('dashboard_admin_aggregates_' . now()->toDateString());
+        });
+    }
+
     // Relasi
     public function siswa(): BelongsTo { return $this->belongsTo(Siswa::class, 'id_siswa'); }
     public function petugas(): BelongsTo { return $this->belongsTo(User::class, 'id_petugas'); }

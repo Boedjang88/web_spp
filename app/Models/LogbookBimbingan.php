@@ -37,4 +37,23 @@ class LogbookBimbingan extends Model
     {
         return $this->belongsTo(Guru::class, 'id_guru');
     }
+
+    public function getBabAttribute(): string
+    {
+        if (preg_match('/^\[(.*?)\]/', (string) $this->catatan_kemajuan_mahasiswa, $matches)) {
+            return $matches[1];
+        }
+        return 'Bimbingan';
+    }
+
+    public function getMateriBimbinganAttribute(): string
+    {
+        $text = (string) $this->catatan_kemajuan_mahasiswa;
+        return trim(preg_replace('/^\[(.*?)\]\s*/', '', $text)) ?: $text;
+    }
+
+    public function getCatatanDosenAttribute(): ?string
+    {
+        return $this->arahan_dosen_pembimbing;
+    }
 }

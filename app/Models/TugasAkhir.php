@@ -29,11 +29,17 @@ class TugasAkhir extends Model
         'abstrak',
         'status_persetujuan',
         'file_revisi_path',
+        'digital_signature_hash',
+        'signature_provider',
+        'is_digitally_signed',
+        'signed_at',
     ];
 
     protected $casts = [
         'skor_plagiarisme_persen' => 'decimal:2',
         'tgl_lulus_sidang' => 'date',
+        'is_digitally_signed' => 'boolean',
+        'signed_at' => 'datetime',
     ];
 
     public function mahasiswa(): BelongsTo

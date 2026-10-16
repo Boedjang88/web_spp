@@ -7,10 +7,10 @@ use App\Models\JadwalKuliah;
 use App\Models\KelasKuliah;
 use App\Models\Krs;
 use App\Models\KrsDetail;
+use App\Models\Mahasiswa;
 use App\Models\MataKuliah;
 use App\Models\MataKuliahPrasyarat;
 use App\Models\Siswa;
-use App\Models\TahunAkademik;
 use App\Services\Audit\AuditTrailService;
 use App\Models\TagihanUkt;
 use Exception;
@@ -19,9 +19,14 @@ use Illuminate\Support\Facades\DB;
 
 class SmartKrsService
 {
+    protected GradingService $gradingService;
+
     public function __construct(
-        protected AuditTrailService $auditService
-    ) {}
+        protected AuditTrailService $auditService,
+        ?GradingService $gradingService = null
+    ) {
+        $this->gradingService = $gradingService ?? app(GradingService::class);
+    }
 
     /**
      * Determine maximum SKS cap based on Previous Semester GPA (IPS)
@@ -31,11 +36,11 @@ class SmartKrsService
         if ($ips >= 3.00) {
             return 24;
         } elseif ($ips >= 2.50) {
-            return 21;
+            return 22;
         } elseif ($ips >= 2.00) {
-            return 18;
+            return 20;
         } else {
-            return 15;
+            return 18;
         }
     }
 
@@ -74,6 +79,15 @@ class SmartKrsService
                 ]
             );
             return true;
+        }
+
+        // 2b. Check Institutional Grace Period (config academic.ukt_grace_period_days)
+        if ($tagihan && $tagihan->tgl_jatuh_tempo) {
+            $graceDays = (int) config('academic.ukt_grace_period_days', 7);
+            $dueWithGrace = \Carbon\Carbon::parse($tagihan->tgl_jatuh_tempo)->addDays($graceDays)->endOfDay();
+            if (now()->lte($dueWithGrace) && $tagihan->status_pembayaran !== 'Kadaluarsa') {
+                return true;
+            }
         }
 
         // 3. Check Siswa info_tunggakan
@@ -115,22 +129,79 @@ class SmartKrsService
             return [true, null];
         }
 
+        // Standard grade rank points
+        $gradeRanks = [
+            'A'  => 4.00,
+            'AB' => 3.50,
+            'B'  => 3.00,
+            'BC' => 2.50,
+            'C'  => 2.00,
+            'D'  => 1.00,
+            'E'  => 0.00,
+        ];
+
+        // Bridge both Siswa and Mahasiswa identity IDs
+        $studentIds = [$idSiswa];
+        $mahasiswa = Mahasiswa::find($idSiswa);
+        $siswa = Siswa::find($idSiswa);
+        if ($mahasiswa && $siswa) {
+            $studentIds = array_unique([$idSiswa, $mahasiswa->id, $siswa->id]);
+        } elseif ($mahasiswa) {
+            $matchedSiswa = Siswa::where('nisn', $mahasiswa->nim)->orWhere('nama', $mahasiswa->nama)->first();
+            if ($matchedSiswa) {
+                $studentIds[] = $matchedSiswa->id;
+            }
+        } elseif ($siswa) {
+            $matchedMahasiswa = Mahasiswa::where('nim', $siswa->nisn)->orWhere('nama', $siswa->nama)->first();
+            if ($matchedMahasiswa) {
+                $studentIds[] = $matchedMahasiswa->id;
+            }
+        }
+
         foreach ($prasyarats as $prasyarat) {
-            // Find past student records for this prerequisite course
-            $hasPassed = KrsDetail::whereHas('krs', function ($q) use ($idSiswa) {
-                $q->where('id_siswa', $idSiswa);
+            $mkPrasyarat = MataKuliah::find($prasyarat->id_mk_prasyarat);
+            $minGrade = strtoupper(trim($prasyarat->nilai_minimum ?? 'C'));
+            $minPoints = $gradeRanks[$minGrade] ?? 2.00;
+
+            // Find past student enrollment records for this prerequisite course
+            $pastEnrollments = KrsDetail::whereHas('krs', function ($q) use ($studentIds) {
+                $q->whereIn('id_siswa', $studentIds);
             })
             ->whereHas('kelasKuliah', function ($q) use ($prasyarat) {
                 $q->where('id_mk', $prasyarat->id_mk_prasyarat);
             })
-            ->where('is_lulus', true)
-            ->exists();
+            ->get();
 
-            if (!$hasPassed) {
-                $mkPrasyarat = MataKuliah::find($prasyarat->id_mk_prasyarat);
+            if ($pastEnrollments->isEmpty()) {
                 return [
                     false,
                     "Anda belum memenuhi mata kuliah prasyarat: {$mkPrasyarat?->nama_mk} ({$mkPrasyarat?->kode_mk})."
+                ];
+            }
+
+            // Find highest grade achieved in all past attempts
+            $bestPassed = false;
+            $bestGrade = null;
+            $bestPoints = -1.0;
+
+            foreach ($pastEnrollments as $enr) {
+                $gradeLetter = strtoupper(trim($enr->nilai_akhir_huruf ?? ''));
+                $points = (float) ($enr->bobot_mutu ?? ($gradeRanks[$gradeLetter] ?? 0.00));
+
+                if ($points > $bestPoints) {
+                    $bestPoints = $points;
+                    $bestGrade = $gradeLetter ?: 'E';
+                }
+
+                if ($enr->is_lulus && $points >= $minPoints) {
+                    $bestPassed = true;
+                }
+            }
+
+            if (!$bestPassed) {
+                return [
+                    false,
+                    "Nilai Anda untuk mata kuliah prasyarat {$mkPrasyarat?->nama_mk} ({$bestGrade}) belum memenuhi batas minimal ({$minGrade})."
                 ];
             }
         }
@@ -146,23 +217,55 @@ class SmartKrsService
     public function enrollClassWithPessimisticLock(int $idSiswa, int $idKelasKuliah, int $idTahunAkademik): KrsDetail
     {
         return DB::transaction(function () use ($idSiswa, $idKelasKuliah, $idTahunAkademik) {
+            // 0. Academic Status & Student Lifecycle Invariant Check
+            $student = Siswa::find($idSiswa) ?? Mahasiswa::find($idSiswa);
+            if ($student && in_array($student->status_kelulusan, ['Lulus', 'Lulus Wisuda', 'LULUS', 'Dikeluarkan', 'Drop Out', 'DO', 'Cuti'])) {
+                throw new Exception("Mahasiswa dengan status akademik '{$student->status_kelulusan}' tidak diizinkan melakukan pengisian KRS.");
+            }
+
             // 1. Financial Clearance Check
             if (!$this->isFinanciallyCleared($idSiswa, $idTahunAkademik)) {
                 throw new Exception('KRS Terkunci! Anda belum menyelesaikan administrasi pembayaran UKT/SPP semester ini.');
             }
 
-            // 2. Fetch or Create KRS Header
+            // 2. Fetch or Create KRS Header with dynamic SKS ceiling based on previous semester IPS
+            $prevKrs = Krs::where('id_siswa', $idSiswa)
+                ->where('id_tahun_akademik', '<', $idTahunAkademik)
+                ->orderByDesc('id_tahun_akademik')
+                ->first();
+
+            $prevIps = null;
+            if ($prevKrs) {
+                if ($prevKrs->ips_lalu !== null && (float) $prevKrs->ips_lalu > 0) {
+                    $prevIps = (float) $prevKrs->ips_lalu;
+                } else {
+                    $calcIps = $this->gradingService->calculateIps($prevKrs);
+                    if ($calcIps > 0) {
+                        $prevIps = $calcIps;
+                    }
+                }
+            }
+
+            $maxSksCap = ($prevIps !== null) ? $this->calculateMaxSksCap($prevIps) : 24;
+
             $krs = Krs::firstOrCreate(
                 [
                     'id_siswa' => $idSiswa,
                     'id_tahun_akademik' => $idTahunAkademik,
                 ],
                 [
-                    'max_sks_diizinkan' => 24,
+                    'max_sks_diizinkan' => $maxSksCap,
                     'total_sks_diambil' => 0,
                     'status_krs' => 'Draft',
+                    'ips_lalu' => $prevIps ?? 0.00,
                 ]
             );
+
+            if ($prevIps !== null && $prevIps > 0 && $krs->max_sks_diizinkan > $maxSksCap) {
+                $krs->max_sks_diizinkan = $maxSksCap;
+                $krs->ips_lalu = $prevIps;
+                $krs->save();
+            }
 
             // 3. Pessimistically Lock the Target Class Row (FOR UPDATE)
             $kelas = KelasKuliah::where('id', $idKelasKuliah)
@@ -310,8 +413,13 @@ class SmartKrsService
 
         foreach ($newSchedules as $newJadwal) {
             foreach ($existingSchedules as $existJadwal) {
-                if ($newJadwal->hari === $existJadwal->hari) {
-                    if ($newJadwal->jam_mulai < $existJadwal->jam_selesai && $newJadwal->jam_selesai > $existJadwal->jam_mulai) {
+                if (trim(strtolower($newJadwal->hari)) === trim(strtolower($existJadwal->hari))) {
+                    $newMulai = substr((string) $newJadwal->jam_mulai, 0, 5);
+                    $newSelesai = substr((string) $newJadwal->jam_selesai, 0, 5);
+                    $existMulai = substr((string) $existJadwal->jam_mulai, 0, 5);
+                    $existSelesai = substr((string) $existJadwal->jam_selesai, 0, 5);
+
+                    if ($newMulai < $existSelesai && $newSelesai > $existMulai) {
                         throw new Exception("Bentrok Jadwal Pribadi! Mata kuliah {$newClass->mataKuliah?->nama_mk} bentrok pada hari {$newJadwal->hari} ({$newJadwal->jam_mulai}-{$newJadwal->jam_selesai}) dengan {$existJadwal->kelasKuliah?->mataKuliah?->nama_mk} ({$existJadwal->jam_mulai}-{$existJadwal->jam_selesai}).");
                     }
                 }

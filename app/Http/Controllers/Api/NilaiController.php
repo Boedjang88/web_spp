@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Nilai;
 use App\Models\Siswa;
+use App\Models\TahunAkademik;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -48,6 +49,18 @@ class NilaiController extends BaseApiController
             'catatan' => 'nullable|string',
         ]);
 
+        $activeTa = TahunAkademik::where('semester', $validated['semester'])
+            ->where(function ($q) use ($validated) {
+                $q->where('nama_tahun', $validated['tahun_ajaran'])
+                  ->orWhere('kode_tahun', 'like', '%' . substr($validated['tahun_ajaran'], 0, 4) . '%');
+            })
+            ->first() ?? TahunAkademik::where('is_active', true)->first();
+
+        $user = auth()->user();
+        if ($activeTa && !$activeTa->isGradingOpen() && $user && !$user->isAdmin() && !$user->isSuperAdmin()) {
+            return $this->sendError('Batas waktu penginputan nilai untuk periode akademik ini telah berakhir atau belum dibuka. Hubungi BAAK untuk dispensasi.', [], 422);
+        }
+
         $existing = Nilai::where('id_siswa', $validated['id_siswa'])
             ->where('id_mapel', $validated['id_mapel'])
             ->where('semester', $validated['semester'])
@@ -90,6 +103,18 @@ class NilaiController extends BaseApiController
 
         if (!$nilai) {
             return $this->sendError('Data nilai tidak ditemukan.', [], 404);
+        }
+
+        $activeTa = TahunAkademik::where('semester', $nilai->semester)
+            ->where(function ($q) use ($nilai) {
+                $q->where('nama_tahun', $nilai->tahun_ajaran)
+                  ->orWhere('kode_tahun', 'like', '%' . substr($nilai->tahun_ajaran, 0, 4) . '%');
+            })
+            ->first() ?? TahunAkademik::where('is_active', true)->first();
+
+        $user = auth()->user();
+        if ($activeTa && !$activeTa->isGradingOpen() && $user && !$user->isAdmin() && !$user->isSuperAdmin()) {
+            return $this->sendError('Periode pengubahan nilai untuk semester ini telah terkunci. Perubahan nilai harus melalui persetujuan resmi BAAK.', [], 422);
         }
 
         $validated = $request->validate([

@@ -262,28 +262,44 @@ class PembayaranController extends BaseApiController
      */
     private function terbilang(int $angka): string
     {
-        $angka = abs($angka);
+        if ($angka === 0) {
+            return 'nol';
+        }
+
+        $prefix = '';
+        if ($angka < 0) {
+            $prefix = 'minus ';
+            $angka = abs($angka);
+        }
+
+        return trim(preg_replace('/\s+/', ' ', $prefix . $this->rawTerbilang($angka)));
+    }
+
+    private function rawTerbilang(int $angka): string
+    {
         $baca = ['', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'tujuh', 'delapan', 'sembilan', 'sepuluh', 'sebelas'];
         $terbilang = '';
 
         if ($angka < 12) {
             $terbilang = ' ' . $baca[$angka];
         } elseif ($angka < 20) {
-            $terbilang = $this->terbilang($angka - 10) . ' belas';
+            $terbilang = $this->rawTerbilang($angka - 10) . ' belas';
         } elseif ($angka < 100) {
-            $terbilang = $this->terbilang((int) ($angka / 10)) . ' puluh' . $this->terbilang($angka % 10);
+            $terbilang = $this->rawTerbilang((int) ($angka / 10)) . ' puluh' . $this->rawTerbilang($angka % 10);
         } elseif ($angka < 200) {
-            $terbilang = ' seratus' . $this->terbilang($angka - 100);
+            $terbilang = ' seratus' . $this->rawTerbilang($angka - 100);
         } elseif ($angka < 1000) {
-            $terbilang = $this->terbilang((int) ($angka / 100)) . ' ratus' . $this->terbilang($angka % 100);
+            $terbilang = $this->rawTerbilang((int) ($angka / 100)) . ' ratus' . $this->rawTerbilang($angka % 100);
         } elseif ($angka < 2000) {
-            $terbilang = ' seribu' . $this->terbilang($angka - 1000);
+            $terbilang = ' seribu' . $this->rawTerbilang($angka - 1000);
         } elseif ($angka < 1000000) {
-            $terbilang = $this->terbilang((int) ($angka / 1000)) . ' ribu' . $this->terbilang($angka % 1000);
+            $terbilang = $this->rawTerbilang((int) ($angka / 1000)) . ' ribu' . $this->rawTerbilang($angka % 1000);
         } elseif ($angka < 1000000000) {
-            $terbilang = $this->terbilang((int) ($angka / 1000000)) . ' juta' . $this->terbilang($angka % 1000000);
+            $terbilang = $this->rawTerbilang((int) ($angka / 1000000)) . ' juta' . $this->rawTerbilang($angka % 1000000);
+        } elseif ($angka < 1000000000000) {
+            $terbilang = $this->rawTerbilang((int) ($angka / 1000000000)) . ' milyar' . $this->rawTerbilang($angka % 1000000000);
         }
 
-        return trim($terbilang);
+        return $terbilang;
     }
 }

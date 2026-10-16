@@ -4,17 +4,21 @@ use App\Http\Controllers\CekTagihanController;
 use App\Http\Controllers\Web\ActivityLogController;
 use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\DashboardController;
+use App\Http\Controllers\Web\DosenController;
 use App\Http\Controllers\Web\GuruController;
 use App\Http\Controllers\Web\JadwalController;
 use App\Http\Controllers\Web\KelasController;
 use App\Http\Controllers\Web\LaporanController;
+use App\Http\Controllers\Web\MahasiswaController;
 use App\Http\Controllers\Web\MapelController;
+use App\Http\Controllers\Web\MataKuliahController;
 use App\Http\Controllers\Web\NilaiController;
 use App\Http\Controllers\Web\PembayaranController;
 use App\Http\Controllers\Web\PresensiController;
 use App\Http\Controllers\Web\ProfileController;
 use App\Http\Controllers\Web\SiswaController;
 use App\Http\Controllers\Web\SppController;
+use App\Http\Controllers\Web\UktController;
 use App\Http\Controllers\Web\UserController;
 use App\Http\Controllers\Web\DosenKrsApprovalController;
 use App\Http\Controllers\Web\DosenBapController;
@@ -39,11 +43,17 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// --- Public Routes: Redirect to Login & Interactive API Docs ---
+// --- Public Routes: Portal Layanan Mandiri, Verifikasi Ijazah & Interactive API Docs ---
 Route::get('/', function () {
     return redirect()->route('login');
-})->name('cek.index');
-Route::post('/cek-tagihan', [CekTagihanController::class, 'search'])->name('cek.search');
+})->name('home');
+Route::get('/cek-tagihan', [CekTagihanController::class, 'index'])->name('cek.index');
+Route::post('/cek-tagihan', [CekTagihanController::class, 'search'])
+    ->middleware('strict.rate_limit:10,1')
+    ->name('cek.search');
+Route::get('/verifikasi-ijazah/{token}', [\App\Http\Controllers\Web\DiplomaVerificationController::class, 'verify'])
+    ->middleware('strict.rate_limit:30,1')
+    ->name('diploma.verify');
 Route::get('/api/docs', [ApiDocsController::class, 'index'])->name('api.docs');
 Route::get('/survey/employer/{token}', [\App\Http\Controllers\Web\EmployerFeedbackPortalController::class, 'show'])->name('employer.feedback.show');
 Route::put('/survey/employer/{token}', [\App\Http\Controllers\Web\EmployerFeedbackPortalController::class, 'update'])->name('employer.feedback.update');
@@ -99,12 +109,14 @@ Route::middleware(['auth', 'pdp.consent'])->group(function () {
     Route::post('siakad/tugas/{id}/submit', [\App\Http\Controllers\Web\StudentAssignmentController::class, 'submit'])->name('siakad.tugas.submit');
     Route::post('tugas/{id}/submit', [\App\Http\Controllers\Web\StudentAssignmentController::class, 'submit'])->name('tugas.submit');
 
-    // --- UKT Portal & Billing Breakdown ---
-    Route::get('siakad/ukt', [\App\Http\Controllers\Web\UktPortalController::class, 'index'])->name('siakad.ukt.index');
-    Route::get('ukt', [\App\Http\Controllers\Web\UktPortalController::class, 'index'])->name('ukt.index');
-    Route::post('siakad/ukt/bayar/{id}', [\App\Http\Controllers\Web\UktPortalController::class, 'bayar'])->name('siakad.ukt.bayar');
-    Route::post('ukt/bayar/{id}', [\App\Http\Controllers\Web\UktPortalController::class, 'bayar'])->name('ukt.bayar');
-    Route::get('siakad/ukt/kwitansi/{id}', [\App\Http\Controllers\Web\UktPortalController::class, 'cetakKwitansi'])->name('siakad.ukt.kwitansi');
+    // --- UKT Portal & Billing Breakdown (Anti-Scraping Rate-Limited) ---
+    Route::middleware('strict.rate_limit:20,1')->group(function () {
+        Route::get('siakad/ukt', [\App\Http\Controllers\Web\UktPortalController::class, 'index'])->name('siakad.ukt.index');
+        Route::get('ukt', [\App\Http\Controllers\Web\UktPortalController::class, 'index'])->name('ukt.index');
+        Route::post('siakad/ukt/bayar/{id}', [\App\Http\Controllers\Web\UktPortalController::class, 'bayar'])->name('siakad.ukt.bayar');
+        Route::post('ukt/bayar/{id}', [\App\Http\Controllers\Web\UktPortalController::class, 'bayar'])->name('ukt.bayar');
+        Route::get('siakad/ukt/kwitansi/{id}', [\App\Http\Controllers\Web\UktPortalController::class, 'cetakKwitansi'])->name('siakad.ukt.kwitansi');
+    });
 
     // --- Student Biodata & PDP Profile Completion ---
     Route::get('siakad/biodata', [\App\Http\Controllers\Web\StudentBiodataController::class, 'edit'])->name('siakad.biodata.edit');
@@ -120,6 +132,7 @@ Route::middleware(['auth', 'pdp.consent'])->group(function () {
 
     Route::get('siakad/dosen/bap', [DosenBapController::class, 'index'])->name('siakad.dosen.bap.index');
     Route::post('siakad/dosen/bap', [DosenBapController::class, 'store'])->name('siakad.dosen.bap.store');
+    Route::post('siakad/dosen/bap/{id}/finalize', [DosenBapController::class, 'finalizeCourse'])->name('siakad.dosen.bap.finalize');
 
     // --- Student Self-Service Portals (EDOM, e-Surat, Facility Booking) ---
     Route::get('siakad/edom', [StudentEdomController::class, 'index'])->name('siakad.edom.index');
@@ -154,6 +167,7 @@ Route::middleware(['auth', 'pdp.consent'])->group(function () {
 
     Route::get('siakad/dbpta/bimbingan', [DbptaBimbinganController::class, 'index'])->name('siakad.dbpta.bimbingan.index');
     Route::post('siakad/dbpta/bimbingan', [DbptaBimbinganController::class, 'store'])->name('siakad.dbpta.bimbingan.store');
+    Route::post('siakad/dbpta/bimbingan/{id}/approve', [DbptaBimbinganController::class, 'approve'])->name('siakad.dbpta.bimbingan.approve')->middleware('role:superadmin,admin,guru');
 
     Route::get('siakad/dbpta/sidang-yudisium', [DbptaSidangController::class, 'index'])->name('siakad.dbpta.sidang.index');
     Route::post('siakad/dbpta/sidang-yudisium', [DbptaSidangController::class, 'store'])->name('siakad.dbpta.sidang.store');
@@ -165,22 +179,34 @@ Route::middleware(['auth', 'pdp.consent'])->group(function () {
     Route::middleware('role:superadmin,admin')->group(function () {
         Route::resource('web/users', UserController::class)->names('web.users');
         Route::get('web/activity-logs', [ActivityLogController::class, 'index'])->name('web.activity-logs.index');
+        
+        // Official Higher Education Resource Routes
+        Route::resource('web/mahasiswa', MahasiswaController::class)->names('web.mahasiswa');
+        Route::resource('web/dosen', DosenController::class)->names('web.dosen');
+        Route::resource('web/matakuliah', MataKuliahController::class)->names('web.matakuliah');
+        Route::resource('web/ukt', UktController::class)->names('web.ukt');
+
+        // Backward-compatible Alias Routes
         Route::resource('web/guru', GuruController::class)->names('web.guru');
         Route::resource('web/mapel', MapelController::class)->names('web.mapel');
         Route::resource('web/kelas', KelasController::class)->names('web.kelas');
         Route::resource('web/spp', SppController::class)->names('web.spp');
         Route::resource('web/siswa', SiswaController::class)->names('web.siswa');
+
         Route::resource('web/pembayaran', PembayaranController::class)->names('web.pembayaran');
         Route::get('web/laporan', [LaporanController::class, 'index'])->name('web.laporan.index');
         Route::get('web/laporan/cetak', [LaporanController::class, 'cetak'])->name('web.laporan.cetak');
         Route::get('web/laporan/export-csv', [LaporanController::class, 'exportCsv'])->name('web.laporan.exportCsv');
+        Route::post('web/laporan/export-async', [LaporanController::class, 'exportAsync'])->name('web.laporan.exportAsync');
+        Route::get('web/laporan/download/{filename}', [LaporanController::class, 'downloadExport'])->name('web.laporan.exportDownload');
+        Route::post('web/pembayaran/batch-kwitansi-queue', [\App\Http\Controllers\CetakKwitansiController::class, 'batchQueue'])->name('web.pembayaran.batchKwitansiQueue');
     });
 
     // --- Academic Portals (Accessible by Students, Lecturers & Admin) ---
     Route::get('web/nilai', [NilaiController::class, 'index'])->name('web.nilai.index');
     Route::get('web/jadwal', [JadwalController::class, 'index'])->name('web.jadwal.index');
 
-    // --- Academic Features & Management (Admin & Dewan Guru) ---
+    // --- Academic Features & Management (Admin & Dewan Guru / Dosen) ---
     Route::middleware('role:superadmin,admin,guru')->group(function () {
         Route::resource('web/jadwal', JadwalController::class)->except(['index'])->names('web.jadwal');
         Route::resource('web/nilai', NilaiController::class)->except(['index'])->names('web.nilai');
@@ -189,15 +215,20 @@ Route::middleware(['auth', 'pdp.consent'])->group(function () {
     });
 
     // --- Student / General Accessible Print Endpoints ---
+    Route::get('web/nilai/khs/{id}', [NilaiController::class, 'cetakKhs'])->name('web.nilai.khs');
     Route::get('web/nilai/rapor/{id}', [NilaiController::class, 'cetakRapor'])->name('web.nilai.rapor');
+    Route::get('web/mahasiswa/{id}/surat-tagihan', [MahasiswaController::class, 'suratTagihan'])->name('web.mahasiswa.suratTagihan');
     Route::get('web/siswa/{id}/surat-tagihan', [SiswaController::class, 'suratTagihan'])->name('web.siswa.suratTagihan');
+    Route::get('web/mahasiswa/{id}/kartu-ujian', [MahasiswaController::class, 'kartuUjian'])->name('web.mahasiswa.kartuUjian');
     Route::get('web/siswa/{id}/kartu-ujian', [SiswaController::class, 'kartuUjian'])->name('web.siswa.kartuUjian');
     Route::get('web/pembayaran/{id}/cetak', [PembayaranController::class, 'cetakKwitansi'])->name('web.pembayaran.cetak');
 
     // --- Enterprise Print Endpoints: SKPI & Digital BAP ---
     Route::get('siakad/skpi/print', function () {
+        $studentId = auth()->user()->id_siswa ?? auth()->user()->id_mahasiswa;
+        abort_if(!$studentId, 403, 'Profil mahasiswa belum terhubung dengan akun Anda.');
         $service = app(\App\Services\Skpi\SkpiService::class);
-        $skpi = $service->generateBilingualSupplement(auth()->user()->id_siswa ?? 1);
+        $skpi = $service->generateBilingualSupplement($studentId);
         return view('siakad.skpi.print', compact('skpi'));
     })->name('siakad.skpi.print');
 

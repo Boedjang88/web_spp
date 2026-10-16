@@ -28,7 +28,8 @@ class SecureDocumentDownloadController extends Controller
     {
         $krs = Krs::with(['mahasiswa.kelas', 'tahunAkademik', 'details.kelasKuliah.mataKuliah'])->findOrFail($id_krs);
         $siswa = $krs->mahasiswa;
-        return view('web.siswa.kartu-ujian', compact('siswa', 'krs'));
+        $viewName = view()->exists('mahasiswa.kartu-ujian') ? 'mahasiswa.kartu-ujian' : (view()->exists('siswa.kartu-ujian') ? 'siswa.kartu-ujian' : 'web.siswa.kartu-ujian');
+        return view($viewName, compact('siswa', 'krs'));
     }
 
     /**
@@ -38,7 +39,8 @@ class SecureDocumentDownloadController extends Controller
     {
         $siswa = Siswa::with(['kelas', 'nilais.mapel'])->findOrFail($id_siswa);
         $nilais = $siswa->nilais;
-        return view('web.nilai.rapor', compact('siswa', 'nilais'));
+        $viewName = view()->exists('nilai.khs') ? 'nilai.khs' : (view()->exists('nilai.rapor') ? 'nilai.rapor' : 'web.nilai.rapor');
+        return view($viewName, compact('siswa', 'nilais'));
     }
 
     /**

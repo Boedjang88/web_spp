@@ -12,11 +12,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->trustProxies(at: '*');
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
             'idempotent' => \App\Http\Middleware\IdempotencyMiddleware::class,
             'pdp.consent' => \App\Http\Middleware\UuPdpConsentMiddleware::class,
             'signed.download' => \App\Http\Middleware\VerifySignedDownloadUrl::class,
+            'strict.rate_limit' => \App\Http\Middleware\StrictRateLimitingMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

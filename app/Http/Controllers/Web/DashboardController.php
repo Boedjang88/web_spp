@@ -78,7 +78,8 @@ class DashboardController extends Controller
                     ->get();
             }
 
-            return view('dashboard.siswa', compact('siswa', 'jadwalSiswa', 'nilaiSiswa', 'presensiSummary', 'tunggakan', 'riwayatPembayaran', 'hariIni'));
+            $viewName = view()->exists('dashboard.mahasiswa') ? 'dashboard.mahasiswa' : 'dashboard.siswa';
+            return view($viewName, compact('siswa', 'jadwalSiswa', 'nilaiSiswa', 'presensiSummary', 'tunggakan', 'riwayatPembayaran', 'hariIni'));
         }
 
         // 2. Data Khusus Dosen / Guru
@@ -105,16 +106,46 @@ class DashboardController extends Controller
                     ->get();
             }
 
-            return view('dashboard.guru', compact('guru', 'jadwalGuruHariIni', 'totalJadwalAjar', 'nilaiTerbaruGuru', 'hariIni'));
+            $viewName = view()->exists('dashboard.dosen') ? 'dashboard.dosen' : 'dashboard.guru';
+            return view($viewName, compact('guru', 'jadwalGuruHariIni', 'totalJadwalAjar', 'nilaiTerbaruGuru', 'hariIni'));
         }
 
-        // 3. Data Umum / Superadmin, Admin TU & BAAK
-        $totalSiswa = User::whereIn('role', ['mahasiswa', 'siswa', 'student'])->count();
-        $totalGuru = User::whereIn('role', ['dosen', 'guru', 'lecturer'])->count();
-        $totalMapel = Mapel::count();
-        $totalKelas = Kelas::count();
-        $totalUsers = User::count();
-        $totalPemasukan = Pembayaran::sum('jumlah_bayar') ?? 0;
+        // 3. Data Umum / Superadmin, Admin TU & BAAK (Cached for 15 minutes / 900s)
+        $cacheKey = 'dashboard_admin_aggregates_' . now()->toDateString();
+        $aggregates = \Illuminate\Support\Facades\Cache::remember($cacheKey, 900, function () {
+            $currentYear = now()->year;
+            $chartData = [];
+            for ($m = 1; $m <= 12; $m++) {
+                $chartData[] = (int) Pembayaran::whereMonth('tgl_bayar', $m)->whereYear('tgl_bayar', $currentYear)->sum('jumlah_bayar');
+            }
+
+            $kelasList = Kelas::withCount('siswas')->get();
+
+            return [
+                'totalSiswa' => User::whereIn('role', ['mahasiswa', 'siswa', 'student'])->count(),
+                'totalGuru' => User::whereIn('role', ['dosen', 'guru', 'lecturer'])->count(),
+                'totalMapel' => Mapel::count(),
+                'totalKelas' => Kelas::count(),
+                'totalUsers' => User::count(),
+                'totalPemasukan' => (float) (Pembayaran::sum('jumlah_bayar') ?? 0),
+                'chartData' => $chartData,
+                'kelasLabels' => $kelasList->pluck('nama_kelas')->toArray(),
+                'kelasData' => $kelasList->pluck('siswas_count')->toArray(),
+            ];
+        });
+
+        $totalSiswa = $aggregates['totalSiswa'];
+        $totalGuru = $aggregates['totalGuru'];
+        $totalMapel = $aggregates['totalMapel'];
+        $totalKelas = $aggregates['totalKelas'];
+        $totalUsers = $aggregates['totalUsers'];
+        $totalPemasukan = $aggregates['totalPemasukan'];
+        $chartData = $aggregates['chartData'];
+        $kelasLabels = $aggregates['kelasLabels'];
+        $kelasData = $aggregates['kelasData'];
+
+        $chartLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        $currentYear = now()->year;
 
         $transaksiHariIni = Pembayaran::whereDate('tgl_bayar', now()->toDateString())->count();
         $pemasukanHariIni = Pembayaran::whereDate('tgl_bayar', now()->toDateString())->sum('jumlah_bayar') ?? 0;
@@ -151,20 +182,6 @@ class DashboardController extends Controller
             'sakit' => $presensisToday->where('status', 'Sakit')->count(),
             'alpa' => $presensisToday->where('status', 'Alpa')->count(),
         ];
-
-        $currentYear = now()->year;
-
-        // Monthly revenue chart data
-        $chartLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-        $chartData = [];
-        for ($m = 1; $m <= 12; $m++) {
-            $chartData[] = (int) Pembayaran::whereMonth('tgl_bayar', $m)->whereYear('tgl_bayar', $currentYear)->sum('jumlah_bayar');
-        }
-
-        // Student class distribution chart data
-        $kelasList = Kelas::withCount('siswas')->get();
-        $kelasLabels = $kelasList->pluck('nama_kelas')->toArray();
-        $kelasData = $kelasList->pluck('siswas_count')->toArray();
 
         return view('dashboard.index', compact(
             'totalSiswa',

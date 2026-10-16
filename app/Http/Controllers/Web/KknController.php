@@ -2,25 +2,35 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Domain\Academic\Actions\EnrollKknAction;
+use App\Domain\Academic\Services\KknRegistrationService;
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
-use App\Models\KknRegistrasi;
+use App\Models\Siswa;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class KknController extends Controller
 {
+    public function __construct(
+        protected KknRegistrationService $kknService,
+        protected EnrollKknAction $enrollKknAction
+    ) {}
+
     public function index(): View
     {
         $user = auth()->user();
-        $siswa = $user?->siswa ?? $user?->mahasiswa ?? \App\Models\Siswa::first();
+        $siswa = $user?->siswa ?? $user?->mahasiswa;
 
-        $kknRegistration = KknRegistrasi::where('id_siswa', $siswa?->id ?? 1)
-            ->latest()
-            ->first();
+        $kknRegistration = $siswa
+            ? $this->kknService->getLatestRegistrationForStudent($siswa->id)
+            : null;
 
-        return view('siakad.kkn.index', compact('siswa', 'kknRegistration'));
+        $passedSks = $siswa ? $this->kknService->getPassedSks($siswa) : 0;
+        $isEligible = $siswa ? $this->kknService->isEligible($siswa) : false;
+        $minSks = KknRegistrationService::MIN_KKN_SKS;
+
+        return view('siakad.kkn.index', compact('siswa', 'kknRegistration', 'passedSks', 'isEligible', 'minSks'));
     }
 
     public function register(Request $request): RedirectResponse
@@ -32,30 +42,16 @@ class KknController extends Controller
         ]);
 
         $user = auth()->user();
-        $siswa = $user?->siswa ?? $user?->mahasiswa ?? \App\Models\Siswa::first();
-        $siswaId = $siswa?->id ?? 1;
+        $siswa = $user?->siswa ?? $user?->mahasiswa;
+        if (!$siswa) {
+            return back()->with('error', 'Profil mahasiswa Anda belum terhubung. Tidak dapat mendaftar KKN.');
+        }
 
-        $tahun = \App\Models\TahunAkademik::first() ?? \App\Models\TahunAkademik::create([
-            'kode_tahun' => '20261',
-            'nama_tahun' => '2026/2027 Ganjil',
-            'semester' => 'Ganjil',
-            'tgl_mulai' => now()->startOfYear(),
-            'tgl_selesai' => now()->endOfYear(),
-            'is_active' => true,
-        ]);
-
-        KknRegistrasi::updateOrCreate(
-            ['id_siswa' => $siswaId, 'id_tahun_akademik' => $tahun->id],
-            [
-                'lokasi_kkn' => $validated['lokasi_kkn'],
-                'kelompok' => $validated['kelompok'],
-                'kecamatan' => 'Kecamatan Ciawi',
-                'kabupaten' => 'Kabupaten Bogor',
-                'status_pendaftaran' => 'SUBMITTED',
-            ]
-        );
-
-        ActivityLog::record('KKN_REGISTER', "Mahasiswa mendaftar KKN di lokasi: {$validated['lokasi_kkn']}");
+        try {
+            $this->enrollKknAction->execute($siswa, $validated);
+        } catch (\DomainException $e) {
+            return back()->with('error', $e->getMessage());
+        }
 
         return redirect()->route('siakad.kkn.index')->with('success', 'Pendaftaran Kuliah Kerja Nyata (KKN) berhasil disimpan!');
     }

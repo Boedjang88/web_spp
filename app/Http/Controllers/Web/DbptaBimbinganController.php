@@ -16,12 +16,12 @@ class DbptaBimbinganController extends Controller
     public function index(): View
     {
         $user = auth()->user();
-        $siswa = $user?->siswa ?? $user?->mahasiswa ?? Siswa::first();
+        $siswa = $user?->siswa ?? $user?->mahasiswa;
 
-        $tugasAkhir = TugasAkhir::where('id_siswa', $siswa?->id ?? 1)->first();
-        $logbookList = LogbookBimbingan::where('id_siswa', $siswa?->id ?? 1)
-            ->latest()
-            ->get();
+        $tugasAkhir = $siswa ? TugasAkhir::where('id_siswa', $siswa->id)->first() : null;
+        $logbookList = $siswa
+            ? LogbookBimbingan::where('id_siswa', $siswa->id)->latest()->get()
+            : collect();
 
         return view('siakad.dbpta.bimbingan', compact('siswa', 'tugasAkhir', 'logbookList'));
     }
@@ -35,28 +35,49 @@ class DbptaBimbinganController extends Controller
         ]);
 
         $user = auth()->user();
-        $siswa = $user?->siswa ?? $user?->mahasiswa ?? Siswa::first();
-        $siswaId = $siswa?->id ?? 1;
+        $siswa = $user?->siswa ?? $user?->mahasiswa;
+        if (!$siswa) {
+            return back()->with('error', 'Profil mahasiswa Anda belum terhubung. Tidak dapat mencatat logbook bimbingan.');
+        }
+        $siswaId = $siswa->id;
 
         $tugasAkhir = TugasAkhir::where('id_siswa', $siswaId)->first();
-        $guru = \App\Models\Guru::first() ?? \App\Models\Guru::create([
-            'nip' => '19800101',
-            'nama_guru' => 'Dosen Pembimbing',
-            'jenis_kelamin' => 'L',
-        ]);
-        $guruId = $guru->id;
+        if (!$tugasAkhir) {
+            return back()->with('error', 'Anda belum memiliki pendaftaran Skripsi/Tugas Akhir aktif. Silakan ajukan proposal terlebih dahulu.');
+        }
+
+        $guruId = $tugasAkhir->pembimbings()->first()?->id_guru
+            ?? \App\Models\Guru::first()?->id
+            ?? \App\Models\Guru::create([
+                'nip' => '19800101',
+                'nama_guru' => 'Dosen Pembimbing',
+                'jenis_kelamin' => 'L',
+            ])->id;
 
         LogbookBimbingan::create([
-            'id_tugas_akhir' => $tugasAkhir?->id ?? 1,
+            'id_tugas_akhir' => $tugasAkhir->id,
             'id_guru' => $guruId,
             'tanggal_bimbingan' => now(),
             'catatan_kemajuan_mahasiswa' => "[$validated[bab]] {$validated['materi_bimbingan']}",
-            'arahan_dosen_pembimbing' => $validated['saran_dosen'] ?? 'Lanjutkan ke bab berikutnya & perbaiki daftar pustaka.',
-            'status_acc' => 'Disetujui',
+            'arahan_dosen_pembimbing' => $validated['saran_dosen'] ?? null,
+            'status_acc' => 'Pending',
         ]);
 
-        ActivityLog::record('LOGBOOK_BIMBINGAN', "Mahasiswa mencatat bimbingan TA: {$validated['bab']}");
+        ActivityLog::record('LOGBOOK_BIMBINGAN', "Mahasiswa mencatat bimbingan TA: {$validated['bab']} (Menunggu Review Dosen)");
 
-        return redirect()->route('siakad.dbpta.bimbingan.index')->with('success', 'Catatan logbook bimbingan berhasil ditambahkan!');
+        return redirect()->route('siakad.dbpta.bimbingan.index')->with('success', 'Catatan logbook bimbingan berhasil ditambahkan dan menunggu paraf/review dosen pembimbing!');
+    }
+
+    public function approve(int $id): RedirectResponse
+    {
+        $logbook = LogbookBimbingan::findOrFail($id);
+        $logbook->update([
+            'status_acc' => 'Disetujui',
+            'tgl_disetujui' => now(),
+        ]);
+
+        ActivityLog::record('LOGBOOK_APPROVE', "Dosen menyetujui logbook bimbingan #{$logbook->id}");
+
+        return back()->with('success', 'Logbook bimbingan berhasil disetujui/di-paraf!');
     }
 }

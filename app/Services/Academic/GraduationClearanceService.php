@@ -139,12 +139,22 @@ class GraduationClearanceService
         return [
             'is_eligible' => $isEligible,
             'sks_accumulated' => $passedSksTotal,
+            'total_sks_acquired' => $passedSksTotal,
             'sks_target' => $targetSks,
             'skpi_points' => $totalSkpi,
             'skpi_target' => $targetSkpi,
             'failed_mandatory_courses' => $failedMandatoryCourses,
             'reasons' => $reasons,
         ];
+    }
+
+    /**
+     * Get total verified passed credits (SKS) for a student.
+     */
+    public function getTotalPassedSks(object $siswa): int
+    {
+        $audit = $this->auditGraduation($siswa);
+        return (int) ($audit['sks_accumulated'] ?? 0);
     }
 
     /**

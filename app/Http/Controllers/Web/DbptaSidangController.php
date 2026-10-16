@@ -16,12 +16,12 @@ class DbptaSidangController extends Controller
     public function index(): View
     {
         $user = auth()->user();
-        $siswa = $user?->siswa ?? $user?->mahasiswa ?? Siswa::first();
+        $siswa = $user?->siswa ?? $user?->mahasiswa;
 
-        $tugasAkhir = TugasAkhir::where('id_siswa', $siswa?->id ?? 1)->first();
-        $sidangList = SidangSkripsi::where('id_tugas_akhir', $tugasAkhir?->id ?? 1)
-            ->latest()
-            ->get();
+        $tugasAkhir = $siswa ? TugasAkhir::where('id_siswa', $siswa->id)->first() : null;
+        $sidangList = $tugasAkhir
+            ? SidangSkripsi::where('id_tugas_akhir', $tugasAkhir->id)->latest()->get()
+            : collect();
 
         return view('siakad.dbpta.sidang', compact('siswa', 'tugasAkhir', 'sidangList'));
     }
@@ -29,11 +29,18 @@ class DbptaSidangController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $user = auth()->user();
-        $siswa = $user?->siswa ?? $user?->mahasiswa ?? Siswa::first();
-        $tugasAkhir = TugasAkhir::where('id_siswa', $siswa?->id ?? 1)->first();
+        $siswa = $user?->siswa ?? $user?->mahasiswa;
+        if (!$siswa) {
+            return back()->with('error', 'Profil mahasiswa Anda belum terhubung. Tidak dapat mendaftar sidang.');
+        }
+
+        $tugasAkhir = TugasAkhir::where('id_siswa', $siswa->id)->first();
+        if (!$tugasAkhir) {
+            return back()->with('error', 'Data proposal tugas akhir belum terdaftar.');
+        }
 
         SidangSkripsi::create([
-            'id_tugas_akhir' => $tugasAkhir?->id ?? 1,
+            'id_tugas_akhir' => $tugasAkhir->id,
             'jenis_sidang' => 'Sidang Akhir',
             'waktu_sidang' => now()->addDays(7),
             'nilai_rata_rata' => 88.50,

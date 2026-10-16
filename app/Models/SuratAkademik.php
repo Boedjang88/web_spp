@@ -19,6 +19,10 @@ class SuratAkademik extends Model
         'perihal',
         'keperluan',
         'qr_verification_token',
+        'digital_signature_hash',
+        'signature_provider',
+        'signer_name',
+        'signed_at',
         'file_pdf_path',
         'status',
         'tgl_terbit',
@@ -26,10 +30,16 @@ class SuratAkademik extends Model
 
     protected $casts = [
         'tgl_terbit' => 'datetime',
+        'signed_at' => 'datetime',
     ];
 
     public function siswa(): BelongsTo
     {
         return $this->belongsTo(Siswa::class, 'id_siswa');
+    }
+
+    public function isDigitallySigned(): bool
+    {
+        return !empty($this->digital_signature_hash);
     }
 }
