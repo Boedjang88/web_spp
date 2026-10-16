@@ -6,7 +6,7 @@
 <div class="space-y-6">
 
     <!-- Top Header Banner (Google Academic Workspace Style) -->
-    <div class="bg-white dark:bg-[#1e1f20] p-5 sm:p-6 rounded-2xl border border-slate-200/90 dark:border-slate-800 text-slate-900 dark:text-slate-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 shadow-2xs relative">
+    <div class="bg-white dark:bg-workspace-surface-dark p-5 sm:p-6 rounded-2xl border border-slate-200/90 dark:border-slate-800 text-slate-900 dark:text-slate-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 shadow-2xs relative">
         <div class="relative z-10">
             <div class="flex flex-wrap items-center gap-2 mb-2 font-mono">
                 <span class="px-2.5 py-0.5 bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300 border border-brand-200/80 dark:border-brand-800 text-[10px] font-bold rounded-full uppercase tracking-wider">

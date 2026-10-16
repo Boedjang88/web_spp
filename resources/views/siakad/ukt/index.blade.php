@@ -6,7 +6,7 @@
 <div class="space-y-6">
 
     <!-- Header Section (Google Academic Workspace Style) -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white dark:bg-[#1e1f20] p-5 sm:p-6 rounded-2xl border border-slate-200/90 dark:border-slate-800 text-slate-900 dark:text-slate-100 shadow-2xs">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white dark:bg-workspace-surface-dark p-5 sm:p-6 rounded-2xl border border-slate-200/90 dark:border-slate-800 text-slate-900 dark:text-slate-100 shadow-2xs">
         <div>
             <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300 border border-brand-200/80 dark:border-brand-800 text-[10px] font-mono font-bold uppercase mb-2">
                 <span>H2H BANK INVOICING GATEWAY</span>
@@ -23,7 +23,7 @@
     </div>
 
     <!-- Active Invoice Breakdown Card -->
-    <div class="p-6 rounded-2xl bg-white dark:bg-[#1e1f20] border border-slate-200/90 dark:border-slate-800 text-slate-900 dark:text-slate-100 shadow-2xs space-y-6">
+    <div class="p-6 rounded-2xl bg-white dark:bg-workspace-surface-dark border border-slate-200/90 dark:border-slate-800 text-slate-900 dark:text-slate-100 shadow-2xs space-y-6">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-6 border-b border-slate-100 dark:border-slate-800">
             <div>
                 <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold block">Nomor Virtual Account H2H Bank</span>
@@ -113,7 +113,7 @@
     </div>
 
     <!-- Payment History Card -->
-    <div class="p-6 rounded-2xl bg-white dark:bg-[#1e1f20] border border-slate-200/90 dark:border-slate-800 text-slate-900 dark:text-slate-100 shadow-2xs space-y-4">
+    <div class="p-6 rounded-2xl bg-white dark:bg-workspace-surface-dark border border-slate-200/90 dark:border-slate-800 text-slate-900 dark:text-slate-100 shadow-2xs space-y-4">
         <h3 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
             Riwayat Pembayaran &amp; Bukti Kwitansi H2H
         </h3>

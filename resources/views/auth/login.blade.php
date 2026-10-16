@@ -40,7 +40,7 @@
 
     <!-- Top Floating Theme Toggle -->
     <div class="fixed top-4 right-4 z-50">
-        <button type="button" onclick="toggleTheme()" class="px-3 py-1.5 rounded-xl bg-white dark:bg-[#1e1f20] hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold transition inline-flex items-center gap-1.5 border border-slate-200 dark:border-slate-700 shadow-xs cursor-pointer" title="Ganti Tema">
+        <button type="button" onclick="toggleTheme()" class="px-3 py-1.5 rounded-xl bg-white dark:bg-workspace-surface-dark hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold transition inline-flex items-center gap-1.5 border border-slate-200 dark:border-slate-700 shadow-xs cursor-pointer" title="Ganti Tema">
             <svg class="theme-icon-sun w-3.5 h-3.5 text-amber-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
             <svg class="theme-icon-moon w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
             <span class="theme-label-text">Terang</span>
@@ -56,12 +56,12 @@
             <div class="inline-flex items-center justify-center w-12 h-12 bg-brand-600 text-white rounded-2xl text-base font-bold mb-3 shadow-xs">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
             </div>
-            <h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">SIAKAD Academic Workspace</h1>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-normal">Gunakan akun universitas untuk masuk ke portal terpadu</p>
+            <h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">SIAKAD Enterprise</h1>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-normal">Masuk Portal SIAKAD &bull; Academic Workspace</p>
         </div>
 
         <!-- Login Card -->
-        <div class="bg-white dark:bg-[#1e1f20] rounded-2xl border border-slate-200/90 dark:border-slate-800 p-6 md:p-8 shadow-card transition-colors">
+        <div class="bg-white dark:bg-workspace-surface-dark rounded-2xl border border-slate-200/90 dark:border-slate-800 p-6 md:p-8 shadow-card transition-colors">
             @if(session('error'))
                 <div class="mb-4 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 p-3.5 rounded-xl text-xs text-rose-800 dark:text-rose-200 flex items-start gap-2">
                     <span class="text-rose-600 dark:text-rose-400 font-bold">&bull;</span>
@@ -127,7 +127,7 @@
 
                 <!-- Google SSO Button (Clean Workspace SSO) -->
                 <div class="pt-2">
-                    <a href="{{ route('auth.google') }}" class="w-full py-2.5 px-4 bg-white dark:bg-[#131314] hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-medium rounded-xl border border-slate-300 dark:border-slate-700 transition shadow-xs flex items-center justify-center gap-2">
+                    <a href="{{ route('auth.google') }}" class="w-full py-2.5 px-4 bg-white dark:bg-workspace-bg-dark hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-medium rounded-xl border border-slate-300 dark:border-slate-700 transition shadow-xs flex items-center justify-center gap-2">
                         <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/><path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12.4 0 15.3c0 2.9.7 5.6 1.9 8l3.7-2.9z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"/></svg>
                         <span>Masuk dengan Google Workspace (SSO)</span>
                     </a>

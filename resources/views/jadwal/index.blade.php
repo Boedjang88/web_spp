@@ -12,7 +12,7 @@
 <div class="space-y-6" x-data="{ viewMode: '{{ $currentView }}', activeDayTab: 'all' }">
 
     <!-- Top Header Banner (Enterprise Modern Style) -->
-    <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-950 p-6 md:p-8 rounded-2xl border border-indigo-900/40 text-white flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 shadow-xl relative overflow-hidden print:bg-white print:text-black print:p-0 print:border-none print:shadow-none">
+    <div class="bg-linear-to-r from-slate-900 via-indigo-950 to-blue-950 p-6 md:p-8 rounded-2xl border border-indigo-900/40 text-white flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 shadow-xl relative overflow-hidden print:bg-white print:text-black print:p-0 print:border-none print:shadow-none">
         <!-- Background decorative glow -->
         <div class="absolute -right-16 -top-16 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none print:hidden"></div>
         <div class="absolute -left-16 -bottom-16 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none print:hidden"></div>
@@ -235,7 +235,7 @@
                     $isToday = ($day === $hariIni);
                     $theme = $dayThemes[$day] ?? $dayThemes['Senin'];
                 @endphp
-                <div x-show="activeDayTab === 'all' || activeDayTab === '{{ $day }}'" class="bg-slate-50/80 dark:bg-slate-900/70 border {{ $isToday ? 'border-indigo-400 dark:border-indigo-500 ring-2 ring-indigo-400/30' : 'border-slate-200/90 dark:border-slate-700' }} rounded-2xl p-3 flex flex-col min-h-[420px] transition duration-200 print:min-h-0 print:border-slate-300">
+                <div x-show="activeDayTab === 'all' || activeDayTab === '{{ $day }}'" class="bg-slate-50/80 dark:bg-slate-900/70 border {{ $isToday ? 'border-indigo-400 dark:border-indigo-500 ring-2 ring-indigo-400/30' : 'border-slate-200/90 dark:border-slate-700' }} rounded-2xl p-3 flex flex-col min-h-105 transition duration-200 print:min-h-0 print:border-slate-300">
                     <!-- Day Header -->
                     <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-slate-700/80">
                         <div class="flex items-center gap-2">
@@ -263,7 +263,7 @@
                                         <svg class="w-3 h-3 text-indigo-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                         <span>{{ substr($item->jam_mulai, 0, 5) }} - {{ substr($item->jam_selesai, 0, 5) }}</span>
                                     </div>
-                                    <span class="text-[10px] font-semibold bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-1.5 py-1 rounded border border-slate-200 dark:border-slate-600 truncate max-w-[80px]" title="{{ $item->ruangan ?? 'Ruang Kuliah' }}">
+                                    <span class="text-[10px] font-semibold bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-1.5 py-1 rounded border border-slate-200 dark:border-slate-600 truncate max-w-20" title="{{ $item->ruangan ?? 'Ruang Kuliah' }}">
                                         {{ $item->ruangan ?? 'R. Kuliah' }}
                                     </span>
                                 </div>
@@ -292,7 +292,7 @@
                                             <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                                             Dosen:
                                         </span>
-                                        <span class="font-medium text-slate-800 dark:text-slate-200 truncate max-w-[110px]" title="{{ $item->guru?->nama_guru }}">
+                                        <span class="font-medium text-slate-800 dark:text-slate-200 truncate max-w-27.5" title="{{ $item->guru?->nama_guru }}">
                                             {{ $item->guru?->nama_guru ?? '-' }}
                                         </span>
                                     </div>

@@ -146,11 +146,11 @@
                 <div class="flex flex-col sm:flex-row gap-2.5">
                     <div class="relative w-full">
                         <input type="text" name="nisn" placeholder="Masukkan NIM / NISN Mahasiswa..." required
-                            class="w-full px-4 py-3 rounded-lg bg-zinc-950 border border-zinc-700 text-white focus:outline-none focus:border-zinc-500 transition text-sm font-mono"
+                            class="w-full px-4 py-3 rounded-lg bg-zinc-950 border border-zinc-700 text-white focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition text-sm font-mono"
                             value="{{ request('nisn', $siswa->nisn ?? '') }}">
                     </div>
                     
-                    <button type="submit" class="w-full sm:w-auto bg-zinc-100 hover:bg-zinc-200 text-zinc-900 font-semibold py-3 px-6 rounded-lg transition text-xs whitespace-nowrap font-mono">
+                    <button type="submit" class="w-full sm:w-auto bg-brand-600 hover:bg-brand-500 text-white font-semibold py-3 px-6 rounded-lg transition text-xs whitespace-nowrap font-mono cursor-pointer shadow-sm">
                         Periksa Data
                     </button>
                 </div>

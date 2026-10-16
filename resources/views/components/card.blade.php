@@ -7,15 +7,15 @@
     'footer' => null,
 ])
 
-<div {{ $attributes->merge(['class' => 'bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm transition-colors overflow-hidden']) }}>
+<div {{ $attributes->merge(['class' => 'bg-white dark:bg-workspace-surface-dark border border-slate-200/80 dark:border-slate-700/60 rounded-2xl shadow-xs transition-colors overflow-hidden']) }}>
     @if($title || $header || $action)
-        <div class="px-5 py-4 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-4">
+        <div class="px-5 py-4 border-b border-slate-100 dark:border-slate-700/60 flex items-center justify-between gap-4">
             @if($header)
                 {{ $header }}
             @else
                 <div class="min-w-0 flex-1">
                     @if($title)
-                        <h3 class="text-base font-semibold text-slate-900 dark:text-white truncate">
+                        <h3 class="text-base font-semibold text-slate-900 dark:text-slate-100 truncate">
                             {{ $title }}
                         </h3>
                     @endif
@@ -40,7 +40,7 @@
     </div>
 
     @if($footer)
-        <div class="px-5 py-3 bg-slate-50/75 dark:bg-slate-800/40 border-t border-slate-100 dark:border-slate-800/80 text-xs text-slate-500 dark:text-slate-400">
+        <div class="px-5 py-3 bg-slate-50/75 dark:bg-slate-800/40 border-t border-slate-100 dark:border-slate-700/60 text-xs text-slate-500 dark:text-slate-400">
             {{ $footer }}
         </div>
     @endif

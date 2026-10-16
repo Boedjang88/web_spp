@@ -6,7 +6,7 @@
 <div class="space-y-6">
 
     <!-- Header Banner -->
-    <div class="bg-gradient-to-r from-blue-900 via-slate-900 to-indigo-950 p-6 rounded-2xl border border-blue-900/50 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
+    <div class="bg-linear-to-r from-blue-900 via-slate-900 to-indigo-950 p-6 rounded-2xl border border-blue-900/50 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
         <div>
             <div class="flex items-center gap-2 mb-1.5 font-mono">
                 <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-500/20 text-blue-200 border border-blue-400/30">DOSEN PEMBIMBING AKADEMIK (PA)</span>
@@ -18,7 +18,7 @@
     </div>
 
     <!-- KRS List Table -->
-    <div class="bg-white dark:bg-[#1c2541] rounded-2xl border border-slate-200/80 dark:border-blue-900/50 shadow-sm p-6 space-y-4">
+    <div class="bg-white dark:bg-workspace-surface-dark rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 space-y-4">
         <h2 class="font-bold text-slate-900 dark:text-white text-sm uppercase font-mono tracking-wider">Daftar Pengajuan KRS Mahasiswa</h2>
 
         <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700">

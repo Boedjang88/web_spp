@@ -17,15 +17,15 @@
         <a href="{{ route('web.pembayaran.index') }}" class="text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl transition">&larr; Kembali</a>
     </div>
 
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-7">
+    <div class="bg-white dark:bg-workspace-surface-dark rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 sm:p-7">
         <form method="POST" action="{{ route('web.pembayaran.store') }}" class="space-y-4 text-xs" id="pembayaranForm">
             @csrf
 
             <!-- Pilih Mahasiswa -->
             <div>
-                <label for="id_siswa" class="block font-semibold text-slate-700 mb-1">Mahasiswa <span class="text-rose-500">*</span></label>
+                <label for="id_siswa" class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Mahasiswa <span class="text-rose-500">*</span></label>
                 <select id="id_siswa" name="id_siswa" required onchange="onSiswaChanged(this)"
-                    class="w-full px-3.5 py-2.5 bg-slate-50/50 border @error('id_siswa') border-rose-400 @else border-slate-200 @enderror rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition">
+                    class="w-full px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-800/50 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white dark:focus:bg-slate-800 text-slate-900 dark:text-slate-100 transition {{ $errors->has('id_siswa') ? 'border-rose-400' : 'border-slate-200 dark:border-slate-700' }}">
                     <option value="">-- Cari dan Pilih Mahasiswa --</option>
                     @foreach($siswas as $s)
                         <option value="{{ $s->id }}" 
@@ -45,9 +45,9 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <!-- Tanggal Bayar -->
                 <div>
-                    <label for="tgl_bayar" class="block font-semibold text-slate-700 mb-1">Tanggal Transaksi <span class="text-rose-500">*</span></label>
+                    <label for="tgl_bayar" class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Tanggal Transaksi <span class="text-rose-500">*</span></label>
                     <input type="date" id="tgl_bayar" name="tgl_bayar" value="{{ old('tgl_bayar', date('Y-m-d')) }}" required
-                        class="w-full px-3.5 py-2.5 bg-slate-50/50 border @error('tgl_bayar') border-rose-400 @else border-slate-200 @enderror rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition">
+                        class="w-full px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-800/50 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white dark:focus:bg-slate-800 text-slate-900 dark:text-slate-100 transition {{ $errors->has('tgl_bayar') ? 'border-rose-400' : 'border-slate-200 dark:border-slate-700' }}">
                     @error('tgl_bayar')
                         <p class="text-[11px] text-rose-500 mt-1">{{ $message }}</p>
                     @enderror
@@ -55,9 +55,9 @@
 
                 <!-- Tahun Dibayar -->
                 <div>
-                    <label for="tahun_dibayar" class="block font-semibold text-slate-700 mb-1">Tahun Anggaran UKT / Biaya Kuliah <span class="text-rose-500">*</span></label>
+                    <label for="tahun_dibayar" class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Tahun Anggaran UKT / Biaya Kuliah <span class="text-rose-500">*</span></label>
                     <input type="number" id="tahun_dibayar" name="tahun_dibayar" value="{{ old('tahun_dibayar', date('Y')) }}" required
-                        class="w-full px-3.5 py-2.5 bg-slate-50/50 border @error('tahun_dibayar') border-rose-400 @else border-slate-200 @enderror rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white font-mono transition">
+                        class="w-full px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-800/50 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white dark:focus:bg-slate-800 text-slate-900 dark:text-slate-100 font-mono transition {{ $errors->has('tahun_dibayar') ? 'border-rose-400' : 'border-slate-200 dark:border-slate-700' }}">
                     @error('tahun_dibayar')
                         <p class="text-[11px] text-rose-500 mt-1">{{ $message }}</p>
                     @enderror
@@ -91,7 +91,7 @@
             </div>
 
             <!-- Kalkulasi Estimasi Pembayaran Live Card -->
-            <div class="p-4 bg-gradient-to-r from-indigo-50/80 to-blue-50/60 border border-indigo-100 rounded-2xl flex items-center justify-between">
+            <div class="p-4 bg-linear-to-r from-indigo-50/80 to-blue-50/60 dark:from-indigo-950/40 dark:to-blue-950/30 border border-indigo-100 dark:border-indigo-900/40 rounded-2xl flex items-center justify-between">
                 <div>
                     <span class="text-[11px] text-indigo-700 font-semibold uppercase tracking-wider block">Total Estimasi Pembayaran:</span>
                     <div id="displayTotal" class="text-xl font-black text-indigo-900 mt-0.5">Rp 0</div>

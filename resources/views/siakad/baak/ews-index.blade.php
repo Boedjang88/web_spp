@@ -6,7 +6,7 @@
 <div class="space-y-6">
 
     <!-- Header Banner -->
-    <div class="bg-gradient-to-r from-red-950 via-slate-900 to-amber-950 p-6 rounded-2xl border border-red-900/50 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
+    <div class="bg-linear-to-r from-red-950 via-slate-900 to-amber-950 p-6 rounded-2xl border border-red-900/50 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
         <div>
             <div class="flex items-center gap-2 mb-1.5 font-mono">
                 <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-500/20 text-red-200 border border-red-400/30">RISK CONTROL BAAK</span>

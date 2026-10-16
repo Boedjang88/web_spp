@@ -78,21 +78,21 @@
             -moz-osx-font-smoothing: grayscale;
         }
         html.dark body {
-            background-color: #131314;
-            color: #e3e3e3;
+            background-color: #0f172a;
+            color: #f1f5f9;
         }
         html:not(.dark) body {
-            background-color: #f8fafd;
-            color: #202124;
+            background-color: #f8fafc;
+            color: #1e293b;
         }
 
         /* WCAG 2.2 AA Contrast for Table Headers */
         table thead th {
-            color: #444746;
+            color: #475569;
             font-weight: 600;
         }
         html.dark table thead th {
-            color: #c4c7c5;
+            color: #cbd5e1;
             font-weight: 600;
         }
 
@@ -208,7 +208,7 @@
     </style>
     @stack('styles')
 </head>
-<body class="bg-slate-50 text-slate-900 antialiased min-h-screen flex flex-col md:flex-row select-text">
+<body class="bg-[#f8fafc] dark:bg-[#0f172a] text-slate-800 dark:text-slate-100 antialiased min-h-screen flex flex-col md:flex-row select-text transition-colors duration-200">
 
     <!-- Skip to main content link for keyboard users (WCAG 2.4.1) -->
     <a href="#main-content" 
@@ -223,7 +223,7 @@
     <div id="toastContainer" role="region" aria-label="Notifikasi Sistem" aria-live="polite" aria-atomic="false" class="fixed top-4 left-4 right-4 sm:left-auto sm:right-6 z-50 flex flex-col gap-2.5 max-w-md w-auto sm:w-96 pointer-events-none"></div>
 
     <!-- Mobile Header Bar (Google Workspace Calm Surface) -->
-    <header class="md:hidden px-4 py-3 flex justify-between items-center sticky top-0 z-40 shadow-xs border-b border-slate-200/90 dark:border-slate-800/90 backdrop-blur-md bg-white/95 dark:bg-[#1e1f20]/95 text-slate-800 dark:text-slate-100 transition-colors">
+    <header class="md:hidden px-4 py-3 flex justify-between items-center sticky top-0 z-40 shadow-xs border-b border-slate-200/90 dark:border-slate-800/90 backdrop-blur-md bg-white/95 dark:bg-workspace-surface-dark/95 text-slate-800 dark:text-slate-100 transition-colors">
         <div class="flex items-center space-x-2.5">
             <div class="w-8 h-8 rounded-xl bg-brand-600 flex items-center justify-center font-bold text-white shadow-xs">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
@@ -257,7 +257,7 @@
 
     <!-- Mobile Drawer Sidebar Backdrop -->
     <div id="mobileSidebar" class="hidden md:hidden fixed inset-0 z-50 bg-slate-900/60 dark:bg-black/80 backdrop-blur-xs opacity-0 transition-opacity duration-300 ease-in-out" onclick="toggleMobileMenu(true)" role="dialog" aria-modal="true" aria-label="Menu Navigasi">
-        <div id="mobileDrawerContent" class="w-72 max-w-[85vw] bg-white dark:bg-[#1e1f20] h-full p-5 text-slate-800 dark:text-slate-200 overflow-y-auto flex flex-col justify-between shadow-2xl border-r border-slate-200 dark:border-slate-800 transform -translate-x-full transition-transform duration-300 ease-in-out" onclick="event.stopPropagation()">
+        <div id="mobileDrawerContent" class="w-72 max-w-[85vw] bg-white dark:bg-workspace-surface-dark h-full p-5 text-slate-800 dark:text-slate-200 overflow-y-auto flex flex-col justify-between shadow-2xl border-r border-slate-200 dark:border-slate-800 transform -translate-x-full transition-transform duration-300 ease-in-out" onclick="event.stopPropagation()">
             <div>
                 <div class="flex justify-between items-center mb-5 border-b border-slate-200 dark:border-slate-800 pb-3">
                     <div class="flex items-center space-x-2.5">
@@ -312,10 +312,10 @@
     </div>
 
     <!-- Desktop Sidebar (Google Workspace Surface & Hierarchy) -->
-    <aside class="hidden md:flex flex-col w-64 bg-white dark:bg-[#1e1f20] text-slate-700 dark:text-slate-300 h-screen sticky top-0 border-r border-slate-200/90 dark:border-slate-800 z-30 select-none shrink-0 transition-colors">
+    <aside class="hidden md:flex flex-col w-64 bg-white dark:bg-workspace-surface-dark text-slate-700 dark:text-slate-300 h-screen sticky top-0 border-r border-slate-200/90 dark:border-slate-800 z-30 select-none shrink-0 transition-colors">
         
         <!-- Brand Header -->
-        <div class="p-5 border-b border-slate-200/80 dark:border-slate-800/80 flex items-center space-x-3 bg-white dark:bg-[#1e1f20]">
+        <div class="p-5 border-b border-slate-200/80 dark:border-slate-800/80 flex items-center space-x-3 bg-white dark:bg-workspace-surface-dark">
             <div class="w-9 h-9 rounded-xl bg-brand-600 flex items-center justify-center font-bold text-white shadow-xs shrink-0">
                 <svg class="w-5 h-5 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
             </div>
@@ -352,7 +352,7 @@
 
         <!-- User Profile Footer -->
         @auth
-        <div class="p-3 border-t border-slate-200/80 dark:border-slate-800 bg-white dark:bg-[#1e1f20]">
+        <div class="p-3 border-t border-slate-200/80 dark:border-slate-800 bg-white dark:bg-workspace-surface-dark">
             <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 hover:border-slate-300 dark:hover:border-slate-600 transition">
                 <a href="{{ route('profile.index') }}" class="flex items-center space-x-2.5 overflow-hidden flex-1 group">
                     <div class="w-7 h-7 rounded-lg bg-brand-500/20 text-brand-700 dark:text-brand-300 font-bold flex items-center justify-center text-xs shrink-0 group-hover:bg-brand-500/30 transition overflow-hidden">
@@ -382,7 +382,7 @@
     <div class="flex-1 flex flex-col min-h-screen pb-20 md:pb-0 overflow-x-hidden">
         
         <!-- Desktop Header Bar (Google Workspace Top Bar) -->
-        <header class="hidden md:flex bg-white/90 dark:bg-[#1e1f20]/90 border-b border-slate-200/80 dark:border-slate-800 px-8 py-3.5 justify-between items-center sticky top-0 z-20 shadow-soft backdrop-blur-md">
+        <header class="hidden md:flex bg-white/90 dark:bg-workspace-surface-dark/90 border-b border-slate-200/80 dark:border-slate-800 px-8 py-3.5 justify-between items-center sticky top-0 z-20 shadow-soft backdrop-blur-md">
             <div class="flex items-center space-x-3 text-xs">
                 <span class="font-semibold text-slate-600 dark:text-slate-300">SIAKAD Academic Workspace &bull; {{ now()->translatedFormat('l, d F Y') }}</span>
                 <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/60">
@@ -436,7 +436,7 @@
         </main>
 
         <!-- Desktop Footer -->
-        <footer class="bg-white dark:bg-[#1e1f20] border-t border-slate-200/80 dark:border-slate-800 py-4 px-8 text-center text-xs text-slate-500 dark:text-slate-400 mt-auto">
+        <footer class="bg-white dark:bg-workspace-surface-dark border-t border-slate-200/80 dark:border-slate-800 py-4 px-8 text-center text-xs text-slate-500 dark:text-slate-400 mt-auto">
             <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
                 <span>&copy; {{ date('Y') }} SIAKAD Academic Workspace &bull; Sistem Informasi Akademik &amp; Keuangan</span>
                 <span class="font-mono text-[11px] text-slate-400 dark:text-slate-500">Enterprise v3.2 &bull; 4-Tier RBAC &bull; UU PDP Compliant</span>
@@ -452,71 +452,71 @@
         $isMhs = in_array($userRole, ['siswa', 'mahasiswa']);
         $isDosen = in_array($userRole, ['guru', 'dosen']);
     @endphp
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#1e1f20]/95 backdrop-blur-md border-t border-slate-200/90 dark:border-slate-800 px-3 py-1.5 flex justify-around items-center shadow-lg select-none">
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-workspace-surface-dark/95 backdrop-blur-md border-t border-slate-200/90 dark:border-slate-800 px-3 py-1.5 flex justify-around items-center shadow-lg select-none">
         <!-- 1. Dashboard -->
-        <a href="{{ route('dashboard') }}" class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-[10px] font-medium transition {{ request()->routeIs('dashboard') ? 'text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
+        <a href="{{ route('dashboard') }}" class="flex flex-col items-center justify-center min-w-14 min-h-11 py-1 text-[10px] font-medium transition {{ request()->routeIs('dashboard') ? 'text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
             <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
             <span>Home</span>
         </a>
 
         @if($isMhs)
             <!-- 2. Smart KRS -->
-            <a href="{{ route('siakad.krs.index') }}" class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-[10px] font-medium transition {{ request()->routeIs('siakad.krs.*') ? 'text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
+            <a href="{{ route('siakad.krs.index') }}" class="flex flex-col items-center justify-center min-w-14 min-h-11 py-1 text-[10px] font-medium transition {{ request()->routeIs('siakad.krs.*') ? 'text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
                 <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                 <span>KRS</span>
             </a>
 
             <!-- 3. Presensi -->
-            <a href="{{ route('siakad.presensi.index') }}" class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-[10px] font-medium transition {{ request()->routeIs('siakad.presensi.*') ? 'text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
+            <a href="{{ route('siakad.presensi.index') }}" class="flex flex-col items-center justify-center min-w-14 min-h-11 py-1 text-[10px] font-medium transition {{ request()->routeIs('siakad.presensi.*') ? 'text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
                 <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 <span>Presensi</span>
             </a>
 
             <!-- 4. UKT -->
-            <a href="{{ route('siakad.ukt.index') }}" class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-[10px] font-medium transition {{ request()->routeIs('siakad.ukt.*') ? 'text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
+            <a href="{{ route('siakad.ukt.index') }}" class="flex flex-col items-center justify-center min-w-14 min-h-11 py-1 text-[10px] font-medium transition {{ request()->routeIs('siakad.ukt.*') ? 'text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
                 <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
                 <span>UKT</span>
             </a>
         @elseif($isDosen)
             <!-- 2. Jadwal Mengajar -->
-            <a href="{{ route('web.jadwal.index') }}" class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-[10px] font-medium transition {{ request()->routeIs('web.jadwal.*') ? 'text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
+            <a href="{{ route('web.jadwal.index') }}" class="flex flex-col items-center justify-center min-w-14 min-h-11 py-1 text-[10px] font-medium transition {{ request()->routeIs('web.jadwal.*') ? 'text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
                 <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                 <span>Jadwal</span>
             </a>
 
             <!-- 3. Presensi Kelas -->
-            <a href="{{ route('web.presensi.index') }}" class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-[10px] font-medium transition {{ request()->routeIs('web.presensi.*') ? 'text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
+            <a href="{{ route('web.presensi.index') }}" class="flex flex-col items-center justify-center min-w-14 min-h-11 py-1 text-[10px] font-medium transition {{ request()->routeIs('web.presensi.*') ? 'text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
                 <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
                 <span>Presensi</span>
             </a>
 
             <!-- 4. Nilai -->
-            <a href="{{ route('web.nilai.index') }}" class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-[10px] font-medium transition {{ request()->routeIs('web.nilai.*') ? 'text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
+            <a href="{{ route('web.nilai.index') }}" class="flex flex-col items-center justify-center min-w-14 min-h-11 py-1 text-[10px] font-medium transition {{ request()->routeIs('web.nilai.*') ? 'text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
                 <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                 <span>Nilai</span>
             </a>
         @else
             <!-- 2. Mahasiswa -->
-            <a href="{{ route('web.mahasiswa.index') }}" class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-[10px] font-medium transition {{ request()->routeIs('web.mahasiswa.*') || request()->routeIs('web.siswa.*') ? 'text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
+            <a href="{{ route('web.mahasiswa.index') }}" class="flex flex-col items-center justify-center min-w-14 min-h-11 py-1 text-[10px] font-medium transition {{ request()->routeIs('web.mahasiswa.*') || request()->routeIs('web.siswa.*') ? 'text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
                 <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                 <span>Mahasiswa</span>
             </a>
 
             <!-- 3. Pembayaran -->
-            <a href="{{ route('web.pembayaran.index') }}" class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-[10px] font-medium transition {{ request()->routeIs('web.pembayaran.*') ? 'text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
+            <a href="{{ route('web.pembayaran.index') }}" class="flex flex-col items-center justify-center min-w-14 min-h-11 py-1 text-[10px] font-medium transition {{ request()->routeIs('web.pembayaran.*') ? 'text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
                 <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
                 <span>Keuangan</span>
             </a>
 
             <!-- 4. Users -->
-            <a href="{{ route('web.users.index') }}" class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-[10px] font-medium transition {{ request()->routeIs('web.users.*') ? 'text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
+            <a href="{{ route('web.users.index') }}" class="flex flex-col items-center justify-center min-w-14 min-h-11 py-1 text-[10px] font-medium transition {{ request()->routeIs('web.users.*') ? 'text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
                 <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                 <span>Users</span>
             </a>
         @endif
 
         <!-- 5. Menu / Drawer Toggle -->
-        <button type="button" onclick="toggleMobileMenu()" class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-[10px] font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition cursor-pointer" aria-label="Buka semua menu">
+        <button type="button" onclick="toggleMobileMenu()" class="flex flex-col items-center justify-center min-w-14 min-h-11 py-1 text-[10px] font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition cursor-pointer" aria-label="Buka semua menu">
             <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
             <span>Menu</span>
         </button>
@@ -823,6 +823,24 @@
                 el.textContent = isDark ? 'Gelap' : 'Terang';
             });
         }
+
+        // Listen for OS dark mode changes if user has not explicitly locked a preference
+        try {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+                if (!localStorage.getItem('theme')) {
+                    if (e.matches) {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                    updateThemeIcons();
+                    window.dispatchEvent(new CustomEvent('themeChanged', { detail: { isDark: e.matches } }));
+                }
+            });
+        } catch(err) {}
+
+        // Run immediately to eliminate any button label/icon sync lag
+        updateThemeIcons();
 
         // Instant Link Click Page Navigation Transition & Top Progress Bar
         document.addEventListener('click', function(e) {
